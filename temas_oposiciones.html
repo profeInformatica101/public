@@ -421,6 +421,13 @@
                     <td id="selectedModules">Ninguno</td>
                     <td id="totalModules">0</td>
                 </tr>
+                <tr>
+                    <td colspan="3">
+                        <div id="probabilitySummary" class="text-center mt-4">
+                            <strong>Resumen:</strong> Selecciona módulos para calcular la probabilidad.
+                        </div>
+                    </td>
+                </tr>
             </tbody>
         </table>
 
@@ -428,37 +435,67 @@
     </div>
 
     <script>
+        // Función para calcular combinaciones (n choose k)
+        function combinations(n, k) {
+            if (k > n) return 0;
+            let numerator = 1;
+            let denominator = 1;
+            for (let i = 0; i < k; i++) {
+                numerator *= (n - i);
+                denominator *= (i + 1);
+            }
+            return numerator / denominator;
+        }
+    
+        // Calcula la probabilidad de acierto
+        function calculateProbability(selectedCount, totalCount, drawCount) {
+            const totalCombinations = combinations(totalCount, drawCount);
+            const noHitCombinations = combinations(totalCount - selectedCount, drawCount);
+            return 1 - (noHitCombinations / totalCombinations);
+        }
+    
         const checkboxes = document.querySelectorAll('.module-checkbox');
         const selectedModules = document.getElementById('selectedModules');
         const totalModules = document.getElementById('totalModules');
         const generateBtn = document.getElementById('generateBtn');
         const customText = document.getElementById('customText');
-
-        // Actualiza la tabla con los módulos seleccionados
+        const probabilitySummary = document.getElementById('probabilitySummary');
+    
+        // Actualiza la tabla con los módulos seleccionados y calcula la probabilidad
         function updateTable() {
-    const checkedModules = Array.from(checkboxes).filter(cb => cb.checked).map(cb => {
-        const row = cb.closest('tr');
-        row.classList.add('highlighted'); // Añadir la clase resaltada a las filas seleccionadas
-        const description = row.querySelector('.description').value;
-        return `${cb.value} - ${description}`;
-    });
-
-    // Quitar el resaltado de filas no seleccionadas
-    Array.from(checkboxes).filter(cb => !cb.checked).forEach(cb => {
-        const row = cb.closest('tr');
-        row.classList.remove('highlighted');
-    });
-
-    selectedModules.textContent = checkedModules.length ? checkedModules.join(', ') : 'Ninguno';
-    totalModules.textContent = checkedModules.length;
-}
-
-
+            const checkedModules = Array.from(checkboxes).filter(cb => cb.checked).map(cb => {
+                const row = cb.closest('tr');
+                row.classList.add('highlighted'); // Añadir la clase resaltada a las filas seleccionadas
+                const description = row.querySelector('.description').value;
+                return `${cb.value} - ${description}`;
+            });
+    
+            // Quitar el resaltado de filas no seleccionadas
+            Array.from(checkboxes).filter(cb => !cb.checked).forEach(cb => {
+                const row = cb.closest('tr');
+                row.classList.remove('highlighted');
+            });
+    
+            selectedModules.textContent = checkedModules.length ? checkedModules.join(', ') : 'Ninguno';
+            totalModules.textContent = checkedModules.length;
+    
+            // Calcula la probabilidad
+            const totalAvailableModules = checkboxes.length;
+            const selectedCount = checkedModules.length;
+            const probability = calculateProbability(selectedCount, totalAvailableModules, 5);
+    
+            // Actualiza el resumen de probabilidad
+            probabilitySummary.innerHTML = `
+                <strong>Resumen:</strong> Se han seleccionado ${selectedCount} módulos de ${totalAvailableModules}. 
+                La probabilidad de acertar al menos uno es ${(probability * 100).toFixed(2)}%.
+            `;
+        }
+    
         // Añade eventos a los checkboxes
         checkboxes.forEach(checkbox => {
             checkbox.addEventListener('change', updateTable);
         });
-
+    
         // Genera un archivo TXT con los datos seleccionados
         generateBtn.addEventListener('click', () => {
             const checkedModules = Array.from(checkboxes).filter(cb => cb.checked).map(cb => {
@@ -467,7 +504,7 @@
                 return `${cb.value} - ${description}`;
             });
             const text = `Módulos Seleccionados:\n${checkedModules.join('\n')}\n\nInformación Adicional:\n${customText.value}`;
-
+    
             const blob = new Blob([text], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');

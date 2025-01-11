@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selección de Módulos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        .highlighted {
+            background-color: yellow;
+            text-decoration: underline;
+        }
+    </style>
+    
+</head>
+<body class="p-4">
+    <div class="container">
+        <h1 class="mb-4">Selección de Módulos</h1>
+        <div class="mb-3">
+            <label for="customText" class="form-label">Información adicional:</label>
+            <textarea id="customText" class="form-control" rows="3" placeholder="Escribe información adicional aquí..."></textarea>
+        </div>
+
+        <h3>Lista de Módulos</h3>
+        <form id="moduleForm" class="mb-4">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Seleccionar</th>
+                        <th>Nombre del Módulo</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="1. Representación y comunicación de la información." id="module1"></td>
+                        <td>1. Representación y comunicación de la información.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="2. Elementos funcionales de un ordenador digital." id="module2"></td>
+                        <td>2. Elementos funcionales de un ordenador digital.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="3. Componentes, estructura y funcionamiento de la Unidad Central de Proceso." id="module3"></td>
+                        <td>3. Componentes, estructura y funcionamiento de la Unidad Central de Proceso.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="4. Memoria interna. Tipos. Direccionamiento. Características y funciones." id="module4"></td>
+                        <td>4. Memoria interna. Tipos. Direccionamiento. Características y funciones.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="5. Microprocesadores. Estructura. Tipos. Comunicación con el exterior." id="module5"></td>
+                        <td>5. Microprocesadores. Estructura. Tipos. Comunicación con el exterior.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="6. Sistemas de almacenamiento externo. Tipos. Características y funcionamiento." id="module6"></td>
+                        <td>6. Sistemas de almacenamiento externo. Tipos. Características y funcionamiento.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="7. Dispositivos periféricos de entrada/salida. Características y funcionamiento." id="module7"></td>
+                        <td>7. Dispositivos periféricos de entrada/salida. Características y funcionamiento.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="8. Hardware comercial de un ordenador. Placa base. Tarjetas controladoras de dispositivos y de entrada/salida." id="module8"></td>
+                        <td>8. Hardware comercial de un ordenador. Placa base. Tarjetas controladoras de dispositivos y de entrada/salida.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="9. Lógica de circuitos. Circuitos combinacionales y secuenciales." id="module9"></td>
+                        <td>9. Lógica de circuitos. Circuitos combinacionales y secuenciales.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="10. Representación interna de los datos." id="module10"></td>
+                        <td>10. Representación interna de los datos.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="11. Organización lógica de los datos. Estructuras estáticas." id="module11"></td>
+                        <td>11. Organización lógica de los datos. Estructuras estáticas.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="12. Organización lógica de los datos. Estructuras dinámicas." id="module12"></td>
+                        <td>12. Organización lógica de los datos. Estructuras dinámicas.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="13. Ficheros. Tipos. Características. Organizaciones." id="module13"></td>
+                        <td>13. Ficheros. Tipos. Características. Organizaciones.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="14. Utilización de ficheros según su organización." id="module14"></td>
+                        <td>14. Utilización de ficheros según su organización.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="15. Sistemas operativos. Componentes. Estructura. Funciones. Tipos." id="module15"></td>
+                        <td>15. Sistemas operativos. Componentes. Estructura. Funciones. Tipos.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="16. Sistemas operativos: Gestión de procesos." id="module16"></td>
+                        <td>16. Sistemas operativos: Gestión de procesos.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="17. Sistemas operativos: Gestión de memoria." id="module17"></td>
+                        <td>17. Sistemas operativos: Gestión de memoria.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="18. Sistemas operativos: Gestión de entradas/salidas." id="module18"></td>
+                        <td>18. Sistemas operativos: Gestión de entradas/salidas.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="19. Sistemas operativos: Gestión de archivos y dispositivos." id="module19"></td>
+                        <td>19. Sistemas operativos: Gestión de archivos y dispositivos.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="20. Explotación y Administración de sistemas operativos monousuario y multiusuario." id="module20"></td>
+                        <td>20. Explotación y Administración de sistemas operativos monousuario y multiusuario.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="21. Sistemas informáticos. Estructura física y funcional." id="module21"></td>
+                        <td>21. Sistemas informáticos. Estructura física y funcional.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="22. Planificación y explotación de sistemas informáticos. Configuración. Condiciones de instalación. Medidas de seguridad. Procedimientos de uso." id="module22"></td>
+                        <td>22. Planificación y explotación de sistemas informáticos. Configuración. Condiciones de instalación. Medidas de seguridad. Procedimientos de uso.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="23. Diseño de algoritmos. Técnicas descriptivas." id="module23"></td>
+                        <td>23. Diseño de algoritmos. Técnicas descriptivas.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="24. Lenguajes de programación. Tipos. Características." id="module24"></td>
+                        <td>24. Lenguajes de programación. Tipos. Características.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="25. Programación estructurada. Estructuras básicas. Funciones y Procedimientos." id="module25"></td>
+                        <td>25. Programación estructurada. Estructuras básicas. Funciones y Procedimientos.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="26. Programación modular. Diseño de funciones. Recursividad. Librerías." id="module26"></td>
+                        <td>26. Programación modular. Diseño de funciones. Recursividad. Librerías.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="27. Programación orientada a objetos. Objetos. Clases. Herencia. Polimorfismo. Lenguajes." id="module27"></td>
+                        <td>27. Programación orientada a objetos. Objetos. Clases. Herencia. Polimorfismo. Lenguajes.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="28. Programación en tiempo real. Interrupciones. Sincronización y comunicación entre tareas. Lenguajes." id="module28"></td>
+                        <td>28. Programación en tiempo real. Interrupciones. Sincronización y comunicación entre tareas. Lenguajes.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="29. Utilidades para el desarrollo y prueba de programas. Compiladores. Interpretes. Depuradores." id="module29"></td>
+                        <td>29. Utilidades para el desarrollo y prueba de programas. Compiladores. Interpretes. Depuradores.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="30. Prueba y documentación de programas. Técnicas." id="module30"></td>
+                        <td>30. Prueba y documentación de programas. Técnicas.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="31. Lenguaje C: Características generales. Elementos del lenguaje. Estructura de un programa. Funciones de librería y usuario. Entorno de compilación. Herramientas para la elaboración y depuración de programas en lenguaje C." id="module31"></td>
+                        <td>31. Lenguaje C: Características generales. Elementos del lenguaje. Estructura de un programa. Funciones de librería y usuario. Entorno de compilación. Herramientas para la elaboración y depuración de programas en lenguaje C.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="32. Lenguaje C: Manipulación de estructuras de datos dinámicas y estáticas. Entrada y salida de datos. Gestión de punteros. Punteros a funciones." id="module32"></td>
+                        <td>32. Lenguaje C: Manipulación de estructuras de datos dinámicas y estáticas. Entrada y salida de datos. Gestión de punteros. Punteros a funciones.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="33. Programación en lenguaje ensamblador. Instrucciones básicas. Formatos. Direccionamientos." id="module33"></td>
+                        <td>33. Programación en lenguaje ensamblador. Instrucciones básicas. Formatos. Direccionamientos.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="34. Sistemas gestores de base de datos. Funciones. Componentes. Arquitecturas de referencia y operacionales. Tipos de sistemas." id="module34"></td>
+                        <td>34. Sistemas gestores de base de datos. Funciones. Componentes. Arquitecturas de referencia y operacionales. Tipos de sistemas.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="35. La definición de datos. Niveles de descripción. Lenguajes. Diccionario de datos." id="module35"></td>
+                        <td>35. La definición de datos. Niveles de descripción. Lenguajes. Diccionario de datos.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="36. La manipulación de datos. Operaciones. Lenguajes. Optimización de consultas." id="module36"></td>
+                        <td>36. La manipulación de datos. Operaciones. Lenguajes. Optimización de consultas.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="37. Modelo de datos jerárquico y en red. Estructuras. Operaciones." id="module37"></td>
+                        <td>37. Modelo de datos jerárquico y en red. Estructuras. Operaciones.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="38. Modelo de datos relacional. Estructuras. Operaciones. Álgebra relacional." id="module38"></td>
+                        <td>38. Modelo de datos relacional. Estructuras. Operaciones. Álgebra relacional.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="39. Lenguajes para la definición y manipulación de datos en sistemas de base de datos relacionales. Tipos. Características. Lenguaje SQL." id="module39"></td>
+                        <td>39. Lenguajes para la definición y manipulación de datos en sistemas de base de datos relacionales. Tipos. Características. Lenguaje SQL.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="40. Diseño de bases de datos relacionales." id="module40"></td>
+                        <td>40. Diseño de bases de datos relacionales.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="41. Utilidades de los sistemas gestores de base de datos para el desarrollo de aplicaciones. Tipos. Características." id="module41"></td>
+                        <td>41. Utilidades de los sistemas gestores de base de datos para el desarrollo de aplicaciones. Tipos. Características.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="42. Sistemas de base de datos distribuidos." id="module42"></td>
+                        <td>42. Sistemas de base de datos distribuidos.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="43. Administración de sistemas de base de datos." id="module43"></td>
+                        <td>43. Administración de sistemas de base de datos.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="44. Técnicas y procedimientos para la seguridad de los datos." id="module44"></td>
+                        <td>44. Técnicas y procedimientos para la seguridad de los datos.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="45. Sistemas de información. Tipos. Características. Sistemas de información en la empresa." id="module45"></td>
+                        <td>45. Sistemas de información. Tipos. Características. Sistemas de información en la empresa.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="46. Aplicaciones informáticas de propósito general y para la gestión empresarial. Tipos. Funciones. Características." id="module46"></td>
+                        <td>46. Aplicaciones informáticas de propósito general y para la gestión empresarial. Tipos. Funciones. Características.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="47. Instalación y explotación de aplicaciones informáticas. Compartición de datos." id="module47"></td>
+                        <td>47. Instalación y explotación de aplicaciones informáticas. Compartición de datos.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="48. Ingeniería del software. Ciclo de desarrollo del software. Tipos de ciclos de desarrollo. Metodologías de desarrollo. Características distintivas de las principales metodologías de desarrollo utilizadas en la Unión Europea." id="module48"></td>
+                        <td>48. Ingeniería del software. Ciclo de desarrollo del software. Tipos de ciclos de desarrollo. Metodologías de desarrollo. Características distintivas de las principales metodologías de desarrollo utilizadas en la Unión Europea.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="49. Análisis de sistemas: Modelización de tratamientos. Modelo de flujo de datos y control. Técnicas descriptivas. Documentación." id="module49"></td>
+                        <td>49. Análisis de sistemas: Modelización de tratamientos. Modelo de flujo de datos y control. Técnicas descriptivas. Documentación.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="50. Análisis de sistemas: Modelización conceptual de datos. Técnicas descriptivas. Documentación." id="module50"></td>
+                        <td>50. Análisis de sistemas: Modelización conceptual de datos. Técnicas descriptivas. Documentación.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="51. Análisis de sistemas: Especificación funcional del sistema. Búsqueda y descripción de requisitos funcionales. Especificación de soluciones técnicas. Análisis de viabilidad técnica y económica." id="module51"></td>
+                        <td>51. Análisis de sistemas: Especificación funcional del sistema. Búsqueda y descripción de requisitos funcionales. Especificación de soluciones técnicas. Análisis de viabilidad técnica y económica.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="52. Diseño lógico de funciones. Definición de funciones. Descomposición modular. Técnicas descriptivas. Documentación." id="module52"></td>
+                        <td>52. Diseño lógico de funciones. Definición de funciones. Descomposición modular. Técnicas descriptivas. Documentación.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="53. Diseño lógico de datos. Transformación del modelo conceptual a modelos lógicos. Análisis relacional de datos. Documentación." id="module53"></td>
+                        <td>53. Diseño lógico de datos. Transformación del modelo conceptual a modelos lógicos. Análisis relacional de datos. Documentación.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="54. Diseño de interfaces de usuario. Criterios de diseño. Descripción de interfaces. Documentación. Herramientas para la construcción de interfaces." id="module54"></td>
+                        <td>54. Diseño de interfaces de usuario. Criterios de diseño. Descripción de interfaces. Documentación. Herramientas para la construcción de interfaces.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="55. Diseño físico de datos y funciones. Criterios de diseño. Documentación." id="module55"></td>
+                        <td>55. Diseño físico de datos y funciones. Criterios de diseño. Documentación.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="56. Análisis y diseño orientado a objetos." id="module56"></td>
+                        <td>56. Análisis y diseño orientado a objetos.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="57. Calidad del software. Factores y métricas. Estrategias de prueba." id="module57"></td>
+                        <td>57. Calidad del software. Factores y métricas. Estrategias de prueba.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="58. Ayudas automatizadas para el desarrollo de software (herramientas CASE). Tipos. Estructura. Prestaciones." id="module58"></td>
+                        <td>58. Ayudas automatizadas para el desarrollo de software (herramientas CASE). Tipos. Estructura. Prestaciones.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="59. Gestión y control de proyectos informáticos. Estimación de recursos. Planificación temporal y organizativa. Seguimiento." id="module59"></td>
+                        <td>59. Gestión y control de proyectos informáticos. Estimación de recursos. Planificación temporal y organizativa. Seguimiento.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="60. Sistemas basados en el conocimiento. Representación del conocimiento. Componentes y arquitectura." id="module60"></td>
+                        <td>60. Sistemas basados en el conocimiento. Representación del conocimiento. Componentes y arquitectura.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="61. Redes y servicios de comunicaciones." id="module61"></td>
+                        <td>61. Redes y servicios de comunicaciones.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="62. Arquitecturas de sistemas de comunicaciones. Arquitecturas basadas en niveles. Estándares." id="module62"></td>
+                        <td>62. Arquitecturas de sistemas de comunicaciones. Arquitecturas basadas en niveles. Estándares.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="63. Funciones y servicios del nivel físico. Tipos y medios de transmisión. Adaptación al medio de transmisión. Limitaciones a la transmisión. Estándares." id="module63"></td>
+                        <td>63. Funciones y servicios del nivel físico. Tipos y medios de transmisión. Adaptación al medio de transmisión. Limitaciones a la transmisión. Estándares.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="64. Funciones y servicios del nivel de enlace. Técnicas. Protocolos." id="module64"></td>
+                        <td>64. Funciones y servicios del nivel de enlace. Técnicas. Protocolos.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-check-input module-checkbox" type="checkbox" value="65. Funciones y servicios del nivel de red y del nivel de transporte. Técnicas. Protocolos." id="module65"></td>
+                        <td>65. Funciones y servicios del nivel de red y del nivel de transporte. Técnicas. Protocolos.</td>
+                        <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+                    </tr>
+                    <tr>
+    <td><input class="form-check-input module-checkbox" type="checkbox" value="66. Funciones y servicios en niveles sesión, presentación y aplicación. Protocolos. Estándares." id="module66"></td>
+    <td>66. Funciones y servicios en niveles sesión, presentación y aplicación. Protocolos. Estándares.</td>
+    <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+</tr>
+<tr>
+    <td><input class="form-check-input module-checkbox" type="checkbox" value="67. Redes de área local. Componentes. Topologías. Estándares. Protocolos." id="module67"></td>
+    <td>67. Redes de área local. Componentes. Topologías. Estándares. Protocolos.</td>
+    <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+</tr>
+<tr>
+    <td><input class="form-check-input module-checkbox" type="checkbox" value="68. Software de sistemas en red. Componentes. Funciones. Estructura." id="module68"></td>
+    <td>68. Software de sistemas en red. Componentes. Funciones. Estructura.</td>
+    <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+</tr>
+<tr>
+    <td><input class="form-check-input module-checkbox" type="checkbox" value="69. Integración de sistemas. Medios de interconexión. Estándares. Protocolos de acceso a redes de área extensa." id="module69"></td>
+    <td>69. Integración de sistemas. Medios de interconexión. Estándares. Protocolos de acceso a redes de área extensa.</td>
+    <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+</tr>
+<tr>
+    <td><input class="form-check-input module-checkbox" type="checkbox" value="70. Diseño de sistemas en red local. Parámetros de diseño. Instalación y configuración de sistemas en red local." id="module70"></td>
+    <td>70. Diseño de sistemas en red local. Parámetros de diseño. Instalación y configuración de sistemas en red local.</td>
+    <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+</tr>
+<tr>
+    <td><input class="form-check-input module-checkbox" type="checkbox" value="71. Explotación y administración de sistemas en red local. Facilidades de gestión." id="module71"></td>
+    <td>71. Explotación y administración de sistemas en red local. Facilidades de gestión.</td>
+    <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+</tr>
+<tr>
+    <td><input class="form-check-input module-checkbox" type="checkbox" value="72. La seguridad en sistemas en red. Servicios de seguridad. Técnicas y sistemas de protección. Estándares." id="module72"></td>
+    <td>72. La seguridad en sistemas en red. Servicios de seguridad. Técnicas y sistemas de protección. Estándares.</td>
+    <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+</tr>
+<tr>
+    <td><input class="form-check-input module-checkbox" type="checkbox" value="73. Evaluación y mejora de prestaciones en un sistema en red. Técnicas y procedimientos de medidas." id="module73"></td>
+    <td>73. Evaluación y mejora de prestaciones en un sistema en red. Técnicas y procedimientos de medidas.</td>
+    <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+</tr>
+<tr>
+    <td><input class="form-check-input module-checkbox" type="checkbox" value="74. Sistemas multimedia." id="module74"></td>
+    <td>74. Sistemas multimedia.</td>
+    <td><input type="text" class="form-control description" placeholder="Añadir descripción"></td>
+</tr>
+                    <!-- Añadir más filas con el resto de los módulos aquí -->
+                </tbody>
+            </table>
+        </form>
+
+        <h3>Resumen</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Módulos Seleccionados</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="selectedModules">Ninguno</td>
+                    <td id="totalModules">0</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <button id="generateBtn" class="btn btn-primary">Generar Archivo</button>
+    </div>
+
+    <script>
+        const checkboxes = document.querySelectorAll('.module-checkbox');
+        const selectedModules = document.getElementById('selectedModules');
+        const totalModules = document.getElementById('totalModules');
+        const generateBtn = document.getElementById('generateBtn');
+        const customText = document.getElementById('customText');
+
+        // Actualiza la tabla con los módulos seleccionados
+        function updateTable() {
+    const checkedModules = Array.from(checkboxes).filter(cb => cb.checked).map(cb => {
+        const row = cb.closest('tr');
+        row.classList.add('highlighted'); // Añadir la clase resaltada a las filas seleccionadas
+        const description = row.querySelector('.description').value;
+        return `${cb.value} - ${description}`;
+    });
+
+    // Quitar el resaltado de filas no seleccionadas
+    Array.from(checkboxes).filter(cb => !cb.checked).forEach(cb => {
+        const row = cb.closest('tr');
+        row.classList.remove('highlighted');
+    });
+
+    selectedModules.textContent = checkedModules.length ? checkedModules.join(', ') : 'Ninguno';
+    totalModules.textContent = checkedModules.length;
+}
+
+
+        // Añade eventos a los checkboxes
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateTable);
+        });
+
+        // Genera un archivo TXT con los datos seleccionados
+        generateBtn.addEventListener('click', () => {
+            const checkedModules = Array.from(checkboxes).filter(cb => cb.checked).map(cb => {
+                const row = cb.closest('tr');
+                const description = row.querySelector('.description').value;
+                return `${cb.value} - ${description}`;
+            });
+            const text = `Módulos Seleccionados:\n${checkedModules.join('\n')}\n\nInformación Adicional:\n${customText.value}`;
+
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'modulos_seleccionados.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+    </script>
+</body>
+</html>

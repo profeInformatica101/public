@@ -184,6 +184,74 @@
   fortune | cowsay</code></pre>
         </ul>
       </section>
+      <section class="my-4">
+        <h2>🎮 Juegos para Aprender Comandos</h2>
+        <p>Se proponen juegos sencillos para reforzar el aprendizaje de comandos en la terminal de Linux, especialmente dirigidos al alumnado de ESO:</p>
+        <ul>
+            <li><strong>🎬 Script Misterioso</strong>
+                <p>Se proporciona un script incompleto y los alumnos deben completarlo para que funcione correctamente. Ideal para trabajar lógica básica y sintaxis.</p>
+                <pre><code>#!/bin/bash
+      read -p "Introduce tu nombre: " nombre
+      # TODO: Mostrar mensaje personalizado de bienvenida
+      echo "Bienvenido, $nombre"</code></pre>
+              </li>
+      
+              <li><strong>🔐 Código Secreto</strong>
+                <p>El script genera un número aleatorio y el alumno tiene que adivinarlo. Sirve para practicar condiciones, bucles y variables.</p>
+                <pre><code>#!/bin/bash
+      clave=$((RANDOM % 10 + 1))
+      intento=0
+      while [ "$intento" -ne "$clave" ]; do
+        read -p "Adivina el número (1-10): " intento
+        if [ "$intento" -lt "$clave" ]; then
+          echo "Demasiado bajo."
+        elif [ "$intento" -gt "$clave" ]; then
+          echo "Demasiado alto."
+        fi
+      done
+      echo "¡Correcto! La clave era $clave."</code></pre>
+              </li>
+      
+              <li><strong>🧠 Script Trivia</strong>
+                <p>Juego de preguntas con opciones. El alumno elige una opción y el script evalúa si es correcta o no.</p>
+                <pre><code>#!/bin/bash
+      echo "¿Cuál es el comando para listar archivos ocultos?"
+      echo "a) ls -a"
+      echo "b) ls --all"
+      echo "c) show hidden"
+      read -p "Elige (a/b/c): " respuesta
+      if [ "$respuesta" == "a" ]; then
+        echo "✅ ¡Correcto!"
+      else
+        echo "❌ Incorrecto. Era 'a'."
+      fi</code></pre>
+              </li>
+              <li><strong>🕵️‍♂️ Búsqueda del Tesoro (Terminal Hunt)</strong>
+                <p>Se crean varios archivos ocultos y visibles dentro de una estructura de carpetas. Los alumnos deben encontrar una "clave secreta" usando comandos como <code>cd</code>, <code>ls -a</code>, <code>cat</code>, <code>grep</code> y <code>find</code>.</p>
+                <pre><code>mkdir -p juego/nivel1/nivel2
+      cd juego
+      echo "¡Sigue buscando!" > nivel1/pista.txt
+      echo "CLAVE:LINUX123" > nivel1/nivel2/secreto.txt</code></pre>
+              </li>
+      
+              <li><strong>💣 Desactiva la Bomba</strong>
+                <p>Simula una cuenta regresiva con un script. El alumno debe encontrar y editar el archivo correcto antes de que el tiempo "explote".</p>
+                <pre><code>#!/bin/bash
+      segundos=10
+      echo "¡Desactiva la bomba! Tienes $segundos segundos..."
+      sleep $segundos
+      echo "💥 ¡BOOM! (o no)"</code></pre>
+              </li>
+      
+              <li><strong>📁 ¿Quién tiene la clave?</strong>
+                <p>Reparte archivos entre compañeros. Solo uno contiene la clave. Deben usar comandos como <code>grep</code> y <code>less</code> para encontrarlo rápidamente.</p>
+              </li>
+      
+              <li><strong>🚀 Carrera de Comandos</strong>
+                <p>Competencia cronometrada por parejas o grupos: gana quien logre completar una lista de comandos correctamente en el menor tiempo posible.</p>
+              </li>
+            </ul>
+          </section>
 
       <section class="my-5">
         <h2>📋 Seguimiento por Grupo (para imprimir)</h2>

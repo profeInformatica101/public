@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Matriz RA ↔ Unidades (0485)</title>
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .table thead th { position: sticky; top: 0; background: #fff; z-index: 1; }
+    .xcell { text-align:center; font-weight:600; }
+  </style>
+</head>
+<body class="bg-light">
+
+<div class="container-fluid py-4">
+  <h1 class="h4 mb-3">Matriz RA ↔ Unidades (Programación – Código 0485)</h1>
+
+  <div class="row g-2 align-items-end mb-3">
+    <div class="col-12 col-md-4">
+      <label class="form-label">Búsqueda global</label>
+      <input id="searchBox" type="search" class="form-control" placeholder="Filtra por criterio o descripción…">
+    </div>
+    <div class="col-6 col-md-3">
+      <label class="form-label">Filtrar por RA</label>
+      <select id="raFilter" class="form-select">
+        <option value="">Todos</option>
+        <option>RA1</option><option>RA2</option><option>RA3</option><option>RA4</option>
+        <option>RA5</option><option>RA6</option><option>RA7</option><option>RA8</option><option>RA9</option>
+      </select>
+    </div>
+    <div class="col-6 col-md-3">
+      <label class="form-label">Filtrar por Unidad (X)</label>
+      <select id="udFilter" class="form-select">
+        <option value="">Todas</option>
+        <option>UD1</option><option>UD2</option><option>UD3</option><option>UD4</option>
+        <option>UD5</option><option>UD6</option><option>UD7</option><option>UD8</option><option>UD9</option>
+        <option>UD10</option><option>UD11</option><option>UD12</option><option>UD13</option>
+        <option>UD14</option><option>UD15</option><option>UD16</option>
+      </select>
+    </div>
+    <div class="col-12 col-md-2 d-grid">
+      <button id="clearBtn" class="btn btn-outline-secondary">Limpiar filtros</button>
+    </div>
+  </div>
+
+  <div class="table-responsive border rounded bg-white">
+    <table class="table table-striped table-bordered table-sm align-middle m-0">
+      <thead class="table-light">
+        <tr>
+          <th style="min-width:110px">Criterio</th>
+          <th style="min-width:420px">Descripción</th>
+          <th>UD1</th><th>UD2</th><th>UD3</th><th>UD4</th><th>UD5</th><th>UD6</th><th>UD7</th>
+          <th>UD8</th><th>UD9</th><th>UD10</th><th>UD11</th><th>UD12</th><th>UD13</th>
+          <th>UD14</th><th>UD15</th><th>UD16</th>
+        </tr>
+      </thead>
+      <tbody id="matrixBody">
+        <!-- ======= TU TABLA (copia tu <tr> tal cual) ======= -->
+        <!-- RA1 -->
+        <tr><td>RA1-a)</td><td>Se han identificado los bloques que componen la estructura de un programa informático.</td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA1-b)</td><td>Se han creado proyectos de desarrollo de aplicaciones.</td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA1-c)</td><td>Se han utilizado entornos integrados de desarrollo.</td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA1-d)</td><td>Se han identificado los distintos tipos de variables y la utilidad específica de cada uno.</td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA1-e)</td><td>Se ha modificado el código de un programa para crear y utilizar variables.</td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA1-f)</td><td>Se han creado y utilizado constantes y literales.</td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA1-g)</td><td>Se han clasificado, reconocido y utilizado en expresiones los operadores del lenguaje.</td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA1-h)</td><td>Se ha comprobado el funcionamiento de las conversiones de tipo explícitas e implícitas.</td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA1-i)</td><td>Se han introducido comentarios en el código.</td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+
+        <!-- RA2 -->
+        <tr><td>RA2-a)</td><td>Se han identificado los fundamentos de la programación orientada a objetos.</td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA2-b)</td><td>Se han escrito programas simples.</td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA2-c)</td><td>Se han instanciado objetos a partir de clases predefinidas.</td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA2-d)</td><td>Se han utilizado métodos y propiedades de los objetos.</td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA2-e)</td><td>Se han escrito llamadas a métodos estáticos.</td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA2-f)</td><td>Se han utilizado parámetros en la llamada a métodos.</td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA2-g)</td><td>Se han incorporado y utilizado librerías de objetos.</td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA2-h)</td><td>Se han utilizado constructores.</td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA2-i)</td><td>Se ha utilizado el entorno integrado de desarrollo en la creación y compilación de programas simples.</td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+
+        <!-- RA3 -->
+        <tr><td>RA3-a)</td><td>Se ha escrito y probado código que haga uso de estructuras de selección.</td><td></td><td class="xcell">X</td><td></td><td class="xcell">X</td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA3-b)</td><td>Se han utilizado estructuras de repetición.</td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA3-c)</td><td>Se han reconocido las posibilidades de las sentencias de salto.</td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA3-d)</td><td>Se ha escrito código utilizando control de excepciones.</td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA3-e)</td><td>Se han creado programas ejecutables utilizando diferentes estructuras de control.</td><td></td><td class="xcell">X</td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA3-f)</td><td>Se han probado y depurado los programas.</td><td></td><td class="xcell">X</td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA3-g)</td><td>Se ha comentado y documentado el código.</td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA3-h)</td><td>Se han creado excepciones.</td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA3-i)</td><td>Se han utilizado aserciones para la detección y corrección de errores durante la fase de desarrollo.</td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+
+        <!-- RA4 -->
+        <tr><td>RA4-a)</td><td>Se ha reconocido la sintaxis, estructura y componentes típicos de una clase.</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA4-b)</td><td>Se han definido clases.</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA4-c)</td><td>Se han definido propiedades y métodos.</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA4-d)</td><td>Se han creado constructores.</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA4-e)</td><td>Se han desarrollado programas que instancien y utilicen objetos de las clases creadas anteriormente.</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA4-f)</td><td>Se han utilizado mecanismos para controlar la visibilidad de las clases y de sus miembros.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA4-g)</td><td>Se han definido y utilizado clases heredadas.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA4-h)</td><td>Se han creado y utilizado métodos estáticos.</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA4-i)</td><td>Se han creado y utilizado conjuntos y librerías de clases.</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+
+        <!-- RA5 -->
+        <tr><td>RA5-a)</td><td>Se ha utilizado la consola para realizar operaciones de entrada y salida de información.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA5-b)</td><td>Se han aplicado formatos en la visualización de la información.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA5-c)</td><td>Se han reconocido las posibilidades de entrada / salida del lenguaje y las librerías asociadas.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA5-d)</td><td>Se han utilizado ficheros para almacenar y recuperar información.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA5-e)</td><td>Se han creado programas que utilicen diversos métodos de acceso al contenido de los ficheros.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA5-f)</td><td>Se han utilizado las herramientas del entorno de desarrollo para crear interfaces gráficos de usuario simples.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA5-g)</td><td>Se han programado controladores de eventos.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA5-h)</td><td>Se han escrito programas que utilicen interfaces gráficos para la entrada y salida de información.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+
+        <!-- RA6 -->
+        <tr><td>RA6-a)</td><td>Se han escrito programas que utilicen matrices (arrays).</td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA6-b)</td><td>Se han reconocido las librerías de clases relacionadas con tipos de datos avanzados.</td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA6-c)</td><td>Se han utilizado listas para almacenar y procesar información.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA6-d)</td><td>Se han utilizado iteradores para recorrer los elementos de las listas.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA6-e)</td><td>Se han reconocido las características y ventajas de cada una de las colecciones de datos disponibles.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA6-f)</td><td>Se han creado clases y métodos genéricos.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA6-g)</td><td>Se han utilizado expresiones regulares en la búsqueda de patrones en cadenas de texto.</td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA6-h)</td><td>Se han identificado las clases relacionadas con el tratamiento de documentos escritos en diferentes lenguajes de intercambio de datos.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA6-i)</td><td>Se han realizado programas que realicen manipulaciones sobre documentos escritos en diferentes lenguajes de intercambio de datos.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA6-j)</td><td>Se han utilizado operaciones agregadas para el manejo de información almacenada en colecciones.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+
+        <!-- RA7 -->
+        <tr><td>RA7-a)</td><td>Se han identificado los conceptos de herencia, superclase y subclase.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA7-b)</td><td>Se han utilizado modificadores para bloquear y forzar la herencia de clases y métodos.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA7-c)</td><td>Se ha reconocido la incidencia de los constructores en la herencia.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA7-d)</td><td>Se han creado clases heredadas que sobrescriben la implementación de métodos de la superclase.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA7-e)</td><td>Se han diseñado y aplicado jerarquías de clases.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA7-f)</td><td>Se han probado y depurado las jerarquías de clases.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA7-g)</td><td>Se han realizado programas que implementen y utilicen jerarquías de clases.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA7-h)</td><td>Se ha comentado y documentado el código.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA7-i)</td><td>Se han identificado y evaluado los escenarios de uso de interfaces.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA7-j)</td><td>Se han identificado y evaluado los escenarios de utilización de la herencia y la composición.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+
+        <!-- RA8 -->
+        <tr><td>RA8-a)</td><td>Se han identificado las características de las bases de datos orientadas a objetos.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td></tr>
+        <tr><td>RA8-b)</td><td>Se ha analizado su aplicación en el desarrollo de aplicaciones mediante lenguajes orientados a objetos.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td></tr>
+        <tr><td>RA8-c)</td><td>Se han instalado sistemas gestores de bases de datos orientados a objetos.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td></tr>
+        <tr><td>RA8-d)</td><td>Se han clasificado y analizado los distintos métodos soportados por los sistemas gestores para la gestión de la información almacenada.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td></tr>
+        <tr><td>RA8-e)</td><td>Se han creado bases de datos y las estructuras necesarias para el almacenamiento de objetos.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td></tr>
+        <tr><td>RA8-f)</td><td>Se han programado aplicaciones que almacenen objetos en las bases de datos creadas.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td></tr>
+        <tr><td>RA8-g)</td><td>Se han realizado programas para recuperar, actualizar y eliminar objetos de las bases de datos.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td></tr>
+        <tr><td>RA8-h)</td><td>Se han realizado programas para almacenar y gestionar tipos de datos estructurados, compuestos y relacionados.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td></tr>
+
+        <!-- RA9 -->
+        <tr><td>RA9-a)</td><td>Se han identificado las características y métodos de acceso a sistemas gestores de bases de datos.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA9-b)</td><td>Se han programado conexiones con bases de datos.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA9-c)</td><td>Se ha escrito un código para almacenar información en bases de datos.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA9-d)</td><td>Se han creado programas para recuperar y mostrar información almacenada en bases de datos.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA9-e)</td><td>Se han efectuado borrados y modificaciones sobre la información almacenada.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA9-f)</td><td>Se han creado aplicaciones que muestren la información almacenada en bases de datos.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA9-g)</td><td>Se han creado aplicaciones para gestionar la información presente en bases de datos.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td class="xcell">X</td></tr>
+
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+(function(){
+  const searchBox = document.getElementById('searchBox');
+  const raFilter  = document.getElementById('raFilter');
+  const udFilter  = document.getElementById('udFilter');
+  const clearBtn  = document.getElementById('clearBtn');
+  const tbody     = document.getElementById('matrixBody');
+
+  function idxFromUD(ud){
+    // Mapear UD -> índice de celda (0: Criterio, 1: Descripción, 2..17: UD1..UD16)
+    if(!ud) return -1;
+    const n = parseInt(ud.replace('UD',''),10);
+    return isNaN(n) ? -1 : (1 + n); // desde 2 para UD1
+  }
+
+  function applyFilters(){
+    const q  = (searchBox.value || '').toLowerCase().trim();
+    const ra = (raFilter.value || '').toUpperCase();
+    const ud = udFilter.value;
+    const udIdx = idxFromUD(ud);
+
+    [...tbody.rows].forEach(tr => {
+      const crit = (tr.cells[0].textContent || '').toUpperCase();
+      const desc = (tr.cells[1].textContent || '').toLowerCase();
+
+      // Filtro RA (compara prefijo: RA1, RA2, etc.)
+      const passRA = !ra || crit.startsWith(ra);
+
+      // Filtro texto global
+      const passQ = !q || crit.toLowerCase().includes(q) || desc.includes(q);
+
+      // Filtro por UD (requiere "X" en la columna de esa UD)
+      let passUD = true;
+      if (ud && udIdx >= 2 && tr.cells[udIdx]) {
+        passUD = (tr.cells[udIdx].textContent || '').trim().toUpperCase() === 'X';
+      }
+
+      tr.style.display = (passRA && passQ && passUD) ? '' : 'none';
+    });
+  }
+
+  [searchBox, raFilter, udFilter].forEach(el => el.addEventListener('input', applyFilters));
+  clearBtn.addEventListener('click', () => {
+    searchBox.value = '';
+    raFilter.value  = '';
+    udFilter.value  = '';
+    applyFilters();
+  });
+
+  applyFilters();
+})();
+</script>
+
+<!-- Bootstrap JS (opcional para componentes, no necesario para filtros) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

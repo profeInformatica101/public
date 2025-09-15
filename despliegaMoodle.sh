@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Script para desplegar Moodle con docker-compose (rama v3)
+# Script para desplegar Moodle con docker-compose 
 # Autor: profeInformatica101
 
 set -euo pipefail
@@ -43,8 +43,8 @@ WORKDIR="$HOME/moodle-docker"
 mkdir -p "$WORKDIR"
 cd "$WORKDIR"
 
-# --- DESCARGA DEL COMPOSE (rama v3) ---
-COMPOSE_URL="https://raw.githubusercontent.com/profeInformatica101/docker/refs/heads/main/ejemplos/moodle/docker-compose.yml"
+# --- DESCARGA DEL COMPOSE  ---
+COMPOSE_URL="https://raw.githubusercontent.com/profeInformatica101/docker/refs/heads/v2/ejemplos/moodle/docker-compose.yml"
 info "Descargando docker-compose.yml de $COMPOSE_URL ..."
 wget -qO docker-compose.yml "$COMPOSE_URL"
 

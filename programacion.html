@@ -83,7 +83,242 @@
       </div>
     </div>
   </div>
+<!-- Paleta y estilos para la tabla ámbar (incluye esto una sola vez) -->
+<style>
+  :root{
+    --amber-deep:#f1c232;  /* cabecera principal */
+    --amber-soft:#fff2cc;  /* subcabecera */
+    --amber-border:#b6b6b6;/* color de bordes de celdas */
+  }
+  .table-amber thead .head-deep th{
+    background:var(--amber-deep); color:#000; text-align:center; vertical-align:middle;
+  }
+  .table-amber thead .head-soft th{
+    background:var(--amber-soft); color:#000; text-align:center; vertical-align:middle;
+  }
+  .table-amber th, .table-amber td{ vertical-align:middle; }
+  .table-amber.table-bordered>:not(caption)>*>*{ border-color:var(--amber-border); }
+</style>
 
+<!-- Tarjeta con la tabla -->
+<div class="card shadow-sm border-0 my-4">
+  <div class="card-header bg-white border-0">
+    <h5 class="mb-0">Ámbitos competencial y educativo por RA</h5>
+  </div>
+
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-amber table-bordered m-0">
+        <thead>
+          <tr class="head-deep">
+            <th rowspan="2" style="width:60px">RA</th>
+            <th colspan="2">Ámbito Competencial</th>
+            <th rowspan="2" style="min-width:320px">
+              Ámbito Educativo<br><small>Acciones en el contexto de aprendizaje</small>
+            </th>
+          </tr>
+          <tr class="head-soft">
+            <th style="min-width:170px">Logro</th>
+            <th style="min-width:220px">Objeto</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-center fw-semibold">1</td>
+            <td>Reconocer</td>
+            <td>La estructura de un programa informático</td>
+            <td>Identificando y relacionando los elementos propios del lenguaje de programación utilizado.</td>
+          </tr>
+          <tr>
+            <td class="text-center fw-semibold">2</td>
+            <td>Escribir y probar</td>
+            <td>Programas sencillos</td>
+            <td>Reconociendo y aplicando los fundamentos de la programación orientada a objetos.</td>
+          </tr>
+          <tr>
+            <td class="text-center fw-semibold">3</td>
+            <td>Escribir y depurar</td>
+            <td>Código</td>
+            <td>Analizando y utilizando las estructuras de control del lenguaje.</td>
+          </tr>
+          <tr>
+            <td class="text-center fw-semibold">4</td>
+            <td>Desarrollar</td>
+            <td>Programas organizados en clases</td>
+            <td>Analizando y aplicando los principios de la programación orientada a objetos.</td>
+          </tr>
+          <tr>
+            <td class="text-center fw-semibold">5</td>
+            <td>Realizar</td>
+            <td>Operaciones de entrada y salida de información</td>
+            <td>Utilizando procedimientos específicos del lenguaje y librerías de clases.</td>
+          </tr>
+          <tr>
+            <td class="text-center fw-semibold">6</td>
+            <td>Escribir</td>
+            <td>Programas que manipulen información</td>
+            <td>Seleccionando y utilizando tipos avanzados de datos.</td>
+          </tr>
+          <tr>
+            <td class="text-center fw-semibold">7</td>
+            <td>Desarrollar</td>
+            <td>Programas</td>
+            <td>Aplicando características avanzadas de los lenguajes orientados a objetos y del entorno de programación.</td>
+          </tr>
+          <tr>
+            <td class="text-center fw-semibold">8</td>
+            <td>Utilizar</td>
+            <td>Bases de datos orientadas a objetos</td>
+            <td>Analizando sus características y aplicación técnica para mantener la persistencia de la información.</td>
+          </tr>
+          <tr>
+            <td class="text-center fw-semibold">9</td>
+            <td>Gestionar</td>
+            <td>Información almacenada en bases de datos</td>
+            <td>Manteniendo la integridad y consistencia de los datos.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+  <!-- Distribución de Unidades -->
+  <h2 class="my-4">Distribución de Unidades – Módulo Programación (0485)</h2>
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover table-striped align-middle bg-white">
+      <thead class="table-light">
+        <tr>
+          <th>Evaluación</th>
+          <th>Título unidad</th>
+          <th>N.º horas</th>
+          <th>Resultado de aprendizaje</th>
+          <th>Contenidos asociados</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1ª</td>
+          <td>Unidad 1. Conceptos básicos.</td>
+          <td>4</td>
+          <td>RA1</td>
+          <td>Estructura y bloques fundamentales; variables; tipos de datos; literales; constantes; operadores y expresiones; conversiones de tipo; comentarios.</td>
+        </tr>
+        <tr>
+          <td>1ª</td>
+          <td>Unidad 2. Condicionales</td>
+          <td>4</td>
+          <td>RA3</td>
+          <td>Estructuras de selección; estructuras de salto; control de excepciones básicos.</td>
+        </tr>
+        <tr>
+          <td>1ª</td>
+          <td>Unidad 3. Bucles</td>
+          <td>8</td>
+          <td>RA3</td>
+          <td>Estructuras de repetición; aserciones; prueba y depuración inicial; documentación básica.</td>
+        </tr>
+        <tr>
+          <td>1ª</td>
+          <td>Unidad 4. Funciones</td>
+          <td>11</td>
+          <td>RA2, RA3</td>
+          <td>Instanciación de objetos; métodos y propiedades; parámetros; métodos estáticos; constructores; programas simples con control de excepciones y estructuras de control.</td>
+        </tr>
+        <tr>
+          <td>1ª</td>
+          <td>Unidad 5. Tablas</td>
+          <td>8</td>
+          <td>RA6</td>
+          <td>Estructuras estáticas; creación de matrices (arrays); arrays multidimensionales.</td>
+        </tr>
+        <tr>
+          <td>1ª</td>
+          <td>Unidad 6. Cadenas de caracteres</td>
+          <td>8</td>
+          <td>RA6</td>
+          <td>Cadenas de caracteres; expresiones regulares; clases asociadas a manipulación de texto.</td>
+        </tr>
+        <tr>
+          <td>2ª</td>
+          <td>Unidad 7. Clases</td>
+          <td>8</td>
+          <td>RA2, RA3, RA4</td>
+          <td>Concepto de clase; estructura y miembros; visibilidad; propiedades y métodos; constructores; instanciación y uso de objetos; <strong>características de los objetos; destrucción de objetos y liberación de memoria</strong>.</td>
+        </tr>
+        <tr>
+          <td>2ª</td>
+          <td>Unidad 8. Herencia</td>
+          <td>6</td>
+          <td>RA4, RA7</td>
+          <td>Herencia y polimorfismo; superclases y subclases; modificadores (final, abstract); constructores y herencia; <strong>sobreescritura de métodos</strong>; diseño de jerarquías de clases.</td>
+        </tr>
+        <tr>
+          <td>2ª</td>
+          <td>Unidad 9. Interfaces</td>
+          <td>6</td>
+          <td>RA7</td>
+          <td>Interfaces; escenarios de uso; composición vs herencia; clases y métodos abstractos.</td>
+        </tr>
+        <tr>
+          <td>2ª</td>
+          <td>Unidad 10. Ficheros de texto</td>
+          <td>6</td>
+          <td>RA5</td>
+          <td>Flujos de caracteres; apertura y cierre de ficheros; modos de acceso; lectura y escritura en ficheros de texto; formato de salida en consola.</td>
+        </tr>
+        <tr>
+          <td>2ª</td>
+          <td>Unidad 11. Ficheros binarios</td>
+          <td>8</td>
+          <td>RA5</td>
+          <td>Flujos de bytes; registros; lectura y escritura en ficheros binarios; creación y eliminación de ficheros y directorios; utilización del sistema de ficheros.</td>
+        </tr>
+        <tr>
+          <td>2ª</td>
+          <td>Unidad 12. Colecciones</td>
+          <td>8</td>
+          <td>RA6</td>
+          <td>Colecciones: Listas, Conjuntos y Diccionarios; iteradores; ventajas de colecciones; clases y métodos genéricos.</td>
+        </tr>
+        <tr>
+          <td>2ª</td>
+          <td>Unidad 13. Stream</td>
+          <td>8</td>
+          <td>RA6</td>
+          <td>Operaciones agregadas: filtrado, reducción y recolección; manipulación de datos con streams; documentos en diferentes lenguajes de intercambio de datos (JSON, XML).</td>
+        </tr>
+        <tr>
+          <td>3ª</td>
+          <td>Unidad 14. Conexión a base de datos: JDBC</td>
+          <td>8</td>
+          <td>RA9</td>
+          <td>Acceso a bases de datos; <strong>estándares y características</strong>; establecimiento de conexiones; operaciones CRUD (crear, recuperar, actualizar, borrar); visualización de resultados.</td>
+        </tr>
+        <tr>
+          <td>3ª</td>
+          <td>Unidad 15. API de persistencia de Java</td>
+          <td>14</td>
+          <td>RA8</td>
+          <td>Persistencia de objetos; características de BBDD orientadas a objetos; <strong>instalación del gestor de BDOO</strong>; creación de bases de datos y estructuras; <strong>mecanismos y lenguaje de consultas (sintaxis, expresiones, operadores)</strong>; recuperación, modificación y borrado de información; tipos de datos objeto y colección.</td>
+        </tr>
+        <tr>
+          <td>3ª</td>
+          <td>Unidad 16. Proyecto integrado.</td>
+          <td>20</td>
+          <td>Todos los RA</td>
+          <td>Proyecto global: integración de clases, herencia, interfaces, colecciones, ficheros, streams y bases de datos. Aplicación completa con persistencia y documentación.</td>
+        </tr>
+      </tbody>
+      <tfoot class="table-light">
+        <tr>
+          <td colspan="2"><strong>Total horas</strong></td>
+          <td><strong>135</strong></td>
+          <td colspan="2"></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
   <!-- Filtros -->
   <div class="row g-2 align-items-end mb-3">
     <div class="col-12 col-md-4">
@@ -227,142 +462,6 @@
     </table>
   </div>
 
-  <!-- Distribución de Unidades -->
-  <h2 class="my-4">Distribución de Unidades – Módulo Programación (0485)</h2>
-  <div class="table-responsive">
-    <table class="table table-bordered table-hover table-striped align-middle bg-white">
-      <thead class="table-light">
-        <tr>
-          <th>Evaluación</th>
-          <th>Título unidad</th>
-          <th>N.º horas</th>
-          <th>Resultado de aprendizaje</th>
-          <th>Contenidos asociados</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1ª</td>
-          <td>Unidad 1. Conceptos básicos.</td>
-          <td>4</td>
-          <td>RA1</td>
-          <td>Estructura y bloques fundamentales; variables; tipos de datos; literales; constantes; operadores y expresiones; conversiones de tipo; comentarios.</td>
-        </tr>
-        <tr>
-          <td>1ª</td>
-          <td>Unidad 2. Condicionales</td>
-          <td>4</td>
-          <td>RA3</td>
-          <td>Estructuras de selección; estructuras de salto; control de excepciones básicos.</td>
-        </tr>
-        <tr>
-          <td>1ª</td>
-          <td>Unidad 3. Bucles</td>
-          <td>8</td>
-          <td>RA3</td>
-          <td>Estructuras de repetición; aserciones; prueba y depuración inicial; documentación básica.</td>
-        </tr>
-        <tr>
-          <td>1ª</td>
-          <td>Unidad 4. Funciones</td>
-          <td>11</td>
-          <td>RA2, RA3</td>
-          <td>Instanciación de objetos; métodos y propiedades; parámetros; métodos estáticos; constructores; programas simples con control de excepciones y estructuras de control.</td>
-        </tr>
-        <tr>
-          <td>1ª</td>
-          <td>Unidad 5. Tablas</td>
-          <td>8</td>
-          <td>RA6</td>
-          <td>Estructuras estáticas; creación de matrices (arrays); arrays multidimensionales.</td>
-        </tr>
-        <tr>
-          <td>1ª</td>
-          <td>Unidad 6. Cadenas de caracteres</td>
-          <td>8</td>
-          <td>RA6</td>
-          <td>Cadenas de caracteres; expresiones regulares; clases asociadas a manipulación de texto.</td>
-        </tr>
-        <tr>
-          <td>2ª</td>
-          <td>Unidad 7. Clases</td>
-          <td>8</td>
-          <td>RA2, RA3, RA4</td>
-          <td>Concepto de clase; estructura y miembros; visibilidad; propiedades y métodos; constructores; instanciación y uso de objetos; <strong>características de los objetos; destrucción de objetos y liberación de memoria</strong>.</td>
-        </tr>
-        <tr>
-          <td>2ª</td>
-          <td>Unidad 8. Herencia</td>
-          <td>6</td>
-          <td>RA4, RA7</td>
-          <td>Herencia y polimorfismo; superclases y subclases; modificadores (final, abstract); constructores y herencia; <strong>sobreescritura de métodos</strong>; diseño de jerarquías de clases.</td>
-        </tr>
-        <tr>
-          <td>2ª</td>
-          <td>Unidad 9. Interfaces</td>
-          <td>6</td>
-          <td>RA7</td>
-          <td>Interfaces; escenarios de uso; composición vs herencia; clases y métodos abstractos.</td>
-        </tr>
-        <tr>
-          <td>2ª</td>
-          <td>Unidad 10. Ficheros de texto</td>
-          <td>6</td>
-          <td>RA5</td>
-          <td>Flujos de caracteres; apertura y cierre de ficheros; modos de acceso; lectura y escritura en ficheros de texto; formato de salida en consola.</td>
-        </tr>
-        <tr>
-          <td>2ª</td>
-          <td>Unidad 11. Ficheros binarios</td>
-          <td>8</td>
-          <td>RA5</td>
-          <td>Flujos de bytes; registros; lectura y escritura en ficheros binarios; creación y eliminación de ficheros y directorios; utilización del sistema de ficheros.</td>
-        </tr>
-        <tr>
-          <td>2ª</td>
-          <td>Unidad 12. Colecciones</td>
-          <td>8</td>
-          <td>RA6</td>
-          <td>Colecciones: Listas, Conjuntos y Diccionarios; iteradores; ventajas de colecciones; clases y métodos genéricos.</td>
-        </tr>
-        <tr>
-          <td>2ª</td>
-          <td>Unidad 13. Stream</td>
-          <td>8</td>
-          <td>RA6</td>
-          <td>Operaciones agregadas: filtrado, reducción y recolección; manipulación de datos con streams; documentos en diferentes lenguajes de intercambio de datos (JSON, XML).</td>
-        </tr>
-        <tr>
-          <td>3ª</td>
-          <td>Unidad 14. Conexión a base de datos: JDBC</td>
-          <td>8</td>
-          <td>RA9</td>
-          <td>Acceso a bases de datos; <strong>estándares y características</strong>; establecimiento de conexiones; operaciones CRUD (crear, recuperar, actualizar, borrar); visualización de resultados.</td>
-        </tr>
-        <tr>
-          <td>3ª</td>
-          <td>Unidad 15. API de persistencia de Java</td>
-          <td>14</td>
-          <td>RA8</td>
-          <td>Persistencia de objetos; características de BBDD orientadas a objetos; <strong>instalación del gestor de BDOO</strong>; creación de bases de datos y estructuras; <strong>mecanismos y lenguaje de consultas (sintaxis, expresiones, operadores)</strong>; recuperación, modificación y borrado de información; tipos de datos objeto y colección.</td>
-        </tr>
-        <tr>
-          <td>3ª</td>
-          <td>Unidad 16. Proyecto integrado.</td>
-          <td>20</td>
-          <td>Todos los RA</td>
-          <td>Proyecto global: integración de clases, herencia, interfaces, colecciones, ficheros, streams y bases de datos. Aplicación completa con persistencia y documentación.</td>
-        </tr>
-      </tbody>
-      <tfoot class="table-light">
-        <tr>
-          <td colspan="2"><strong>Total horas</strong></td>
-          <td><strong>135</strong></td>
-          <td colspan="2"></td>
-        </tr>
-      </tfoot>
-    </table>
-  </div>
 
 </div>
 

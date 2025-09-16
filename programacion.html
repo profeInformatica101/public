@@ -4,65 +4,87 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Matriz RA ↔ Unidades (0485)</title>
+
   <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- MathJax v3 (TeX) para fórmulas -->
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
   <style>
     .table thead th { position: sticky; top: 0; background: #fff; z-index: 1; }
     .xcell { text-align:center; font-weight:600; }
+    body { background:#f8f9fa; }
   </style>
 </head>
-<body class="bg-light">
+<body>
 
 <div class="container-fluid py-4">
   <h1 class="h4 mb-3">Matriz RA ↔ Unidades (Programación – Código 0485)</h1>
-<div class="container my-4">
-  <div class="card shadow-sm border-0">
-    <div class="card-body">
-      <h5 class="card-title text-primary mb-3">📚 Bibliografía del curso</h5>
-      <p class="card-text">
-        Jiménez Marín, A., & Pérez Montes, F. M. (2021). 
-        <em>Programación (Edición 2021)</em>. 
-        Ediciones Paraninfo, S. A.
-      </p>
+
+  <!-- Bibliografía -->
+  <div class="container my-4">
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <h5 class="card-title text-primary mb-3">📚 Bibliografía del curso</h5>
+        <p class="card-text mb-0">
+          Jiménez Marín, A., &amp; Pérez Montes, F. M. (2021).
+          <em>Programación (Edición 2021)</em>.
+          Ediciones Paraninfo, S. A.
+        </p>
+      </div>
     </div>
   </div>
-</div>
+
+  <!-- Sistema de Evaluación -->
   <div class="container my-5">
-  <div class="card shadow-sm border-0">
-    <div class="card-body">
-      <h4 class="card-title text-primary mb-3">📊 Sistema de Evaluación</h4>
-      <p class="card-text">
-        La nota de cada <strong>Resultado de Aprendizaje (RA)</strong> se obtiene mediante la 
-        <em>suma ponderada</em> de sus criterios de evaluación:
-      </p>
-      
-      <pre class="bg-light p-3 rounded"><code>Nota RAj = ∑ (CEk × Peso k)</code></pre>
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <h4 class="card-title text-primary mb-3">📊 Sistema de Evaluación</h4>
 
-      <p class="card-text">
-        Para calcular la <strong>nota final del módulo</strong>, se realiza la suma ponderada de cada RA. 
-        Es necesario obtener una <strong>nota mínima de 5</strong> en cada unidad para poder hacer la media:
-      </p>
-      
-      <pre class="bg-light p-3 rounded"><code>Nota final = (1/9) × ∑ (RAi)   con i=1…9</code></pre>
+        <p class="card-text">
+          La nota de cada <strong>Resultado de Aprendizaje (RA)</strong> se obtiene mediante la
+          <em>suma ponderada</em> de sus criterios de evaluación:
+        </p>
 
-      <p class="card-text">
-        La calificación de cada evaluación parcial se obtiene como 
-        el sumatorio de las notas alcanzadas hasta el momento, ponderadas según sus criterios.
-      </p>
+        <div class="bg-light p-3 rounded mb-3">
+          $$\mathrm{Nota}_{RA_j}=\sum_{k=1}^{n}\left(CE_k\cdot Peso_k\right)$$
+        </div>
 
-      <p class="card-text">
-        ➤ Se realizará un <strong>examen por cada unidad</strong>, que podrá ser:
-        <ul>
+        <p class="card-text">
+          Para calcular la <strong>nota final del módulo</strong>, se realiza la suma ponderada de cada RA.
+          Es necesario obtener una <strong>nota mínima de 5</strong> en cada unidad para poder hacer la media:
+        </p>
+
+        <div class="bg-light p-3 rounded mb-3">
+          $$\mathrm{Nota\ final}=\frac{1}{9}\sum_{i=1}^{9} RA_i$$
+        </div>
+
+        <p class="card-text">
+          La calificación de cada evaluación parcial se obtiene como el sumatorio de las notas alcanzadas
+          hasta el momento, ponderadas según sus criterios.
+        </p>
+
+        <p class="card-text mb-2">➤ Se realizará un <strong>examen por cada unidad</strong>, que podrá ser:</p>
+        <ul class="mb-0">
           <li>Teórico</li>
           <li>Práctico</li>
           <li>Teórico-práctico</li>
         </ul>
-        La nota de cada examen será la <em>media aritmética</em> de las partes correspondientes.
-      </p>
+        <p class="mb-0 mt-2">
+          La nota de cada examen será la <em>media aritmética</em> de las partes correspondientes.
+        </p>
+      </div>
     </div>
   </div>
-</div>
 
+  <!-- Filtros -->
   <div class="row g-2 align-items-end mb-3">
     <div class="col-12 col-md-4">
       <label class="form-label">Búsqueda global</label>
@@ -91,6 +113,7 @@
     </div>
   </div>
 
+  <!-- Matriz RA x UD -->
   <div class="table-responsive border rounded bg-white">
     <table class="table table-striped table-bordered table-sm align-middle m-0">
       <thead class="table-light">
@@ -162,12 +185,12 @@
         <tr><td>RA6-a)</td><td>Se han escrito programas que utilicen matrices (arrays).</td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
         <tr><td>RA6-b)</td><td>Se han reconocido las librerías de clases relacionadas con tipos de datos avanzados.</td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td class="xcell">X</td></tr>
         <tr><td>RA6-c)</td><td>Se han utilizado listas para almacenar y procesar información.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td class="xcell">X</td></tr>
-        <tr><td>RA6-d)</td><td>Se han utilizado iteradores para recorrer los elementos de las listas.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td class="xcell">X</td></tr>
-        <tr><td>RA6-e)</td><td>Se han reconocido las características y ventajas de cada una de las colecciones de datos disponibles.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td class="xcell">X</td></tr>
-        <tr><td>RA6-f)</td><td>Se han creado clases y métodos genéricos.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td class="xcell">X</td></tr>
-        <tr><td>RA6-g)</td><td>Se han utilizado expresiones regulares en la búsqueda de patrones en cadenas de texto.</td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
-        <tr><td>RA6-h)</td><td>Se han identificado las clases relacionadas con el tratamiento de documentos escritos en diferentes lenguajes de intercambio de datos.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td class="xcell">X</td></tr>
-        <tr><td>RA6-i)</td><td>Se han realizado programas que realicen manipulaciones sobre documentos escritos en diferentes lenguajes de intercambio de datos.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA6-d)</td><td>Se han utilizado iteradores para recorrer los elementos de las listas.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA6-e)</td><td>Se han reconocido las características y ventajas de cada una de las colecciones de datos disponibles.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA6-f)</td><td>Se han creado clases y métodos genéricos.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA6-g)</td><td>Se han utilizado expresiones regulares en la búsqueda de patrones en cadenas de texto.</td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA6-h)</td><td>Se han identificado las clases relacionadas con el tratamiento de documentos escritos en diferentes lenguajes de intercambio de datos.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td class="xcell">X</td></tr>
+        <tr><td>RA6-i)</td><td>Se han realizado programas que realicen manipulaciones sobre documentos escritos en diferentes lenguajes de intercambio de datos.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td class="xcell">X</td><td></td><td></td><td></td><td class="xcell">X</td></tr>
         <tr><td>RA6-j)</td><td>Se han utilizado operaciones agregadas para el manejo de información almacenada en colecciones.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td></td><td></td><td class="xcell">X</td></tr>
 
         <!-- RA7 -->
@@ -200,190 +223,147 @@
         <tr><td>RA9-e)</td><td>Se han efectuado borrados y modificaciones sobre la información almacenada.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td class="xcell">X</td></tr>
         <tr><td>RA9-f)</td><td>Se han creado aplicaciones que muestren la información almacenada en bases de datos.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td class="xcell">X</td></tr>
         <tr><td>RA9-g)</td><td>Se han creado aplicaciones para gestionar la información presente en bases de datos.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="xcell">X</td><td></td><td class="xcell">X</td></tr>
-
       </tbody>
     </table>
-
-     <h2 class="mb-4">Distribución de Unidades – Módulo Programación (0485)</h2>
-  <table class="table table-bordered table-hover table-striped align-middle">
-   
-      <tr>
-        <th>Evaluación</th>
-        <th>Título unidad</th>
-        <th>N.º horas</th>
-        <th>Resultado de aprendizaje</th>
-        <th>Contenidos asociados</th>
-      </tr>
-
-    <tbody>
-      <tr>
-        <td>1ª</td>
-        <td>Unidad 1. Conceptos básicos.</td>
-        <td>4</td>
-        <td>RA1</td>
-        <td>
-          Estructura y bloques fundamentales; variables; tipos de datos; literales; constantes;
-          operadores y expresiones; conversiones de tipo; comentarios.
-        </td>
-      </tr>
-      <tr>
-        <td>1ª</td>
-        <td>Unidad 2. Condicionales</td>
-        <td>4</td>
-        <td>RA3</td>
-        <td>
-          Estructuras de selección; estructuras de salto; control de excepciones básicos.
-        </td>
-      </tr>
-      <tr>
-        <td>1ª</td>
-        <td>Unidad 3. Bucles</td>
-        <td>8</td>
-        <td>RA3</td>
-        <td>
-          Estructuras de repetición; aserciones; prueba y depuración inicial; documentación básica.
-        </td>
-      </tr>
-      <tr>
-        <td>1ª</td>
-        <td>Unidad 4. Funciones</td>
-        <td>11</td>
-        <td>RA2, RA3</td>
-        <td>
-          Instanciación de objetos; métodos y propiedades; parámetros; métodos estáticos; constructores;
-          programas simples con control de excepciones y estructuras de control.
-        </td>
-      </tr>
-      <tr>
-        <td>1ª</td>
-        <td>Unidad 5. Tablas</td>
-        <td>8</td>
-        <td>RA6</td>
-        <td>
-          Estructuras estáticas; creación de matrices (arrays); arrays multidimensionales.
-        </td>
-      </tr>
-      <tr>
-        <td>1ª</td>
-        <td>Unidad 6. Cadenas de caracteres</td>
-        <td>8</td>
-        <td>RA6</td>
-        <td>
-          Cadenas de caracteres; expresiones regulares; clases asociadas a manipulación de texto.
-        </td>
-      </tr>
-      <tr>
-        <td>2ª</td>
-        <td>Unidad 7. Clases</td>
-        <td>8</td>
-        <td>RA2, RA3, RA4</td>
-        <td>
-          Concepto de clase; estructura y miembros; visibilidad; propiedades y métodos;
-          constructores; instanciación y uso de objetos; <strong>características de los objetos; destrucción de objetos y liberación de memoria</strong>.
-        </td>
-      </tr>
-      <tr>
-        <td>2ª</td>
-        <td>Unidad 8. Herencia</td>
-        <td>6</td>
-        <td>RA4, RA7</td>
-        <td>
-          Herencia y polimorfismo; superclases y subclases; modificadores (final, abstract);
-          constructores y herencia; <strong>sobreescritura de métodos</strong>; diseño de jerarquías de clases.
-        </td>
-      </tr>
-      <tr>
-        <td>2ª</td>
-        <td>Unidad 9. Interfaces</td>
-        <td>6</td>
-        <td>RA7</td>
-        <td>
-          Interfaces; escenarios de uso; composición vs herencia; clases y métodos abstractos.
-        </td>
-      </tr>
-      <tr>
-        <td>2ª</td>
-        <td>Unidad 10. Ficheros de texto</td>
-        <td>6</td>
-        <td>RA5</td>
-        <td>
-          Flujos de caracteres; apertura y cierre de ficheros; modos de acceso;
-          lectura y escritura en ficheros de texto; formato de salida en consola.
-        </td>
-      </tr>
-      <tr>
-        <td>2ª</td>
-        <td>Unidad 11. Ficheros binarios</td>
-        <td>8</td>
-        <td>RA5</td>
-        <td>
-          Flujos de bytes; registros; lectura y escritura en ficheros binarios;
-          creación y eliminación de ficheros y directorios; utilización del sistema de ficheros.
-        </td>
-      </tr>
-      <tr>
-        <td>2ª</td>
-        <td>Unidad 12. Colecciones</td>
-        <td>8</td>
-        <td>RA6</td>
-        <td>
-          Colecciones: Listas, Conjuntos y Diccionarios; iteradores; ventajas de colecciones;
-          clases y métodos genéricos.
-        </td>
-      </tr>
-      <tr>
-        <td>2ª</td>
-        <td>Unidad 13. Stream</td>
-        <td>8</td>
-        <td>RA6</td>
-        <td>
-          Operaciones agregadas: filtrado, reducción y recolección; manipulación de datos con streams;
-          documentos en diferentes lenguajes de intercambio de datos (JSON, XML).
-        </td>
-      </tr>
-      <tr>
-        <td>3ª</td>
-        <td>Unidad 14. Conexión a base de datos: JDBC</td>
-        <td>8</td>
-        <td>RA9</td>
-        <td>
-          Acceso a bases de datos; <strong>estándares y características</strong>; establecimiento de conexiones;
-          operaciones CRUD (crear, recuperar, actualizar, borrar); visualización de resultados.
-        </td>
-      </tr>
-      <tr>
-        <td>3ª</td>
-        <td>Unidad 15. API de persistencia de Java</td>
-        <td>14</td>
-        <td>RA8</td>
-        <td>
-          Persistencia de objetos; características de BBDD orientadas a objetos;
-          <strong>instalación del gestor de BDOO</strong>; creación de bases de datos y estructuras;
-          <strong>mecanismos y lenguaje de consultas (sintaxis, expresiones, operadores)</strong>;
-          recuperación, modificación y borrado de información; tipos de datos objeto y colección.
-        </td>
-      </tr>
-      <tr>
-        <td>3ª</td>
-        <td>Unidad 16. Proyecto integrado.</td>
-        <td>20</td>
-        <td>Todos los RA</td>
-        <td>
-          Proyecto global: integración de clases, herencia, interfaces, colecciones,
-          ficheros, streams y bases de datos. Aplicación completa con persistencia y documentación.
-        </td>
-      </tr>
-    </tbody>
-    <tfoot class="table-light">
-      <tr>
-        <td colspan="2"><strong>Total horas</strong></td>
-        <td><strong>135</strong></td>
-        <td colspan="2"></td>
-      </tr>
-    </tfoot>
-  </table>
-    
   </div>
+
+  <!-- Distribución de Unidades -->
+  <h2 class="my-4">Distribución de Unidades – Módulo Programación (0485)</h2>
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover table-striped align-middle bg-white">
+      <thead class="table-light">
+        <tr>
+          <th>Evaluación</th>
+          <th>Título unidad</th>
+          <th>N.º horas</th>
+          <th>Resultado de aprendizaje</th>
+          <th>Contenidos asociados</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1ª</td>
+          <td>Unidad 1. Conceptos básicos.</td>
+          <td>4</td>
+          <td>RA1</td>
+          <td>Estructura y bloques fundamentales; variables; tipos de datos; literales; constantes; operadores y expresiones; conversiones de tipo; comentarios.</td>
+        </tr>
+        <tr>
+          <td>1ª</td>
+          <td>Unidad 2. Condicionales</td>
+          <td>4</td>
+          <td>RA3</td>
+          <td>Estructuras de selección; estructuras de salto; control de excepciones básicos.</td>
+        </tr>
+        <tr>
+          <td>1ª</td>
+          <td>Unidad 3. Bucles</td>
+          <td>8</td>
+          <td>RA3</td>
+          <td>Estructuras de repetición; aserciones; prueba y depuración inicial; documentación básica.</td>
+        </tr>
+        <tr>
+          <td>1ª</td>
+          <td>Unidad 4. Funciones</td>
+          <td>11</td>
+          <td>RA2, RA3</td>
+          <td>Instanciación de objetos; métodos y propiedades; parámetros; métodos estáticos; constructores; programas simples con control de excepciones y estructuras de control.</td>
+        </tr>
+        <tr>
+          <td>1ª</td>
+          <td>Unidad 5. Tablas</td>
+          <td>8</td>
+          <td>RA6</td>
+          <td>Estructuras estáticas; creación de matrices (arrays); arrays multidimensionales.</td>
+        </tr>
+        <tr>
+          <td>1ª</td>
+          <td>Unidad 6. Cadenas de caracteres</td>
+          <td>8</td>
+          <td>RA6</td>
+          <td>Cadenas de caracteres; expresiones regulares; clases asociadas a manipulación de texto.</td>
+        </tr>
+        <tr>
+          <td>2ª</td>
+          <td>Unidad 7. Clases</td>
+          <td>8</td>
+          <td>RA2, RA3, RA4</td>
+          <td>Concepto de clase; estructura y miembros; visibilidad; propiedades y métodos; constructores; instanciación y uso de objetos; <strong>características de los objetos; destrucción de objetos y liberación de memoria</strong>.</td>
+        </tr>
+        <tr>
+          <td>2ª</td>
+          <td>Unidad 8. Herencia</td>
+          <td>6</td>
+          <td>RA4, RA7</td>
+          <td>Herencia y polimorfismo; superclases y subclases; modificadores (final, abstract); constructores y herencia; <strong>sobreescritura de métodos</strong>; diseño de jerarquías de clases.</td>
+        </tr>
+        <tr>
+          <td>2ª</td>
+          <td>Unidad 9. Interfaces</td>
+          <td>6</td>
+          <td>RA7</td>
+          <td>Interfaces; escenarios de uso; composición vs herencia; clases y métodos abstractos.</td>
+        </tr>
+        <tr>
+          <td>2ª</td>
+          <td>Unidad 10. Ficheros de texto</td>
+          <td>6</td>
+          <td>RA5</td>
+          <td>Flujos de caracteres; apertura y cierre de ficheros; modos de acceso; lectura y escritura en ficheros de texto; formato de salida en consola.</td>
+        </tr>
+        <tr>
+          <td>2ª</td>
+          <td>Unidad 11. Ficheros binarios</td>
+          <td>8</td>
+          <td>RA5</td>
+          <td>Flujos de bytes; registros; lectura y escritura en ficheros binarios; creación y eliminación de ficheros y directorios; utilización del sistema de ficheros.</td>
+        </tr>
+        <tr>
+          <td>2ª</td>
+          <td>Unidad 12. Colecciones</td>
+          <td>8</td>
+          <td>RA6</td>
+          <td>Colecciones: Listas, Conjuntos y Diccionarios; iteradores; ventajas de colecciones; clases y métodos genéricos.</td>
+        </tr>
+        <tr>
+          <td>2ª</td>
+          <td>Unidad 13. Stream</td>
+          <td>8</td>
+          <td>RA6</td>
+          <td>Operaciones agregadas: filtrado, reducción y recolección; manipulación de datos con streams; documentos en diferentes lenguajes de intercambio de datos (JSON, XML).</td>
+        </tr>
+        <tr>
+          <td>3ª</td>
+          <td>Unidad 14. Conexión a base de datos: JDBC</td>
+          <td>8</td>
+          <td>RA9</td>
+          <td>Acceso a bases de datos; <strong>estándares y características</strong>; establecimiento de conexiones; operaciones CRUD (crear, recuperar, actualizar, borrar); visualización de resultados.</td>
+        </tr>
+        <tr>
+          <td>3ª</td>
+          <td>Unidad 15. API de persistencia de Java</td>
+          <td>14</td>
+          <td>RA8</td>
+          <td>Persistencia de objetos; características de BBDD orientadas a objetos; <strong>instalación del gestor de BDOO</strong>; creación de bases de datos y estructuras; <strong>mecanismos y lenguaje de consultas (sintaxis, expresiones, operadores)</strong>; recuperación, modificación y borrado de información; tipos de datos objeto y colección.</td>
+        </tr>
+        <tr>
+          <td>3ª</td>
+          <td>Unidad 16. Proyecto integrado.</td>
+          <td>20</td>
+          <td>Todos los RA</td>
+          <td>Proyecto global: integración de clases, herencia, interfaces, colecciones, ficheros, streams y bases de datos. Aplicación completa con persistencia y documentación.</td>
+        </tr>
+      </tbody>
+      <tfoot class="table-light">
+        <tr>
+          <td colspan="2"><strong>Total horas</strong></td>
+          <td><strong>135</strong></td>
+          <td colspan="2"></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
 </div>
 
 <script>
@@ -398,7 +378,7 @@
     // Mapear UD -> índice de celda (0: Criterio, 1: Descripción, 2..17: UD1..UD16)
     if(!ud) return -1;
     const n = parseInt(ud.replace('UD',''),10);
-    return isNaN(n) ? -1 : (1 + n); // desde 2 para UD1
+    return isNaN(n) ? -1 : (1 + n); // UD1 -> índice 2
   }
 
   function applyFilters(){
@@ -411,13 +391,9 @@
       const crit = (tr.cells[0].textContent || '').toUpperCase();
       const desc = (tr.cells[1].textContent || '').toLowerCase();
 
-      // Filtro RA (compara prefijo: RA1, RA2, etc.)
       const passRA = !ra || crit.startsWith(ra);
+      const passQ  = !q || crit.toLowerCase().includes(q) || desc.includes(q);
 
-      // Filtro texto global
-      const passQ = !q || crit.toLowerCase().includes(q) || desc.includes(q);
-
-      // Filtro por UD (requiere "X" en la columna de esa UD)
       let passUD = true;
       if (ud && udIdx >= 2 && tr.cells[udIdx]) {
         passUD = (tr.cells[udIdx].textContent || '').trim().toUpperCase() === 'X';
@@ -439,7 +415,7 @@
 })();
 </script>
 
-<!-- Bootstrap JS (opcional para componentes, no necesario para filtros) -->
+<!-- Bootstrap JS (opcional) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,0 +1,110 @@
+# =====================================================================
+# Archivo: .editorconfig
+# Descripción: Estilo de código profesional para proyectos Java.
+# Compatible con Eclipse, IntelliJ IDEA y VS Code.
+# =====================================================================
+
+# Indica que este es el archivo raíz
+root = true
+
+# ---------------------------------------------------------------------
+# Reglas globales
+# ---------------------------------------------------------------------
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+tab_width = 4
+
+# Limitar longitud de línea para favorecer la legibilidad
+max_line_length = 120
+
+# ---------------------------------------------------------------------
+# Archivos Java
+# ---------------------------------------------------------------------
+[*.java]
+indent_style = space
+indent_size = 4
+continuation_indent_size = 8
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Se sugiere respetar la convención de llaves en nueva línea para bloques grandes
+# (aunque Eclipse lo controla desde las preferencias del formateador)
+# JavaDoc debe usar espacios, no tabuladores
+[**/src/**/*.java]
+indent_style = space
+indent_size = 4
+
+# ---------------------------------------------------------------------
+# Archivos XML (pom.xml, Spring config, etc.)
+# ---------------------------------------------------------------------
+[*.xml]
+indent_style = space
+indent_size = 2
+charset = utf-8
+insert_final_newline = true
+
+# ---------------------------------------------------------------------
+# Archivos JSP / HTML / CSS / JS
+# ---------------------------------------------------------------------
+[*.jsp]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+
+[*.html]
+indent_style = space
+indent_size = 2
+
+[*.css]
+indent_style = space
+indent_size = 2
+
+[*.js]
+indent_style = space
+indent_size = 2
+quote_type = double
+
+# ---------------------------------------------------------------------
+# Archivos Markdown / Documentación
+# ---------------------------------------------------------------------
+[*.md]
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = false
+
+# ---------------------------------------------------------------------
+# Archivos YAML (GitHub Actions, Docker Compose, etc.)
+# ---------------------------------------------------------------------
+[*.yml]
+indent_style = space
+indent_size = 2
+
+# ---------------------------------------------------------------------
+# Archivos JSON
+# ---------------------------------------------------------------------
+[*.json]
+indent_style = space
+indent_size = 2
+
+# ---------------------------------------------------------------------
+# Archivos de propiedades
+# ---------------------------------------------------------------------
+[*.properties]
+charset = utf-8
+indent_style = space
+indent_size = 0
+insert_final_newline = true
+
+# ---------------------------------------------------------------------
+# Archivos Shell / Bash
+# ---------------------------------------------------------------------
+[*.sh]
+end_of_line = lf
+insert_final_newline = true
+indent_style = space
+indent_size = 2

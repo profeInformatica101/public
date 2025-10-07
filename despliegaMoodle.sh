@@ -42,11 +42,10 @@ DC="docker-compose"
 WORKDIR="$HOME/moodle-docker"
 mkdir -p "$WORKDIR"
 cd "$WORKDIR"
-
 # --- DESCARGA DEL COMPOSE  ---
-COMPOSE_URL="https://raw.githubusercontent.com/profeInformatica101/docker/refs/heads/v2/ejemplos/moodle/docker-compose.yml"
+COMPOSE_URL="https://raw.githubusercontent.com/profeInformatica101/docker/v2/ejemplos/moodle/docker-compose.yml"
 info "Descargando docker-compose.yml de $COMPOSE_URL ..."
-wget -qO docker-compose.yml "$COMPOSE_URL"
+wget -qO docker-compose.yml "$COMPOSE_URL" || error "No se pudo descargar docker-compose.yml"
 
 # --- ARRANCAR ---
 info "Levantando servicios Moodle + MariaDB ..."

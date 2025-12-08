@@ -21,7 +21,7 @@ echo.
 
 :: 1. ACTIVAR PLAN DE ENERGÍA DE ALTO RENDIMIENTO
 echo [1/7] Activando plan de energia de ALTO RENDIMIENTO...
-powercfg -setactive SCHEME_MIN
+powercfg -setactive SCHEME_MAX
 echo     - Plan de energia ajustado a Alto rendimiento.
 echo.
 

@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Scouter HUD – Cámara + Transcripción</title>
+
+  <style>
+    :root {
+      --hud-bg: rgba(5, 10, 20, 0.9);          /* más oscuro */
+      --hud-border: rgba(255, 255, 255, 0.18);
+      --hud-glow: 0 0 18px rgba(0, 180, 255, 0.28);
+      --accent: #ff4e8a;
+      --accent-soft: #ff80ab;
+      --text-main: #f5f5f5;
+      --text-muted: #b0bec5;
+      --radius-lg: 0.9rem;
+      --radius-md: 0.65rem;
+      --blur: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;   /* fondo negro continuo para las gafas */
+      overflow: hidden;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text-main);
+    }
+
+    body {
+      position: relative;
+    }
+
+    button, select {
+      font-family: inherit;
+    }
+
+    button:focus-visible,
+    select:focus-visible {
+      outline: 2px solid var(--accent-soft);
+      outline-offset: 2px;
+    }
+
+    /* ---------- BOTÓN PANTALLA COMPLETA ---------- */
+
+    #fs-btn {
+      position: fixed;
+      top: 0.6rem;
+      right: 0.6rem;
+      border: none;
+      border-radius: 999px;
+      padding: 0.3rem 0.8rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      backdrop-filter: blur(12px);
+      z-index: 100;
+      box-shadow: 0 0 16px rgba(0, 0, 0, 0.6);
+    }
+
+    #fs-btn:hover {
+      background: rgba(0, 0, 0, 1);
+    }
+
+    /* ---------- PANEL CÁMARA (ARRIBA IZQUIERDA) ---------- */
+
+    #camera-panel {
+      position: fixed;
+      top: 0.6rem;
+      left: 0.6rem;
+      width: 260px;
+      height: 160px;
+      max-width: 40vw;
+      border-radius: var(--radius-lg);
+      background: var(--hud-bg);
+      border: 1px solid var(--hud-border);
+      box-shadow: var(--hud-glow);
+      backdrop-filter: blur(var(--blur));
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      z-index: 50;
+    }
+
+    #cam-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.3rem 0.7rem;
+      font-size: 0.75rem;
+      border-bottom: 1px solid rgba(255,255,255,0.14);
+      background: linear-gradient(
+        to right,
+        rgba(255, 78, 138, 0.35),
+        rgba(0, 0, 0, 0.85)
+      );
+    }
+
+    #cam-label {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent-soft);
+    }
+
+    #datetime {
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+
+    #camVideo {
+      flex: 1 1 auto;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(1.2) contrast(1.05);
+    }
+
+    #cam-status {
+      position: absolute;
+      left: 0.8rem;
+      bottom: 0.4rem;
+      right: 0.8rem;
+      padding: 0.25rem 0.6rem;
+      font-size: 0.75rem;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.7);
+      color: var(--text-muted);
+    }
+
+    /* ---------- PANEL CHAT / TRANSCRIPCIÓN (SUBIDO) ---------- */
+
+    #chat-panel {
+      position: fixed;
+      left: 0.6rem;
+      bottom: 4rem;               /* antes 0.6rem → lo subimos */
+      width: 320px;
+      max-width: 45vw;
+      height: 220px;
+      max-height: 45vh;
+      border-radius: var(--radius-lg);
+      background: var(--hud-bg);
+      border: 1px solid var(--hud-border);
+      box-shadow: var(--hud-glow);
+      backdrop-filter: blur(var(--blur));
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 40;
+    }
+
+    #chat-header {
+      padding: 0.35rem 0.75rem;
+      border-bottom: 1px solid rgba(255,255,255,0.14);
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.4rem;
+    }
+
+    #chat-title {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent-soft);
+      white-space: nowrap;
+    }
+
+    #lang-select {
+      font-size: 0.75rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.3);
+      background: rgba(0,0,0,0.7);
+      color: var(--text-main);
+      padding: 0.15rem 0.45rem;
+    }
+
+    #mic-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 0.2rem 0.6rem;
+      font-size: 0.78rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: #ef5350;
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    #mic-btn.listening {
+      background: #43a047;
+    }
+
+    #chat-body {
+      flex: 1 1 auto;
+      padding: 0.4rem 0.7rem;
+      font-size: 0.8rem;
+      overflow-y: auto;
+    }
+
+    .line-final {
+      margin-bottom: 0.2rem;
+      color: #e0f7fa;
+    }
+
+    .line-interim {
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    #chat-footer {
+      padding: 0.25rem 0.7rem 0.4rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border-top: 1px solid rgba(255,255,255,0.14);
+    }
+
+    @media (max-width: 900px) {
+      #camera-panel {
+        width: 220px;
+        height: 140px;
+      }
+      #chat-panel {
+        width: 260px;
+        height: 200px;
+        bottom: 3rem;
+      }
+      #chat-header {
+        gap: 0.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button id="fs-btn" type="button" title="Alternar pantalla completa">
+    <span id="fs-icon">⛶</span>
+    <span id="fs-label">Full</span>
+  </button>
+
+  <section id="camera-panel" aria-label="Visor de cámara">
+    <div id="cam-header">
+      <div id="cam-label">CAM · LIVE</div>
+      <div id="datetime">--/--/---- --:--:--</div>
+    </div>
+    <video id="camVideo" autoplay playsinline muted></video>
+    <div id="cam-status">Inicializando cámara…</div>
+  </section>
+
+  <section id="chat-panel" aria-label="Chat de contexto y transcripción de audio">
+    <div id="chat-header">
+      <div id="chat-title">Contexto · Voz</div>
+
+      <div style="display:flex; align-items:center; gap:0.4rem;">
+        <select id="lang-select" aria-label="Idioma de reconocimiento">
+          <option value="es-ES" selected>ES</option>
+          <option value="en-US">EN</option>
+        </select>
+        <button id="mic-btn" type="button">
+          🎤 <span>Escuchar</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="chat-body">
+      <div class="line-final">Esperando audio…</div>
+    </div>
+
+    <div id="chat-footer">
+      El audio se transcribe en tiempo real. Esta demo usa la Web Speech API;
+      aquí podrías enchufar tu backend con cualquier API de transcripción (Whisper, etc.).
+    </div>
+  </section>
+
+  <script>
+    // =======================
+    //  PANTALLA COMPLETA
+    // =======================
+    (function initFullscreen() {
+      const btn   = document.getElementById('fs-btn');
+      const icon  = document.getElementById('fs-icon');
+      const label = document.getElementById('fs-label');
+
+      function updateState() {
+        const fs = !!document.fullscreenElement;
+        icon.textContent  = fs ? '🡼' : '⛶';
+        label.textContent = fs ? 'Salir' : 'Full';
+      }
+
+      btn.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen?.();
+        } else {
+          document.exitFullscreen?.();
+        }
+      });
+
+      document.addEventListener('fullscreenchange', updateState);
+      updateState();
+    })();
+
+    // =======================
+    //  FECHA / HORA
+    // =======================
+    (function initClock() {
+      const dtElem = document.getElementById('datetime');
+
+      function tick() {
+        const now   = new Date();
+        const fecha = now.toLocaleDateString('es-ES');
+        const hora  = now.toLocaleTimeString('es-ES', {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        });
+        dtElem.textContent = `${fecha} ${hora}`;
+      }
+
+      tick();
+      setInterval(tick, 1000);
+    })();
+
+    // =======================
+    //  CÁMARA
+    // =======================
+    (function initCamera() {
+      const video  = document.getElementById('camVideo');
+      const status = document.getElementById('cam-status');
+      let streamRef = null;
+
+      if (!navigator.mediaDevices?.getUserMedia) {
+        status.textContent = 'getUserMedia no está soportado en este navegador.';
+        return;
+      }
+
+      // IMPORTANTE: Si quieres asegurarte de que el audio esté disponible
+      // para la API de voz, puedes cambiar `audio: false` a `audio: true`.
+      // Aunque la Web Speech API es independiente, esto puede ayudar en algunos entornos.
+      navigator.mediaDevices.getUserMedia({ video: true, audio: false }) 
+        .then(stream => {
+          streamRef = stream;
+          video.srcObject = stream;
+          status.textContent = 'Cámara activa.';
+        })
+        .catch(err => {
+          console.error('Error cámara:', err);
+          status.textContent = 'No se pudo acceder a la cámara: ' + err.message;
+        });
+
+      window.addEventListener('beforeunload', () => {
+        if (streamRef) {
+          streamRef.getTracks().forEach(t => t.stop());
+        }
+      });
+    })();
+
+    // =======================
+    //  CHAT / TRANSCRIPCIÓN
+    // =======================
+    (function initTranscription() {
+      const bodyEl     = document.getElementById('chat-body');
+      const micBtn     = document.getElementById('mic-btn');
+      const micLabel   = micBtn.querySelector('span');
+      const langSelect = document.getElementById('lang-select');
+
+      let recognition = null;
+      let recognizing = false;
+      let interimNode = null;
+      const MAX_LINES = 120; // límite de líneas en el panel
+
+      function trimLines() {
+        const nodes = bodyEl.querySelectorAll('.line-final, .line-interim');
+        if (nodes.length > MAX_LINES) {
+          const excess = nodes.length - MAX_LINES;
+          for (let i = 0; i < excess; i++) {
+            nodes[i].parentNode.removeChild(nodes[i]);
+          }
+        }
+      }
+
+      function appendFinal(text) {
+        if (!text.trim()) return;
+        const div = document.createElement('div');
+        div.className = 'line-final';
+        div.textContent = text.trim();
+        bodyEl.appendChild(div);
+        trimLines();
+        bodyEl.scrollTop = bodyEl.scrollHeight;
+      }
+
+      function setInterim(text) {
+        if (!interimNode) {
+          interimNode = document.createElement('div');
+          interimNode.className = 'line-interim';
+          bodyEl.appendChild(interimNode);
+        }
+        interimNode.textContent = text;
+        bodyEl.scrollTop = bodyEl.scrollHeight;
+      }
+
+      function clearInterim() {
+        if (interimNode && interimNode.parentNode) {
+          interimNode.parentNode.removeChild(interimNode);
+        }
+        interimNode = null;
+      }
+
+      // Detecta la API con prefijo (WebKit)
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        appendFinal("Este navegador no soporta la Web Speech API. Usa aquí tu backend con otra API de STT.");
+        micBtn.disabled = true;
+        return;
+      }
+
+      recognition = new SpeechRecognition();
+      recognition.lang = langSelect.value || "es-ES";
+      recognition.continuous = true;
+      recognition.interimResults = true;
+
+      // Limpiar mensaje inicial cuando se empiece a escuchar
+      function clearInitialMessageIfAny() {
+        const first = bodyEl.firstElementChild;
+        if (first && first.textContent.includes('Esperando audio')) {
+          bodyEl.innerHTML = '';
+        }
+      }
+
+      recognition.onstart = () => {
+        clearInitialMessageIfAny();
+        recognizing = true;
+        micBtn.classList.add("listening");
+        micLabel.textContent = "Detener";
+        appendFinal("🎧 Escuchando…");
+      };
+
+      recognition.onend = () => {
+        micBtn.classList.remove("listening");
+        micLabel.textContent = "Escuchar";
+        clearInterim();
+
+        // Si seguimos en modo "activo" (es decir, el usuario no ha pulsado Stop), 
+        // Chrome ha cortado la conexión (es normal) → reintentar
+        if (recognizing) {
+          try {
+            recognition.start();
+          } catch (e) {
+            console.error("Error reanudando reconocimiento:", e);
+            recognizing = false; // Parar si hay un error al reanudar
+          }
+        } else {
+          recognizing = false;
+        }
+      };
+
+      recognition.onerror = (event) => {
+        console.error("SpeechRecognition error:", event.error);
+        if (event.error === 'not-allowed') {
+          appendFinal("⚠️ Error de permisos: Debes permitir el acceso al micrófono.");
+        } else {
+          appendFinal("⚠️ Error en reconocimiento: " + event.error);
+        }
+      };
+
+      recognition.onresult = (event) => {
+        let finalBatch = "";
+        let interim = "";
+
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const res = event.results[i];
+          if (res.isFinal) {
+            finalBatch += res[0].transcript + " ";
+          } else {
+            interim += res[0].transcript;
+          }
+        }
+
+        if (finalBatch.trim().length > 0) {
+          clearInterim();
+          appendFinal(finalBatch);
+          // Aquí podrías enviar finalBatch a tu backend (Whisper, chat, etc.)
+        }
+
+        if (interim) {
+          setInterim(interim);
+        } else {
+          clearInterim();
+        }
+      };
+
+      // Cambiar idioma sobre la marcha (se aplica en el próximo start)
+      langSelect.addEventListener('change', () => {
+        if (recognition) {
+          recognition.lang = langSelect.value;
+        }
+      });
+
+      // Botón micrófono
+      micBtn.addEventListener("click", () => {
+        if (!recognition) return;
+        if (!recognizing) {
+          // Si no está escuchando, empezamos
+          recognizing = true;
+          try {
+            recognition.start();
+          } catch (e) {
+            console.error(e);
+            recognizing = false;
+          }
+        } else {
+          // Si está escuchando, paramos
+          recognizing = false;
+          recognition.stop();
+        }
+      });
+
+      // Atajo de teclado: barra espaciadora para alternar micrófono
+      window.addEventListener('keydown', (ev) => {
+        if (ev.code === 'Space' && !ev.repeat) {
+          // Evita el scroll
+          ev.preventDefault(); 
+          // Clic en el botón para alternar el estado
+          micBtn.click();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

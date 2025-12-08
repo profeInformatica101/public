@@ -19,24 +19,20 @@
       --blur: 10px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html, body {
       margin: 0;
       padding: 0;
       width: 100%;
       height: 100%;
-      background: #000;   /* fondo negro continuo para las gafas */
+      background: #000;   /* fondo negro continuo para las gafas oscuras */
       overflow: hidden;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--text-main);
     }
 
-    body {
-      position: relative;
-    }
+    body { position: relative; }
 
     button, select {
       font-family: inherit;
@@ -69,9 +65,7 @@
       box-shadow: 0 0 16px rgba(0, 0, 0, 0.6);
     }
 
-    #fs-btn:hover {
-      background: rgba(0, 0, 0, 1);
-    }
+    #fs-btn:hover { background: rgba(0, 0, 0, 1); }
 
     /* ---------- PANEL CÁMARA (ARRIBA IZQUIERDA) ---------- */
 
@@ -138,12 +132,12 @@
       color: var(--text-muted);
     }
 
-    /* ---------- PANEL CHAT / TRANSCRIPCIÓN (SUBIDO) ---------- */
+    /* ---------- PANEL CHAT / TRANSCRIPCIÓN (ABAJO IZQUIERDA) ---------- */
 
     #chat-panel {
       position: fixed;
       left: 0.6rem;
-      bottom: 4rem;               /* antes 0.6rem → lo subimos */
+      bottom: 4rem;
       width: 320px;
       max-width: 45vw;
       height: 220px;
@@ -199,9 +193,7 @@
       white-space: nowrap;
     }
 
-    #mic-btn.listening {
-      background: #43a047;
-    }
+    #mic-btn.listening { background: #43a047; }
 
     #chat-body {
       flex: 1 1 auto;
@@ -244,24 +236,29 @@
   </style>
 </head>
 <body>
+  <!-- BOTÓN PANTALLA COMPLETA -->
   <button id="fs-btn" type="button" title="Alternar pantalla completa">
     <span id="fs-icon">⛶</span>
     <span id="fs-label">Full</span>
   </button>
 
+  <!-- PANEL DE CÁMARA + FECHA/HORA -->
   <section id="camera-panel" aria-label="Visor de cámara">
     <div id="cam-header">
       <div id="cam-label">CAM · LIVE</div>
       <div id="datetime">--/--/---- --:--:--</div>
     </div>
+    <!-- muted: evita eco, no afecta a la captura de micrófono -->
     <video id="camVideo" autoplay playsinline muted></video>
-    <div id="cam-status">Inicializando cámara…</div>
+    <div id="cam-status">Pulsa en la pantalla para activar cámara/micrófono…</div>
   </section>
 
+  <!-- PANEL CHAT / TRANSCRIPCIÓN -->
   <section id="chat-panel" aria-label="Chat de contexto y transcripción de audio">
     <div id="chat-header">
       <div id="chat-title">Contexto · Voz</div>
 
+      <!-- Selector de idioma + botón micro -->
       <div style="display:flex; align-items:center; gap:0.4rem;">
         <select id="lang-select" aria-label="Idioma de reconocimiento">
           <option value="es-ES" selected>ES</option>
@@ -278,8 +275,8 @@
     </div>
 
     <div id="chat-footer">
-      El audio se transcribe en tiempo real. Esta demo usa la Web Speech API;
-      aquí podrías enchufar tu backend con cualquier API de transcripción (Whisper, etc.).
+      El audio se transcribe en tiempo real con la Web Speech API.
+      En producción puedes enchufar aquí Whisper u otra API en tu backend.
     </div>
   </section>
 
@@ -332,32 +329,53 @@
     })();
 
     // =======================
-    //  CÁMARA
+    //  CÁMARA + MICRÓFONO (getUserMedia)
     // =======================
-    (function initCamera() {
+    (function setupCameraAndMic() {
       const video  = document.getElementById('camVideo');
       const status = document.getElementById('cam-status');
       let streamRef = null;
+      let started   = false;
 
-      if (!navigator.mediaDevices?.getUserMedia) {
-        status.textContent = 'getUserMedia no está soportado en este navegador.';
-        return;
-      }
+      async function initMedia() {
+        if (started) return;
+        if (!navigator.mediaDevices?.getUserMedia) {
+          status.textContent = 'getUserMedia no está soportado en este navegador.';
+          return;
+        }
 
-      // IMPORTANTE: Si quieres asegurarte de que el audio esté disponible
-      // para la API de voz, puedes cambiar `audio: false` a `audio: true`.
-      // Aunque la Web Speech API es independiente, esto puede ayudar en algunos entornos.
-      navigator.mediaDevices.getUserMedia({ video: true, audio: false }) 
-        .then(stream => {
+        try {
+          // facingMode: "environment" si quieres la trasera en móvil/gafas
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: "environment" },
+            audio: true
+          });
+
           streamRef = stream;
           video.srcObject = stream;
-          status.textContent = 'Cámara activa.';
-        })
-        .catch(err => {
-          console.error('Error cámara:', err);
-          status.textContent = 'No se pudo acceder a la cámara: ' + err.message;
-        });
+          await video.play().catch(() => {});
+          status.textContent = 'Cámara + micrófono activos.';
+          started = true;
+        } catch (err) {
+          console.error('Error cámara/micrófono:', err);
+          status.textContent = 'No se pudo acceder a cámara/micrófono: ' + err.message;
+        }
+      }
 
+      // Arranca en primer toque en pantalla
+      window.addEventListener('click', () => {
+        initMedia();
+      }, { once: true });
+
+      // Y también al pulsar el botón de pantalla completa
+      const fsBtn = document.getElementById('fs-btn');
+      if (fsBtn) {
+        fsBtn.addEventListener('click', () => {
+          initMedia();
+        });
+      }
+
+      // Limpiar al salir
       window.addEventListener('beforeunload', () => {
         if (streamRef) {
           streamRef.getTracks().forEach(t => t.stop());
@@ -366,7 +384,7 @@
     })();
 
     // =======================
-    //  CHAT / TRANSCRIPCIÓN
+    //  CHAT / TRANSCRIPCIÓN (Web Speech API)
     // =======================
     (function initTranscription() {
       const bodyEl     = document.getElementById('chat-body');
@@ -377,7 +395,7 @@
       let recognition = null;
       let recognizing = false;
       let interimNode = null;
-      const MAX_LINES = 120; // límite de líneas en el panel
+      const MAX_LINES = 120;
 
       function trimLines() {
         const nodes = bodyEl.querySelectorAll('.line-final, .line-interim');
@@ -416,10 +434,18 @@
         interimNode = null;
       }
 
-      // Detecta la API con prefijo (WebKit)
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      function clearInitialMessageIfAny() {
+        const first = bodyEl.firstElementChild;
+        if (first && first.textContent.includes('Esperando audio')) {
+          bodyEl.innerHTML = '';
+        }
+      }
+
+      const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
+
       if (!SpeechRecognition) {
-        appendFinal("Este navegador no soporta la Web Speech API. Usa aquí tu backend con otra API de STT.");
+        appendFinal("Este navegador no soporta la Web Speech API. Usa un backend de STT (Whisper, etc.).");
         micBtn.disabled = true;
         return;
       }
@@ -428,14 +454,6 @@
       recognition.lang = langSelect.value || "es-ES";
       recognition.continuous = true;
       recognition.interimResults = true;
-
-      // Limpiar mensaje inicial cuando se empiece a escuchar
-      function clearInitialMessageIfAny() {
-        const first = bodyEl.firstElementChild;
-        if (first && first.textContent.includes('Esperando audio')) {
-          bodyEl.innerHTML = '';
-        }
-      }
 
       recognition.onstart = () => {
         clearInitialMessageIfAny();
@@ -449,25 +467,17 @@
         micBtn.classList.remove("listening");
         micLabel.textContent = "Escuchar";
         clearInterim();
-
-        // Si seguimos en modo "activo" (es decir, el usuario no ha pulsado Stop), 
-        // Chrome ha cortado la conexión (es normal) → reintentar
-        if (recognizing) {
-          try {
-            recognition.start();
-          } catch (e) {
-            console.error("Error reanudando reconocimiento:", e);
-            recognizing = false; // Parar si hay un error al reanudar
-          }
-        } else {
-          recognizing = false;
-        }
+        recognizing = false;
       };
 
       recognition.onerror = (event) => {
         console.error("SpeechRecognition error:", event.error);
-        if (event.error === 'not-allowed') {
-          appendFinal("⚠️ Error de permisos: Debes permitir el acceso al micrófono.");
+        if (event.error === 'no-speech') {
+          appendFinal("⚠️ No se ha detectado voz.");
+        } else if (event.error === 'audio-capture') {
+          appendFinal("⚠️ No se detecta micrófono. Revisa permisos del navegador.");
+        } else if (event.error === 'not-allowed') {
+          appendFinal("⚠️ Permiso de micrófono denegado.");
         } else {
           appendFinal("⚠️ Error en reconocimiento: " + event.error);
         }
@@ -489,7 +499,7 @@
         if (finalBatch.trim().length > 0) {
           clearInterim();
           appendFinal(finalBatch);
-          // Aquí podrías enviar finalBatch a tu backend (Whisper, chat, etc.)
+          // Aquí podrías enviar finalBatch al backend (Whisper, LLM, traducción, etc.)
         }
 
         if (interim) {
@@ -499,38 +509,30 @@
         }
       };
 
-      // Cambiar idioma sobre la marcha (se aplica en el próximo start)
       langSelect.addEventListener('change', () => {
         if (recognition) {
           recognition.lang = langSelect.value;
         }
       });
 
-      // Botón micrófono
       micBtn.addEventListener("click", () => {
         if (!recognition) return;
         if (!recognizing) {
-          // Si no está escuchando, empezamos
-          recognizing = true;
           try {
             recognition.start();
           } catch (e) {
             console.error(e);
-            recognizing = false;
+            appendFinal("❌ No se pudo iniciar el reconocimiento: " + e.message);
           }
         } else {
-          // Si está escuchando, paramos
-          recognizing = false;
           recognition.stop();
         }
       });
 
-      // Atajo de teclado: barra espaciadora para alternar micrófono
+      // Atajo: barra espaciadora para alternar micro (útil en PC)
       window.addEventListener('keydown', (ev) => {
         if (ev.code === 'Space' && !ev.repeat) {
-          // Evita el scroll
-          ev.preventDefault(); 
-          // Clic en el botón para alternar el estado
+          ev.preventDefault();
           micBtn.click();
         }
       });

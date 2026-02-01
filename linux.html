@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Carpetas Linux (FP) — Mapa mental</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- p5.js -->
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+
+  <style>
+    :root { --card-radius: 1.25rem; }
+
+    body{
+      background: radial-gradient(1200px 600px at 20% 0%, rgba(13,110,253,.18), transparent 60%),
+                  radial-gradient(1200px 600px at 90% 10%, rgba(32,201,151,.14), transparent 55%),
+                  #08101f;
+      color:#f1f5ff;
+    }
+
+    .navbar-blur{
+      background: rgba(6, 12, 22, .82) !important;
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+
+    .hero{ padding: 3.5rem 0 1.5rem; }
+
+    .badge-soft{
+      background: rgba(13,110,253,.22);
+      border: 1px solid rgba(13,110,253,.45);
+      color:#eaf2ff;
+    }
+
+    .card{
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: var(--card-radius);
+      box-shadow: 0 10px 40px rgba(0,0,0,.30);
+    }
+    .card-header{
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      border-top-left-radius: var(--card-radius);
+      border-top-right-radius: var(--card-radius);
+    }
+
+    .muted{ color: rgba(241,245,255,.82); }
+
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      background: rgba(0,0,0,.45);
+      border: 1px solid rgba(255,255,255,.16);
+      padding: .15rem .4rem;
+      border-radius: .5rem;
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    .canvas-wrap{
+      border-radius: var(--card-radius);
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.30);
+      overflow: hidden;
+    }
+    #p5-holder{ width:100%; }
+
+    .legend-dot{
+      width:10px;height:10px;border-radius:50%;
+      display:inline-block;margin-right:.4rem;
+      background: rgba(255,255,255,.5);
+    }
+    .dot-safe{ background: rgba(32,201,151,.95); }
+    .dot-caution{ background: rgba(255,193,7,.98); }
+    .dot-danger{ background: rgba(220,53,69,.98); }
+
+    .pill{
+      display:inline-flex; gap:.4rem; align-items:center;
+      padding:.35rem .6rem;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.08);
+      color: rgba(241,245,255,.90);
+      font-size:.9rem;
+    }
+
+    .divider{ height:1px; background: rgba(255,255,255,.12); margin:1rem 0; }
+
+    .callout{
+      border-left:4px solid rgba(13,110,253,.9);
+      padding:.9rem 1rem;
+      background: rgba(13,110,253,.14);
+      border-radius: 1rem;
+      border:1px solid rgba(13,110,253,.26);
+    }
+    .callout-warning{
+      border-left-color: rgba(255,193,7,.98);
+      background: rgba(255,193,7,.14);
+      border-color: rgba(255,193,7,.26);
+    }
+    .callout-danger{
+      border-left-color: rgba(220,53,69,.98);
+      background: rgba(220,53,69,.14);
+      border-color: rgba(220,53,69,.26);
+    }
+
+    :focus-visible{
+      outline: 3px solid rgba(154, 209, 255, .95);
+      outline-offset: 2px;
+      border-radius: .6rem;
+    }
+
+    .form-select{
+      background-color: rgba(255,255,255,.10);
+      color:#f1f5ff;
+      border:1px solid rgba(255,255,255,.18);
+    }
+    .form-select option{ color:#0b1220; }
+
+    .footer{
+      border-top:1px solid rgba(255,255,255,.10);
+      color: rgba(241,245,255,.70);
+      padding:2rem 0;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-blur sticky-top">
+    <div class="container">
+      <a class="navbar-brand fw-semibold" href="#">
+        🐧 Linux en FP <span class="text-info">/</span> Mapa de carpetas
+      </a>
+      <div class="d-flex gap-2 align-items-center">
+        <span class="pill"><span class="legend-dot dot-safe"></span> ok tocar poco</span>
+        <span class="pill"><span class="legend-dot dot-caution"></span> cuidado</span>
+        <span class="pill"><span class="legend-dot dot-danger"></span> no tocar</span>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <div class="row g-4 align-items-center">
+        <div class="col-lg-7">
+          <div class="text-uppercase small muted" style="letter-spacing:.08em;">SMR · ASIR · DAW · DevOps básico</div>
+          <h1 class="display-5 fw-bold lh-1 mt-2">¿Qué significa cada carpeta en Linux?</h1>
+          <p class="lead muted mt-3">
+            Mapa mental interactivo para FP. Haz clic en una carpeta y verás qué es, ejemplos y qué NO tocar.
+          </p>
+          <div class="d-flex flex-wrap gap-2 mt-3">
+            <span class="badge badge-soft rounded-pill px-3 py-2">✅ Para prácticas de servidor</span>
+            <span class="badge badge-soft rounded-pill px-3 py-2">✅ Para DAW/DevOps</span>
+            <span class="badge badge-soft rounded-pill px-3 py-2">✅ Para exámenes de sistemas</span>
+          </div>
+          <div class="callout mt-4">
+            <strong>Uso:</strong> clic en el mapa → panel de la derecha con explicación y ejemplos.
+          </div>
+        </div>
+
+        <div class="col-lg-5">
+          <div class="card">
+            <div class="card-header"><strong>Mini-reglas de supervivencia</strong></div>
+            <div class="card-body">
+              <ul class="mb-0">
+                <li><span class="kbd">/home</span>: tu zona segura.</li>
+                <li><span class="kbd">/etc</span>: configuración (copia antes de editar).</li>
+                <li><span class="kbd">/usr</span>: software instalado (lo gestiona el sistema).</li>
+                <li><span class="kbd">/var</span>: logs/datos variables (diagnóstico).</li>
+                <li><span class="kbd">/dev</span> · <span class="kbd">/proc</span> · <span class="kbd">/sys</span>: especiales (no “carpetas normales”).</li>
+              </ul>
+              <div class="divider"></div>
+              <div class="muted">Tip FP: si algo falla, mira <span class="kbd">/var/log</span> y <span class="kbd">journalctl</span>.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <main class="pb-5">
+    <div class="container">
+      <div class="row g-4">
+
+        <!-- MAPA -->
+        <div class="col-lg-7">
+          <div class="card">
+            <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+              <div>
+                <strong>Mapa mental interactivo</strong>
+                <div class="muted small">Responsive (móvil ok) · Clic para seleccionar</div>
+              </div>
+              <div class="d-flex gap-2">
+                <button id="btnReset" class="btn btn-sm btn-outline-light">Reiniciar</button>
+                <button id="btnRandom" class="btn btn-sm btn-outline-info">Sugerir</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="canvas-wrap">
+                <div id="p5-holder"></div>
+              </div>
+              <div class="mt-3 d-flex flex-wrap gap-2">
+                <span class="pill"><span class="legend-dot dot-safe"></span> zona “aprendiz”</span>
+                <span class="pill"><span class="legend-dot dot-caution"></span> toca con cuidado</span>
+                <span class="pill"><span class="legend-dot dot-danger"></span> no tocar</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PANEL -->
+        <div class="col-lg-5">
+          <div class="card h-100">
+            <div class="card-header">
+              <strong id="panelTitle">Selecciona una carpeta</strong>
+            </div>
+            <div class="card-body">
+              <p id="panelDesc" class="muted">Haz clic en el mapa para ver explicación y ejemplos.</p>
+
+              <div id="panelTags" class="d-flex flex-wrap gap-2 mb-3"></div>
+
+              <h6 class="mt-3">Ejemplos típicos</h6>
+              <ul id="panelExamples"></ul>
+
+              <div id="panelDoDont" class="mt-3"></div>
+
+              <div class="divider"></div>
+
+              <h6>Comandos útiles (FP)</h6>
+              <ul>
+                <li><span class="kbd">ls -la /ruta</span> permisos y contenido</li>
+                <li><span class="kbd">cat archivo</span> lectura rápida</li>
+                <li><span class="kbd">sudo nano archivo</span> edición controlada</li>
+                <li><span class="kbd">journalctl -xe</span> logs systemd</li>
+              </ul>
+
+              <div class="callout callout-warning mt-3">
+                <strong>Regla de oro:</strong> antes de tocar config:
+                <div class="mt-2"><span class="kbd">sudo cp archivo archivo.bak</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RESUMEN -->
+      <div class="row g-4 mt-2">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <strong>Resumen rápido (para estudiar)</strong>
+              <div class="muted small">Memoriza el “para qué”</div>
+            </div>
+            <div class="card-body">
+              <div class="row g-3" id="cards"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MINI TEST -->
+      <div class="row g-4 mt-2">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <strong>Mini-test</strong>
+              <div class="muted small">Cierre de clase (5 min)</div>
+            </div>
+            <div class="card-body">
+              <div class="row g-3 align-items-end">
+                <div class="col-md-7">
+                  <label class="form-label">Si un servicio falla, ¿dónde miras primero?</label>
+                  <select id="quiz1" class="form-select">
+                    <option value="">Elige una opción…</option>
+                    <option>/home</option>
+                    <option>/var/log</option>
+                    <option>/bin</option>
+                    <option>/dev</option>
+                  </select>
+                </div>
+                <div class="col-md-5">
+                  <button id="quizCheck" class="btn btn-info w-100">Comprobar</button>
+                </div>
+              </div>
+              <div id="quizResult" class="mt-3"></div>
+
+              <div class="callout callout-danger mt-3">
+                <strong>Trampa típica:</strong> <span class="kbd">/proc</span> y <span class="kbd">/sys</span> son virtuales (kernel).
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container d-flex flex-wrap justify-content-between gap-2">
+      <div>Hecho para FP: claro, visual y práctico.</div>
+      <div class="muted">Úsalo como póster + práctica guiada.</div>
+    </div>
+  </footer>
+
+  <script>
+    // --- Datos ---
+    const FS = [
+      { key:"/etc",  level:"caution", title:"/etc — configuración", desc:"Config del sistema y servicios. Son archivos de texto.", tags:["config","servicios"], examples:["/etc/nginx/nginx.conf","/etc/ssh/sshd_config"], do:["Copia antes de editar","Documenta cambios"], dont:["Editar a ciegas","Borrar sin saber"] },
+      { key:"/home", level:"safe",   title:"/home — usuarios", desc:"Zona segura del usuario: proyectos, docs, repos.", tags:["usuario","proyectos"], examples:["/home/alumno/proyecto","/home/alumno/.ssh"], do:["Guardar proyectos","Config personal"], dont:["Meter config global aquí"] },
+      { key:"/usr",  level:"caution",title:"/usr — software", desc:"Software instalado (binarios, librerías, recursos).", tags:["paquetes","software"], examples:["/usr/bin/python3","/usr/share/"], do:["Gestionar con apt/dnf","Usar /usr/local si procede"], dont:["Editar a mano (actualizaciones lo pisan)"] },
+      { key:"/var",  level:"safe",   title:"/var — datos variables", desc:"Logs, cachés y datos que cambian. Diagnóstico.", tags:["logs","servicios"], examples:["/var/log/","/var/cache/"], do:["Revisar logs","Controlar tamaño"], dont:["Borrar logs sin criterio"] },
+      { key:"/opt",  level:"safe",   title:"/opt — terceros", desc:"Apps externas o instalaciones manuales/autocontenidas.", tags:["apps","manual"], examples:["/opt/postman","/opt/google/chrome"], do:["Instalar apps autocontenidas"], dont:["Mezclar config del sistema"] },
+      { key:"/bin",  level:"danger", title:"/bin — comandos", desc:"Comandos esenciales (a menudo enlazado a /usr/bin).", tags:["sistema","crítico"], examples:["/bin/ls","/bin/cp"], do:["Usar comandos"], dont:["Borrar/reemplazar binarios"] },
+      { key:"/sbin", level:"danger", title:"/sbin — admin", desc:"Herramientas de administración (muchas en /usr/sbin).", tags:["admin","crítico"], examples:["/sbin/reboot","/usr/sbin/*"], do:["Usar con sudo cuando toque"], dont:["Tocar binarios"] },
+      { key:"/lib",  level:"danger", title:"/lib — librerías", desc:"Librerías del sistema (tipo DLL). Gestionadas por el SO.", tags:["dependencias","crítico"], examples:["/lib/x86_64-linux-gnu/","/lib64/"], do:["Conocer (teoría)"], dont:["No tocar"] },
+      { key:"/dev",  level:"danger", title:"/dev — dispositivos", desc:"Dispositivos como archivos. Ojo con dd y discos.", tags:["hardware","kernel"], examples:["/dev/sda","/dev/null"], do:["Aprender concepto"], dont:["Escribir a discos sin saber"] },
+      { key:"/boot", level:"danger", title:"/boot — arranque", desc:"Kernel/GRUB. Tocar aquí puede dejar el sistema sin arrancar.", tags:["arranque","crítico"], examples:["/boot/grub/","/boot/vmlinuz-*"], do:["Entender qué hay"], dont:["Borrar kernels/GRUB"] },
+      { key:"/media",level:"safe",   title:"/media — montajes", desc:"Montaje automático de USB/discos externos.", tags:["usb","montaje"], examples:["/media/usuario/USB"], do:["Copiar desde USB"], dont:["Desconectar sin desmontar (según caso)"] },
+      { key:"/tmp",  level:"safe",   title:"/tmp — temporales", desc:"Temporales. Se puede limpiar solo.", tags:["temporal"], examples:["/tmp/build-XXXX"], do:["Pruebas rápidas"], dont:["Guardar algo importante"] },
+      { key:"/proc", level:"danger", title:"/proc — virtual", desc:"Info del kernel/procesos. No son archivos normales.", tags:["virtual","kernel"], examples:["/proc/cpuinfo","/proc/meminfo"], do:["Consultar info"], dont:["Tratarlo como carpeta de datos"] },
+      { key:"/sys",  level:"danger", title:"/sys — virtual", desc:"Interfaz del kernel/hardware. Cambios impactan al momento.", tags:["virtual","hardware"], examples:["/sys/class/net/"], do:["Consultar (avanzado)"], dont:["Cambiar valores sin guía"] },
+    ];
+
+    const byKey = Object.fromEntries(FS.map(x => [x.key, x]));
+
+    function badgeFor(level){
+      if(level==="safe") return `<span class="badge text-bg-success">Seguro</span>`;
+      if(level==="caution") return `<span class="badge text-bg-warning">Cuidado</span>`;
+      return `<span class="badge text-bg-danger">No tocar</span>`;
+    }
+
+    function setPanel(key){
+      const item = byKey[key];
+      if(!item) return;
+      document.getElementById("panelTitle").innerHTML = `${item.title} ${badgeFor(item.level)}`;
+      document.getElementById("panelDesc").textContent = item.desc;
+
+      const tags = document.getElementById("panelTags");
+      tags.innerHTML = "";
+      item.tags.forEach(t=>{
+        const b=document.createElement("span");
+        b.className="badge rounded-pill text-bg-secondary";
+        b.textContent=t;
+        tags.appendChild(b);
+      });
+
+      const ex=document.getElementById("panelExamples");
+      ex.innerHTML="";
+      item.examples.forEach(e=>{
+        const li=document.createElement("li");
+        li.innerHTML = `<span class="kbd">${e}</span>`;
+        ex.appendChild(li);
+      });
+
+      const cls = item.level==="safe" ? "callout" : item.level==="caution" ? "callout callout-warning" : "callout callout-danger";
+      document.getElementById("panelDoDont").innerHTML = `
+        <div class="${cls}">
+          <div class="row g-3">
+            <div class="col-12 col-md-6">
+              <strong>✅ Recomendado</strong>
+              <ul class="mt-2 mb-0">${item.do.map(x=>`<li>${x}</li>`).join("")}</ul>
+            </div>
+            <div class="col-12 col-md-6">
+              <strong>⛔ Evita</strong>
+              <ul class="mt-2 mb-0">${item.dont.map(x=>`<li>${x}</li>`).join("")}</ul>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    // Cards resumen
+    const cardsRoot = document.getElementById("cards");
+    FS.forEach(item=>{
+      const col=document.createElement("div");
+      col.className="col-12 col-md-6 col-xl-4";
+      col.innerHTML=`
+        <div class="card h-100">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <strong>${item.key}</strong> ${badgeFor(item.level)}
+          </div>
+          <div class="card-body">
+            <div class="muted">${item.desc}</div>
+            <div class="mt-3">
+              <button class="btn btn-sm btn-outline-info w-100" data-pick="${item.key}">Ver en el mapa</button>
+            </div>
+          </div>
+        </div>`;
+      cardsRoot.appendChild(col);
+    });
+
+    function scrollToMap(){
+      document.querySelector("#p5-holder").scrollIntoView({behavior:"smooth", block:"center"});
+    }
+
+    // Mini test
+    document.getElementById("quizCheck").addEventListener("click", ()=>{
+      const val=document.getElementById("quiz1").value;
+      const box=document.getElementById("quizResult");
+      if(!val){ box.innerHTML=`<div class="alert alert-secondary mb-0">Elige una opción 🙂</div>`; return; }
+      if(val==="/var/log"){
+        box.innerHTML=`<div class="alert alert-success mb-0">✅ Correcto. Logs = pistas del fallo. También <span class="kbd">journalctl -xe</span>.</div>`;
+      }else{
+        box.innerHTML=`<div class="alert alert-danger mb-0">❌ No. Lo más útil suele ser <span class="kbd">/var/log</span> (y <span class="kbd">journalctl</span>).</div>`;
+      }
+    });
+
+    // ==========================
+    // p5.js — MAPA ARBOL REAL
+    // ==========================
+    let nodes = [];
+    let selected = "/home";
+    let hovered = null;
+
+    function selectNode(key){
+      selected = key;
+      setPanel(key);
+    }
+
+    function levelColor(level, p){
+      if(level==="safe") return p.color(32,201,151,235);
+      if(level==="caution") return p.color(255,193,7,240);
+      return p.color(220,53,69,240);
+    }
+
+    function hit(p, mx, my, n){
+      return p.dist(mx,my,n.x,n.y) <= n.r + 6;
+    }
+
+    const sketch = (p)=>{
+      p.setup = ()=>{
+        const holder=document.getElementById("p5-holder");
+        const w=holder.clientWidth;
+        const h = (w < 520) ? 520 : 440; // más alto en móvil
+        const canvas=p.createCanvas(w,h);
+        canvas.parent("p5-holder");
+        buildLayout();
+        selectNode("/home");
+      };
+
+      p.windowResized = ()=>{
+        const holder=document.getElementById("p5-holder");
+        const w=holder.clientWidth;
+        const h = (w < 520) ? 520 : 440;
+        p.resizeCanvas(w,h);
+        buildLayout();
+      };
+
+      function buildLayout(){
+        nodes = [];
+
+        const w = p.width;
+        const h = p.height;
+
+        // tronco central (vertical)
+        const trunkX = w * 0.50;
+        const trunkTopY = 70;
+        const trunkBotY = h - 70;
+
+        // raíz "/"
+        const rootY = h * 0.52;
+        nodes.push({ key:"/", x: trunkX, y: rootY, r: 26, level:"safe", root:true });
+
+        // Reparto equilibrado: izquierda y derecha con espaciado adaptativo
+        const leftKeys  = ["/bin","/sbin","/etc","/home","/lib"];
+        const rightKeys = ["/usr","/var","/opt","/dev","/boot","/media","/tmp","/proc","/sys"];
+
+        const leftYStep  = (trunkBotY - trunkTopY) / (leftKeys.length + 1);
+        const rightYStep = (trunkBotY - trunkTopY) / (rightKeys.length + 1);
+
+        // Distancia horizontal de ramas (responsive)
+        const leftX  = Math.max(90,  trunkX - Math.min(220, w*0.36));
+        const rightX = Math.min(w-90, trunkX + Math.min(220, w*0.36));
+
+        leftKeys.forEach((k,i)=>{
+          const y = trunkTopY + leftYStep*(i+1);
+          nodes.push({ key:k, x:leftX, y, r:(w<520?20:22) });
+        });
+
+        rightKeys.forEach((k,i)=>{
+          const y = trunkTopY + rightYStep*(i+1);
+          nodes.push({ key:k, x:rightX, y, r:(w<520?18:20) });
+        });
+
+        // guardar para líneas
+        p._layout = { trunkX, trunkTopY, trunkBotY, rootY, leftX, rightX };
+      }
+
+      function drawBranch(fromX, fromY, toX, toY){
+        // línea con codo (└─)
+        const midX = (fromX + toX) / 2;
+        p.line(fromX, fromY, midX, fromY);
+        p.line(midX, fromY, midX, toY);
+        p.line(midX, toY, toX, toY);
+      }
+
+      p.draw = ()=>{
+        p.clear();
+
+        // fondo suave dentro del canvas (para contraste)
+        p.noStroke();
+        p.fill(255,255,255,10);
+        for(let i=0;i<12;i++){
+          p.circle((i*97)%p.width, (i*73)%p.height, 140);
+        }
+
+        const L = p._layout;
+
+        // tronco
+        p.stroke(255,255,255,80);
+        p.strokeWeight(4);
+        p.line(L.trunkX, L.trunkTopY, L.trunkX, L.trunkBotY);
+
+        const root = nodes.find(n=>n.key==="/");
+
+        // ramas con codo desde tronco hacia cada nodo
+        p.stroke(255,255,255,85);
+        p.strokeWeight(2);
+
+        nodes.forEach(n=>{
+          if(n.key==="/") return;
+          // punto de salida desde tronco a la altura del nodo
+          const fromX = L.trunkX;
+          const fromY = n.y;
+          drawBranch(fromX, fromY, n.x, n.y);
+        });
+
+        // hover detect
+        hovered = null;
+
+        // nodos
+        nodes.forEach(n=>{
+          const key = n.key;
+          const level = (key==="/") ? "safe" : byKey[key]?.level || "safe";
+          const isSel = (selected === key);
+          const isHover = hit(p, p.mouseX, p.mouseY, n);
+          if(isHover && key !== "/") hovered = key;
+
+          // halo selección
+          if(isSel){
+            p.noFill();
+            p.stroke(154,209,255,220);
+            p.strokeWeight(5);
+            p.circle(n.x, n.y, (n.r+14)*2);
+          }
+
+          // círculo
+          p.noStroke();
+          p.fill(levelColor(level,p));
+          p.circle(n.x, n.y, n.r*2);
+
+          // texto SIEMPRE BLANCO + sombra
+          p.textAlign(p.CENTER, p.CENTER);
+          p.textStyle(p.BOLD);
+          p.textSize(key==="/" ? 18 : (p.width<520 ? 13 : 14));
+
+          p.fill(0,0,0,190);
+          p.text(key, n.x+1.2, n.y+1.2);
+          p.fill(255,255,255,250);
+          p.text(key, n.x, n.y);
+        });
+
+        // tooltip
+        if(hovered && byKey[hovered]){
+          const info = byKey[hovered];
+          const text = `${hovered} — ${info.desc}`;
+
+          const pad=12;
+          p.textStyle(p.NORMAL);
+          p.textSize(12);
+
+          const maxW = Math.min(p.width - 32, 420);
+          // recorte simple por ancho
+          let shown = text;
+          while(p.textWidth(shown) > (maxW - pad*2) && shown.length > 12) shown = shown.slice(0,-1);
+          if(shown !== text) shown = shown.slice(0,-3) + "...";
+
+          const boxW = Math.min(maxW, p.textWidth(shown) + pad*2);
+          const boxH = 54;
+
+          const x = p.constrain(p.mouseX + 14, 16, p.width - boxW - 16);
+          const y = p.constrain(p.mouseY + 14, 16, p.height - boxH - 16);
+
+          p.noStroke();
+          p.fill(0,0,0,190);
+          p.rect(x,y,boxW,boxH,12);
+
+          p.fill(255,255,255,245);
+          p.textAlign(p.LEFT, p.TOP);
+          p.text(shown, x+pad, y+10);
+          p.fill(210,210,210,235);
+          p.text("clic para ver detalles", x+pad, y+30);
+        }
+
+        // cabecera canvas
+        p.noStroke();
+        p.fill(255,255,255,175);
+        p.textAlign(p.LEFT, p.TOP);
+        p.textSize(12);
+        p.text("Árbol de directorios (FP) · clic en un nodo", 12, 10);
+      };
+
+      p.mousePressed = ()=>{
+        for(const n of nodes){
+          if(n.key==="/") continue;
+          if(hit(p, p.mouseX, p.mouseY, n)){
+            selectNode(n.key);
+            return;
+          }
+        }
+      };
+    };
+
+    new p5(sketch);
+
+    // Botones
+    document.getElementById("btnReset").addEventListener("click", ()=> selectNode("/home"));
+    document.getElementById("btnRandom").addEventListener("click", ()=>{
+      const keys = FS.map(x=>x.key);
+      selectNode(keys[Math.floor(Math.random()*keys.length)]);
+    });
+
+    // Cards click
+    cardsRoot.addEventListener("click",(e)=>{
+      const btn=e.target.closest("[data-pick]");
+      if(!btn) return;
+      selectNode(btn.getAttribute("data-pick"));
+      scrollToMap();
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Plantilla estándar ProgramaMe (Interfaces + Java 17 + JUnit 5) · Roles · Patrón</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    :root { --card-radius: 1rem; }
+    body { background: #0b1220; color: #e8eefc; }
+    .navbar, .footer { background: rgba(255,255,255,0.05); backdrop-filter: blur(6px); }
+    .card { border: 1px solid rgba(255,255,255,0.08); border-radius: var(--card-radius); background: rgba(255,255,255,0.04); }
+    .badge-soft { background: rgba(13,110,253,0.15); color: #b9d3ff; border: 1px solid rgba(13,110,253,0.25); }
+    .codeblock {
+      position: relative;
+      border-radius: 1rem;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: #070b14;
+    }
+    pre {
+      margin: 0;
+      padding: 1rem 1rem 1.25rem;
+      color: #d6e2ff;
+      font-size: 0.92rem;
+      line-height: 1.35rem;
+      overflow: auto;
+    }
+    .codebar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .65rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+    }
+    .codebar small { color: rgba(255,255,255,0.70); }
+    .btn-copy {
+      border-radius: .8rem;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.06);
+      color: #e8eefc;
+      padding: .35rem .75rem;
+    }
+    .btn-copy:hover { background: rgba(255,255,255,0.12); }
+    .kbd {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      padding: .15rem .4rem;
+      border-radius: .5rem;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.9);
+      font-size: .85rem;
+    }
+    a { color: #9bc0ff; }
+    .muted { color: rgba(255,255,255,0.7); }
+    .pill { border-radius: 999px; }
+    .divider { height: 1px; background: rgba(255,255,255,0.10); margin: 1.5rem 0; }
+    .callout {
+      border-left: 4px solid rgba(13,110,253,0.7);
+      padding: 1rem 1rem;
+      background: rgba(13,110,253,0.10);
+      border-radius: 1rem;
+      border: 1px solid rgba(13,110,253,0.20);
+    }
+  </style>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg sticky-top">
+  <div class="container py-2">
+    <a class="navbar-brand text-white fw-semibold" href="#">
+      ProgramaMe · Plantilla estándar (Interfaces + Java 17 + JUnit 5)
+    </a>
+    <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="nav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link text-white-50" href="#inicio">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link text-white-50" href="#maven">Maven</a></li>
+        <li class="nav-item"><a class="nav-link text-white-50" href="#interfaces">Interfaces</a></li>
+        <li class="nav-item"><a class="nav-link text-white-50" href="#plantilla">Main (I/O)</a></li>
+        <li class="nav-item"><a class="nav-link text-white-50" href="#tests">JUnit 5</a></li>
+        <li class="nav-item"><a class="nav-link text-white-50" href="#patron">Patrón</a></li>
+        <li class="nav-item"><a class="nav-link text-white-50" href="#roles">Roles</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<header id="inicio" class="py-5">
+  <div class="container">
+    <div class="row g-4 align-items-center">
+      <div class="col-lg-7">
+        <span class="badge badge-soft pill px-3 py-2 mb-3">Checklist de concurso</span>
+        <h1 class="display-6 fw-semibold">Plantilla de equipo: Interface + Solver + Main + Tests</h1>
+        <p class="lead muted mb-4">
+          En vez de “todo en Main”, usamos una <b>interfaz</b> para desacoplar la lógica del problema.
+          El equipo cambia de problema creando otro <span class="kbd">Solver</span>, sin tocar la infraestructura.
+        </p>
+
+        <div class="callout">
+          <div class="d-flex flex-wrap gap-2 align-items-center">
+            <span class="kbd">Entrada</span><span class="muted">→</span>
+            <span class="kbd">Case</span><span class="muted">→</span>
+            <span class="kbd">ProblemSolver</span><span class="muted">→</span>
+            <span class="kbd">Salida</span>
+            <span class="muted ms-2">= menos WA, más velocidad y mejor reparto de tareas.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-5">
+        <div class="card p-4">
+          <h2 class="h5 fw-semibold mb-2">Incluye</h2>
+          <ul class="mb-0 muted">
+            <li>Script Bash para crear proyecto Maven</li>
+            <li>Interfaz <span class="kbd">ProblemSolver</span> + <span class="kbd">record Case</span></li>
+            <li>Ejemplo completo: “Mafalda cucharadas”</li>
+            <li>Plantilla Main con FastScanner</li>
+            <li>JUnit 5 con ejemplos y bordes</li>
+            <li>Patrón de resolución + roles de alumnos</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="pb-5">
+  <div class="container">
+
+    <!-- 1) Bash fragment -->
+    <section id="maven" class="mb-5">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+        <h2 class="h4 fw-semibold mb-0">1) Script de arranque (añadir al inicio)</h2>
+        <span class="badge badge-soft pill px-3 py-2">Bash + Maven Archetype</span>
+      </div>
+
+      <p class="muted mb-3">
+        Guarda esto como <span class="kbd">crear_proyecto.sh</span>, dale permisos y ejecútalo.
+      </p>
+
+      <div class="codeblock" data-codeblock>
+        <div class="codebar">
+          <small>crear_proyecto.sh</small>
+          <button class="btn-copy" type="button" data-copy>Copiar</button>
+        </div>
+        <pre><code class="language-bash">#!/bin/bash
+# Da permisos de ejecución 'chmod+x' primero 
+mvn archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.5 -DgroupId=es.iescamas.programame -DartifactId=ProgramaMe -Dversion=1.0.0-SNAPSHOT -DjavaCompilerVersion=17  -DjunitVersion=5.11.0  -DinteractiveMode=false</code></pre>
+      </div>
+
+      <div class="row g-3 mt-3">
+        <div class="col-lg-6">
+          <div class="card p-4 h-100">
+            <h3 class="h6 fw-semibold">Comandos útiles</h3>
+            <ul class="mb-0 muted">
+              <li><span class="kbd">chmod +x crear_proyecto.sh</span></li>
+              <li><span class="kbd">./crear_proyecto.sh</span></li>
+              <li><span class="kbd">cd ProgramaMe</span></li>
+              <li><span class="kbd">mvn test</span> (ejecuta JUnit)</li>
+              <li><span class="kbd">mvn -q -DskipTests package</span> (compilar rápido)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="card p-4 h-100">
+            <h3 class="h6 fw-semibold">Regla de entrega (importante)</h3>
+            <ul class="mb-0 muted">
+              <li>En el juez online suele bastar con <span class="kbd">Main</span> (sin paquetes).</li>
+              <li>Para entrenar en clase, mantener paquetes y tests es ideal.</li>
+              <li>Antes de enviar, puedes copiar-pegar el contenido de <span class="kbd">Main</span> en el juez.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- 2) Interfaces approach -->
+    <section id="interfaces" class="mb-5">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+        <h2 class="h4 fw-semibold mb-0">2) Enfoque con Interfaces (plantilla profesional)</h2>
+        <span class="badge badge-soft pill px-3 py-2">Contrato + Caso + Solver</span>
+      </div>
+
+      <p class="muted mb-3">
+        Objetivo: el equipo trabaja contra un <b>contrato</b>. Si cambia el problema, solo cambia el <span class="kbd">Solver</span>
+        (y su <span class="kbd">Case</span>), sin romper el resto.
+      </p>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="codeblock" data-codeblock>
+            <div class="codebar">
+              <small>src/main/java/es/iescamas/programame/ProblemSolver.java</small>
+              <button class="btn-copy" type="button" data-copy>Copiar</button>
+            </div>
+            <pre><code class="language-java">package es.iescamas.programame;
+
+/**
+ * Contrato genérico para concurso:
+ * - Recibe un caso (I)
+ * - Devuelve una salida (O)
+ */
+public interface ProblemSolver&lt;I, O&gt; {
+    O solve(I input);
+}</code></pre>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="codeblock" data-codeblock>
+            <div class="codebar">
+              <small>src/main/java/es/iescamas/programame/MafaldaCase.java</small>
+              <button class="btn-copy" type="button" data-copy>Copiar</button>
+            </div>
+            <pre><code class="language-java">package es.iescamas.programame;
+
+/**
+ * Un "caso" del problema: a b n
+ */
+public record MafaldaCase(int a, int b, int n) { }</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="codeblock mt-3" data-codeblock>
+        <div class="codebar">
+          <small>src/main/java/es/iescamas/programame/MafaldaSpoonsSolver.java</small>
+          <button class="btn-copy" type="button" data-copy>Copiar</button>
+        </div>
+        <pre><code class="language-java">package es.iescamas.programame;
+
+/**
+ * Implementación del problema (cucharadas).
+ *
+ * Interpretación:
+ * - Mafalda: comió x &gt;= a
+ * - Padre: dejó n-x &lt;= b  =&gt; x &gt;= n-b
+ * - 0 &lt;= x &lt;= n
+ *
+ * Respuestas posibles: x en [ max(a, n-b), n ]
+ * Conteo: n - L + 1, si L &lt;= n; si no, 0.
+ */
+public class MafaldaSpoonsSolver implements ProblemSolver&lt;MafaldaCase, Integer&gt; {
+
+    @Override
+    public Integer solve(MafaldaCase c) {
+        int L = Math.max(c.a(), c.n() - c.b());
+        if (L &gt; c.n()) return 0;
+        return c.n() - L + 1;
+    }
+}</code></pre>
+      </div>
+
+      <div class="card p-4 mt-3">
+        <h3 class="h6 fw-semibold">Ventajas para el equipo</h3>
+        <ul class="mb-0 muted">
+          <li><b>Analista</b> define el <span class="kbd">Case</span> y escribe tests.</li>
+          <li><b>Programador</b> implementa el <span class="kbd">Solver</span>.</li>
+          <li><b>Tester</b> mete bordes y valida formato / tipos.</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- 3) Main + FastScanner -->
+    <section id="plantilla" class="mb-5">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+        <h2 class="h4 fw-semibold mb-0">3) Main estándar ProgramaMe (solo I/O)</h2>
+        <span class="badge badge-soft pill px-3 py-2">Main delega en Solver</span>
+      </div>
+
+      <p class="muted mb-3">
+        Main se limita a leer casos y a imprimir resultados. La lógica vive en el solver (testeable).
+      </p>
+
+      <div class="codeblock" data-codeblock>
+        <div class="codebar">
+          <small>src/main/java/es/iescamas/programame/Main.java</small>
+          <button class="btn-copy" type="button" data-copy>Copiar</button>
+        </div>
+        <pre><code class="language-java">package es.iescamas.programame;
+
+import java.io.*;
+
+public class Main {
+
+    public static void main(String[] args) throws Exception {
+        FastScanner fs = new FastScanner(System.in);
+        StringBuilder out = new StringBuilder();
+
+        ProblemSolver&lt;MafaldaCase, Integer&gt; solver = new MafaldaSpoonsSolver();
+
+        int t = fs.nextInt();
+        for (int i = 0; i &lt; t; i++) {
+            int a = fs.nextInt();
+            int b = fs.nextInt();
+            int n = fs.nextInt();
+
+            int ans = solver.solve(new MafaldaCase(a, b, n));
+            out.append(ans).append('\n');
+        }
+
+        System.out.print(out);
+    }
+
+    // Scanner rápido para concursos
+    static class FastScanner {
+        private final InputStream in;
+        private final byte[] buffer = new byte[1 &lt;&lt; 16];
+        private int ptr = 0, len = 0;
+
+        FastScanner(InputStream in) { this.in = in; }
+
+        private int read() throws IOException {
+            if (ptr &gt;= len) {
+                len = in.read(buffer);
+                ptr = 0;
+                if (len &lt;= 0) return -1;
+            }
+            return buffer[ptr++];
+        }
+
+        int nextInt() throws IOException {
+            int c;
+            do { c = read(); } while (c &lt;= ' ');
+
+            int sign = 1;
+            if (c == '-') { sign = -1; c = read(); }
+
+            int val = 0;
+            while (c &gt; ' ') {
+                val = val * 10 + (c - '0');
+                c = read();
+            }
+            return val * sign;
+        }
+    }
+}</code></pre>
+      </div>
+
+      <div class="card p-4 mt-3">
+        <h3 class="h6 fw-semibold">Nota de concurso (juez online)</h3>
+        <p class="muted mb-0">
+          Si el juez exige una única clase <span class="kbd">Main</span> sin paquetes, podéis “aplanar”:
+          copiar el contenido del solver dentro de Main. Para entrenar en equipo, mantener interfaz + tests es mejor.
+        </p>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- 4) Unit tests -->
+    <section id="tests" class="mb-5">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+        <h2 class="h4 fw-semibold mb-0">4) Pruebas unitarias (JUnit 5) — usando la interfaz</h2>
+        <span class="badge badge-soft pill px-3 py-2">TDD recomendado en entreno</span>
+      </div>
+
+      <p class="muted mb-3">
+        Las pruebas se hacen contra <span class="kbd">ProblemSolver</span>. Así el equipo puede refactorizar la implementación
+        sin cambiar los tests.
+      </p>
+
+      <div class="codeblock" data-codeblock>
+        <div class="codebar">
+          <small>src/test/java/es/iescamas/programame/MafaldaSpoonsSolverTest.java</small>
+          <button class="btn-copy" type="button" data-copy>Copiar</button>
+        </div>
+        <pre><code class="language-java">package es.iescamas.programame;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+
+class MafaldaSpoonsSolverTest {
+
+    private final ProblemSolver&lt;MafaldaCase, Integer&gt; solver = new MafaldaSpoonsSolver();
+
+    @Test
+    void ejemplos() {
+        // 2 2 5 -> comidas posibles: 3,4,5 => 3
+        assertEquals(3, solver.solve(new MafaldaCase(2, 2, 5)));
+
+        // 7 5 10 -> comidas posibles: 7,8,9,10 => 4
+        assertEquals(4, solver.solve(new MafaldaCase(7, 5, 10)));
+    }
+
+    @Test
+    void bordes() {
+        // Debe comer todo
+        assertEquals(1, solver.solve(new MafaldaCase(5, 0, 5)));
+
+        // Padre permite mucho: manda 'a' -> 2..5
+        assertEquals(4, solver.solve(new MafaldaCase(2, 999, 5)));
+
+        // Imposible: no puede comer más que n
+        assertEquals(0, solver.solve(new MafaldaCase(6, 0, 5)));
+    }
+}</code></pre>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- 5) Example I/O -->
+    <section class="mb-5">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+        <h2 class="h4 fw-semibold mb-0">5) Ejemplo de entrada/salida (validación manual)</h2>
+        <span class="badge badge-soft pill px-3 py-2">1 caso → 1 línea</span>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="codeblock" data-codeblock>
+            <div class="codebar">
+              <small>Entrada</small>
+              <button class="btn-copy" type="button" data-copy>Copiar</button>
+            </div>
+            <pre><code class="language-text">2
+2 2 5
+7 5 10</code></pre>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="codeblock" data-codeblock>
+            <div class="codebar">
+              <small>Salida esperada</small>
+              <button class="btn-copy" type="button" data-copy>Copiar</button>
+            </div>
+            <pre><code class="language-text">3
+4</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="card p-4 mt-3">
+        <h3 class="h6 fw-semibold">Idea del problema (en una línea)</h3>
+        <p class="muted mb-0">
+          Respuestas posibles de cucharadas comidas: <span class="kbd">x</span> desde
+          <span class="kbd">L = max(a, n-b)</span> hasta <span class="kbd">n</span> → cantidad <span class="kbd">n - L + 1</span>.
+        </p>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- 6) Pattern -->
+    <section id="patron" class="mb-5">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+        <h2 class="h4 fw-semibold mb-0">6) Patrón de resolución (el que más funciona en ProgramaMe)</h2>
+        <span class="badge badge-soft pill px-3 py-2">Lectura → Modelo → Bordes → Código → Envío</span>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-lg-7">
+          <div class="card p-4 h-100">
+            <h3 class="h6 fw-semibold">Pipeline fijo (siempre igual)</h3>
+            <ol class="muted mb-0">
+              <li><b>Leer</b> Entrada/Salida y restricciones (primero).</li>
+              <li><b>Modelar</b>: variables + significado (crear <span class="kbd">record Case</span>).</li>
+              <li><b>Convertir</b> historia a reglas (desigualdades / condiciones).</li>
+              <li><b>Bordes</b>: mínimo, máximo, “imposible”, “todo vale”.</li>
+              <li><b>Tests</b>: 2 ejemplos + 2 bordes (entreno TDD).</li>
+              <li><b>Implementar</b> <span class="kbd">Solver</span>.</li>
+              <li><b>Main</b> solo I/O + formateo de salida (1 línea por caso).</li>
+            </ol>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <div class="card p-4 h-100">
+            <h3 class="h6 fw-semibold">Checklist antes de enviar</h3>
+            <ul class="muted mb-0">
+              <li>¿Una línea por caso?</li>
+              <li>¿Sin textos extra?</li>
+              <li>¿Lee todos los casos?</li>
+              <li>¿Tipos correctos (<span class="kbd">int</span>/<span class="kbd">long</span>)?</li>
+              <li>¿Pasa ejemplo del enunciado?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- 7) Roles -->
+    <section id="roles" class="mb-5">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+        <h2 class="h4 fw-semibold mb-0">7) Roles del equipo (3 alumnos) y cómo encaja con interfaces</h2>
+        <span class="badge badge-soft pill px-3 py-2">Rotables por problema</span>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-lg-4">
+          <div class="card p-4 h-100">
+            <h3 class="h6 fw-semibold">🧠 Analista</h3>
+            <ul class="muted mb-0">
+              <li>Define el <span class="kbd">record Case</span> (modelo del caso).</li>
+              <li>Traduce historia → reglas claras.</li>
+              <li>Escribe tests: ejemplo + bordes.</li>
+              <li>Valida el enfoque con el equipo.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="card p-4 h-100">
+            <h3 class="h6 fw-semibold">💻 Programador</h3>
+            <ul class="muted mb-0">
+              <li>Implementa el <span class="kbd">Solver</span> (interface).</li>
+              <li>Evita tocar Main (salvo lectura del caso).</li>
+              <li>Cuida complejidad y tipos.</li>
+              <li>Refactor mínimo y seguro.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="card p-4 h-100">
+            <h3 class="h6 fw-semibold">🔍 Tester / Validador</h3>
+            <ul class="muted mb-0">
+              <li>Probar manualmente con ejemplos.</li>
+              <li>Busca “off-by-one”, límites y formato.</li>
+              <li>Propone casos trampa.</li>
+              <li>Da el “OK para enviar”.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="card p-4 mt-3">
+        <h3 class="h6 fw-semibold">Dinámica recomendada</h3>
+        <p class="muted mb-0">
+          Rotad roles cada 1–2 problemas. El enfoque con interfaces ayuda a repartir tareas:
+          mientras el programador implementa, el analista puede preparar tests del siguiente problema.
+        </p>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer class="footer py-4">
+  <div class="container d-flex flex-wrap gap-2 justify-content-between align-items-center">
+    <div class="muted">Plantilla educativa ProgramaMe · Interfaces + Java 17 + JUnit 5</div>
+    <div class="muted">Tip: entrenad con tests; en concurso, al menos validación manual + bordes.</div>
+  </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  // Copiar contenido de bloques de código
+  function findPre(el) {
+    return el.closest('[data-codeblock]').querySelector('pre');
+  }
+
+  document.querySelectorAll('[data-copy]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const pre = findPre(btn);
+      const text = pre.innerText;
+
+      try {
+        await navigator.clipboard.writeText(text);
+        const old = btn.textContent;
+        btn.textContent = 'Copiado ✓';
+        setTimeout(() => btn.textContent = old, 900);
+      } catch (e) {
+        // fallback
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+
+        const old = btn.textContent;
+        btn.textContent = 'Copiado ✓';
+        setTimeout(() => btn.textContent = old, 900);
+      }
+    });
+  });
+</script>
+</body>
+</html>

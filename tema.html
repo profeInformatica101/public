@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Entrenador Parte B — Oposición Informática (590107)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;700&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --card: #16161f;
+    --border: #23232e;
+    --accent: #e8ff47;
+    --accent2: #47b3ff;
+    --accent3: #ff6b6b;
+    --text: #e8e8f0;
+    --muted: #8a8aa0;
+    --success: #4fffb0;
+    --warning: #ffd166;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  header {
+    padding: 32px 40px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .logo span { color: var(--accent); }
+
+  .hero {
+    padding: 48px 40px 24px;
+    max-width: 1080px;
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(32px, 5vw, 56px);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .hero p {
+    margin-top: 16px;
+    font-size: 16px;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 780px;
+    line-height: 1.7;
+  }
+
+  .meta-banner {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px;
+  }
+
+  .meta-box {
+    background: rgba(71,179,255,0.05);
+    border: 1px solid rgba(71,179,255,0.18);
+    border-radius: 6px;
+    padding: 14px 16px;
+  }
+
+  .meta-box .k {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 6px;
+  }
+
+  .meta-box .v {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text);
+  }
+
+  main {
+    padding: 0 40px 80px;
+    max-width: 1180px;
+  }
+
+  .phase-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 36px;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+  }
+
+  .phase-tab {
+    padding: 12px 20px;
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    color: var(--muted);
+    transition: all 0.2s;
+    margin-bottom: -1px;
+    background: none;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    white-space: nowrap;
+  }
+
+  .phase-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  .phase-tab:hover:not(.active) { color: var(--text); }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  .timer-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+
+  .timer-display {
+    font-family: 'DM Mono', monospace;
+    font-size: 42px;
+    font-weight: 500;
+    color: var(--accent);
+    min-width: 160px;
+    line-height: 1;
+  }
+
+  .timer-display.danger { color: var(--accent3); animation: pulse 0.5s infinite alternate; }
+  .timer-display.running { color: var(--success); }
+
+  @keyframes pulse { to { opacity: 0.55; } }
+
+  .timer-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .btn {
+    padding: 10px 18px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 1.5px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    transition: all 0.15s;
+    border-radius: 4px;
+  }
+
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.primary { background: var(--accent); color: #000; border-color: var(--accent); }
+  .btn.primary:hover { opacity: 0.9; color: #000; }
+  .btn.danger { border-color: var(--accent3); color: var(--accent3); }
+
+  .section-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  .bolas-section { margin-bottom: 30px; }
+
+  .bolas-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .bola {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 18px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    min-height: 138px;
+  }
+
+  .bola .num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .bola .tema {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.45;
+    color: var(--text);
+  }
+
+  .bola:hover {
+    border-color: var(--accent2);
+    transform: translateY(-2px);
+  }
+
+  .bola.selected {
+    border-color: var(--accent);
+    background: rgba(232,255,71,0.05);
+  }
+
+  .bola.selected::before {
+    content: 'TEMA ELEGIDO';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+
+  .tema-elegido-banner {
+    background: rgba(232,255,71,0.06);
+    border: 1.5px solid rgba(232,255,71,0.3);
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    display: none;
+  }
+
+  .tema-elegido-banner.visible { display: block; }
+
+  .tema-elegido-banner .lab {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .tema-elegido-banner .nombre {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.4;
+  }
+
+  .tip-box {
+    background: rgba(232,255,71,0.04);
+    border: 1px solid rgba(232,255,71,0.2);
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.65;
+  }
+
+  .tip-box .tip-head {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .warning-box {
+    background: rgba(255,209,102,0.05);
+    border: 1px solid rgba(255,209,102,0.22);
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .warning-box .tip-head {
+    color: var(--warning);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .checklist {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .check-item:hover { border-color: var(--accent2); }
+  .check-item.checked { border-color: var(--accent); }
+
+  .check-box {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--muted);
+    border-radius: 2px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    margin-top: 1px;
+  }
+
+  .check-item.checked .check-box {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #000;
+    font-size: 11px;
+  }
+
+  .check-text {
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 400;
+  }
+
+  .check-item.checked .check-text { color: var(--success); }
+
+  .nota-bar {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 20px 24px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .nota-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 38px;
+    font-weight: 500;
+    color: var(--accent);
+    min-width: 92px;
+  }
+
+  .nota-progress {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .nota-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--success));
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+
+  .nota-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .indice-wrap {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+
+  .indice-wrap h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .indice-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 8px;
+    align-items: center;
+  }
+
+  .indice-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    min-width: 24px;
+  }
+
+  .indice-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    padding: 8px 4px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .indice-input:focus { border-bottom-color: var(--accent); }
+  .indice-input::placeholder { color: var(--muted); font-style: italic; }
+
+  .pregunta-section { margin-bottom: 28px; }
+
+  .pregunta-section h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .pregunta-section h3::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .pregunta-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 8px;
+  }
+
+  .pregunta-card {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    padding: 14px 16px;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+
+  .pregunta-card:hover {
+    color: var(--text);
+    border-color: var(--accent2);
+  }
+
+  .pregunta-card strong {
+    display: block;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 4px;
+    font-size: 14px;
+  }
+
+  .estructura {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+  }
+
+  .est-chip {
+    padding: 8px 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    color: var(--muted);
+    transition: all 0.3s;
+  }
+
+  .est-chip.lit {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(232,255,71,0.08);
+    box-shadow: 0 0 12px rgba(232,255,71,0.12);
+  }
+
+  .rubrica-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .rubrica-card {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 16px;
+  }
+
+  .rubrica-card .top {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .rubrica-card h4 {
+    font-size: 16px;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+
+  .rubrica-card p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .footer-note {
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 800px) {
+    .bolas-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 600px) {
+    header, .hero, main {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .timer-display { font-size: 34px; }
+    .nota-bar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Parte <span>B</span> · Trainer</div>
+</header>
+
+<div class="hero">
+  <h1>Entrenamiento de <em>desarrollo del tema</em></h1>
+  <p>
+    Simulador de preparación para la parte B de la oposición de Informática.
+    Está ajustado a la lógica de la rúbrica oficial: estructura del tema,
+    expresión y presentación, y calidad de los contenidos específicos.
+  </p>
+
+  <div class="meta-banner">
+    <div class="meta-box">
+      <div class="k">Especialidad</div>
+      <div class="v">590107 · Informática</div>
+    </div>
+    <div class="meta-box">
+      <div class="k">Temario</div>
+      <div class="v">74 temas oficiales</div>
+    </div>
+    <div class="meta-box">
+      <div class="k">Criterios clave</div>
+      <div class="v">Índice, introducción, desarrollo, conclusión, bibliografía, normativa, profundidad, ejemplos y citas durante el desarrollo</div>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <div class="phase-bar">
+    <button class="phase-tab active" onclick="switchTab('fase1')">① Selección</button>
+    <button class="phase-tab" onclick="switchTab('fase2')">② Índice oficial</button>
+    <button class="phase-tab" onclick="switchTab('fase3')">③ Desarrollo</button>
+    <button class="phase-tab" onclick="switchTab('fase4')">④ Control rúbrica</button>
+  </div>
+
+  <!-- FASE 1 -->
+  <div class="screen active" id="fase1">
+
+    <div class="warning-box">
+      <div class="tip-head">Simulación personal</div>
+      Los temporizadores de esta pantalla sirven para entrenar tu toma de decisión, pero no forman parte del estándar oficial.
+      El objetivo real aquí es elegir el tema que te permita desarrollar mejor la rúbrica.
+    </div>
+
+    <div class="timer-row">
+      <div class="timer-display" id="timer1">00:45</div>
+      <div class="timer-btns">
+        <button class="btn primary" onclick="startTimer(1,45)">▶ Iniciar 45s</button>
+        <button class="btn" onclick="startTimer(1,60)">60s</button>
+        <button class="btn danger" onclick="resetTimer(1)">✕ Reset</button>
+      </div>
+    </div>
+
+    <div class="bolas-section">
+      <div class="section-label">Simulación de bolas</div>
+      <button class="btn primary" id="generator-btn" onclick="generarBolas()">⟳ Generar 4 bolas aleatorias</button>
+      <div style="height: 14px;"></div>
+      <div class="bolas-grid" id="bolas-grid"></div>
+    </div>
+
+    <div class="tema-elegido-banner" id="banner-elegido">
+      <div class="lab">Tema elegido</div>
+      <div class="nombre" id="banner-nombre">—</div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-head">Criterio práctico de elección</div>
+      Elige el tema que te permita cumplir mejor la rúbrica oficial:
+      estructura completa, profundidad, argumentación, ejemplos, secuencia lógica,
+      lenguaje técnico, bibliografía y referencias normativas.
+    </div>
+
+    <div class="section-label">Preguntas para elegir el tema</div>
+    <div class="checklist" id="checklist-seleccion">
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text"><strong>¿Puedo construir un índice sólido?</strong> Veo con claridad introducción, apartados, conclusión, bibliografía y normativa.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text"><strong>¿Puedo desarrollar con profundidad?</strong> Tengo contenido técnico suficiente para no quedarme superficial.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text"><strong>¿Puedo argumentarlo?</strong> Soy capaz de justificarlo normativa, epistemológica o curricularmente.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text"><strong>¿Tengo ejemplos o esquemas?</strong> Puedo ilustrarlo con casos, diagramas, comparaciones o recursos visuales.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text"><strong>¿Manejo lenguaje técnico y referencias?</strong> Puedo citar bibliografía, normas o estándares a lo largo del desarrollo.</div>
+      </div>
+    </div>
+
+    <div class="nota-bar">
+      <div>
+        <div class="nota-num" id="nota1">0/5</div>
+        <div class="nota-label">criterios a favor</div>
+      </div>
+      <div class="nota-progress">
+        <div class="nota-fill" id="nota1-fill" style="width:0%"></div>
+      </div>
+      <div class="nota-label" id="nota1-msg">Valora el tema elegido</div>
+    </div>
+
+    <button class="btn primary" onclick="switchTab('fase2')">Continuar → Índice oficial</button>
+  </div>
+
+  <!-- FASE 2 -->
+  <div class="screen" id="fase2">
+
+    <div class="tip-box">
+      <div class="tip-head">Paso clave</div>
+      Antes de escribir, convierte el tema en una estructura compatible con la rúbrica oficial.
+      El índice debe ayudarte a no olvidar ninguna de estas piezas:
+      introducción, desarrollo ordenado, conclusión, bibliografía y normativa.
+    </div>
+
+    <div class="timer-row">
+      <div class="timer-display" id="timer2">02:00</div>
+      <div class="timer-btns">
+        <button class="btn primary" onclick="startTimer(2,120)">▶ Iniciar 2 min</button>
+        <button class="btn danger" onclick="resetTimer(2)">✕ Reset</button>
+      </div>
+    </div>
+
+    <div class="pregunta-section">
+      <h3>Preguntas de arranque</h3>
+      <div class="pregunta-cards">
+        <div class="pregunta-card"><strong>¿Qué es exactamente?</strong> Define el concepto central con precisión técnica.</div>
+        <div class="pregunta-card"><strong>¿Por qué es relevante?</strong> Sitúalo en un contexto profesional, científico o productivo.</div>
+        <div class="pregunta-card"><strong>¿Cómo voy a organizarlo?</strong> Ordena de lo general a lo específico con secuencia lógica.</div>
+        <div class="pregunta-card"><strong>¿Qué autores, normas o estándares citaré?</strong> Piensa en bibliografía y referencias normativas útiles.</div>
+      </div>
+    </div>
+
+    <div class="indice-wrap">
+      <h3>Plantilla de índice ajustada a la rúbrica</h3>
+      <div id="indice-items">
+        <div class="indice-item"><span class="indice-num">1.</span><input class="indice-input" placeholder="Introducción y relevancia del tema" /></div>
+        <div class="indice-item"><span class="indice-num">2.</span><input class="indice-input" placeholder="Concepto, objetivos o fundamentos" /></div>
+        <div class="indice-item"><span class="indice-num">3.</span><input class="indice-input" placeholder="Componentes, estructura, modelos o clasificación" /></div>
+        <div class="indice-item"><span class="indice-num">4.</span><input class="indice-input" placeholder="Funcionamiento, procesos, técnicas o metodologías" /></div>
+        <div class="indice-item"><span class="indice-num">5.</span><input class="indice-input" placeholder="Ejemplos, aplicaciones, esquemas o comparaciones" /></div>
+        <div class="indice-item"><span class="indice-num">6.</span><input class="indice-input" placeholder="Conclusión y valoración crítica" /></div>
+        <div class="indice-item"><span class="indice-num">7.</span><input class="indice-input" placeholder="Bibliografía y referencias normativas" /></div>
+      </div>
+    </div>
+
+    <div class="rubrica-grid">
+      <div class="rubrica-card">
+        <div class="top">Estructura · 1 punto</div>
+        <h4>No olvides</h4>
+        <p>Índice, introducción, desarrollo ordenado, conclusión, bibliografía y referencias normativas.</p>
+      </div>
+      <div class="rubrica-card">
+        <div class="top">Expresión · 1 punto</div>
+        <h4>Redacción</h4>
+        <p>Claridad, precisión terminológica, corrección léxica y presentación limpia y ordenada.</p>
+      </div>
+      <div class="rubrica-card">
+        <div class="top">Contenidos · 8 puntos</div>
+        <h4>Lo que más pesa</h4>
+        <p>Profundidad, actualización, juicio crítico, ejemplos, secuencia lógica, lenguaje técnico y citas durante el desarrollo.</p>
+      </div>
+    </div>
+
+    <button class="btn primary" onclick="switchTab('fase3')">Continuar → Desarrollo</button>
+  </div>
+
+  <!-- FASE 3 -->
+  <div class="screen" id="fase3">
+
+    <div class="tip-box">
+      <div class="tip-head">Desarrollo con estándar oficial</div>
+      Estas preguntas están formuladas para que el tema no se quede en una definición superficial.
+      Úsalas para ganar profundidad, concreción, actualización, argumentación y claridad.
+    </div>
+
+    <div class="pregunta-section">
+      <h3>Introducción</h3>
+      <div class="pregunta-cards">
+        <div class="pregunta-card"><strong>Contexto y relevancia</strong> ¿Por qué este tema es importante en informática y en el ámbito profesional?</div>
+        <div class="pregunta-card"><strong>Justificación</strong> ¿Qué necesidad técnica, organizativa o histórica explica su aparición?</div>
+      </div>
+    </div>
+
+    <div class="pregunta-section">
+      <h3>Definición y fundamentos</h3>
+      <div class="pregunta-cards">
+        <div class="pregunta-card"><strong>Definición técnica</strong> ¿Cuál es la definición precisa del concepto o sistema?</div>
+        <div class="pregunta-card"><strong>Base teórica</strong> ¿Qué principios, modelos o teorías lo sustentan?</div>
+        <div class="pregunta-card"><strong>Terminología exacta</strong> ¿Qué vocabulario técnico debo usar correctamente?</div>
+      </div>
+    </div>
+
+    <div class="pregunta-section">
+      <h3>Estructura, componentes o clasificación</h3>
+      <div class="pregunta-cards">
+        <div class="pregunta-card"><strong>Partes</strong> ¿Qué elementos lo componen y cuál es la función de cada uno?</div>
+        <div class="pregunta-card"><strong>Tipos</strong> ¿Qué clasificaciones existen y en qué se diferencian?</div>
+        <div class="pregunta-card"><strong>Secuencia lógica</strong> ¿Qué orden me conviene seguir para explicarlo mejor?</div>
+      </div>
+    </div>
+
+    <div class="pregunta-section">
+      <h3>Funcionamiento, técnicas o metodologías</h3>
+      <div class="pregunta-cards">
+        <div class="pregunta-card"><strong>¿Cómo funciona?</strong> Explica el proceso paso a paso, de forma comprensible y técnica.</div>
+        <div class="pregunta-card"><strong>¿Qué técnicas usa?</strong> Algoritmos, protocolos, métodos, fases, procedimientos o procesos asociados.</div>
+        <div class="pregunta-card"><strong>¿Qué problemas resuelve?</strong> Relaciónalo con necesidades reales de sistemas, organización o desarrollo.</div>
+      </div>
+    </div>
+
+    <div class="pregunta-section">
+      <h3>Profundización y juicio crítico</h3>
+      <div class="pregunta-cards">
+        <div class="pregunta-card"><strong>Valoración fundamentada</strong> ¿Qué ventajas, limitaciones o implicaciones presenta?</div>
+        <div class="pregunta-card"><strong>Actualización</strong> ¿Cómo ha evolucionado o qué tendencias recientes lo afectan?</div>
+        <div class="pregunta-card"><strong>Comparación</strong> ¿Con qué otros enfoques, arquitecturas o tecnologías puedo compararlo?</div>
+      </div>
+    </div>
+
+    <div class="pregunta-section">
+      <h3>Ejemplos, esquemas y aplicaciones</h3>
+      <div class="pregunta-cards">
+        <div class="pregunta-card"><strong>Ejemplo real</strong> ¿Qué caso concreto ilustra bien el contenido?</div>
+        <div class="pregunta-card"><strong>Esquema útil</strong> ¿Qué diagrama, mapa o clasificación aclararía el tema?</div>
+        <div class="pregunta-card"><strong>Aplicación profesional</strong> ¿Dónde se usa esto en empresas, administraciones o sistemas reales?</div>
+      </div>
+    </div>
+
+    <div class="pregunta-section">
+      <h3>Normativa y bibliografía</h3>
+      <div class="pregunta-cards">
+        <div class="pregunta-card"><strong>Normas o estándares</strong> ¿Qué ISO, IEEE, RFC, OMG, ENS, ENI u otras referencias son pertinentes?</div>
+        <div class="pregunta-card"><strong>Citas durante el desarrollo</strong> ¿Dónde voy a insertar menciones a bibliografía o normativa, no solo al final?</div>
+        <div class="pregunta-card"><strong>Fuentes solventes</strong> ¿Qué manuales, autores o normas apoyan mejor mis afirmaciones?</div>
+      </div>
+    </div>
+
+    <div class="pregunta-section">
+      <h3>Conclusión</h3>
+      <div class="pregunta-cards">
+        <div class="pregunta-card"><strong>Síntesis</strong> ¿Qué ideas principales debo cerrar de forma clara y coherente?</div>
+        <div class="pregunta-card"><strong>Conexión global</strong> ¿Cómo relaciono todos los apartados del tema entre sí?</div>
+        <div class="pregunta-card"><strong>Valor final</strong> ¿Qué reflexión o valoración crítica refuerza el cierre?</div>
+      </div>
+    </div>
+
+    <button class="btn primary" onclick="switchTab('fase4')">Continuar → Control rúbrica</button>
+  </div>
+
+  <!-- FASE 4 -->
+  <div class="screen" id="fase4">
+
+    <div class="tip-box">
+      <div class="tip-head">Estructura mental recomendada</div>
+      No es una plantilla rígida, pero sí una secuencia muy compatible con la rúbrica:
+      introducción → fundamentos → desarrollo ordenado → ejemplos → conclusión → fuentes.
+    </div>
+
+    <div class="estructura" id="estructura-chips">
+      <div class="est-chip">Índice</div>
+      <div class="est-chip">Introducción</div>
+      <div class="est-chip">Fundamentos</div>
+      <div class="est-chip">Desarrollo</div>
+      <div class="est-chip">Ejemplos</div>
+      <div class="est-chip">Conclusión</div>
+      <div class="est-chip">Bibliografía</div>
+      <div class="est-chip">Normativa</div>
+    </div>
+
+    <div class="timer-row" style="margin-bottom:32px;">
+      <button class="btn primary" onclick="animarEstructura()">▶ Animar estructura</button>
+      <button class="btn" onclick="resetEstructura()">✕ Reset</button>
+    </div>
+
+    <div class="section-label">Checklist final ajustada a la rúbrica oficial</div>
+    <div class="checklist" id="checklist-calidad">
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Incluyo <strong>índice</strong> adecuado al título del tema.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">La <strong>introducción</strong> explica con claridad la relevancia del tema.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Desarrollo los apartados del índice de forma <strong>ordenada y secuenciada</strong>.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">La <strong>conclusión</strong> sintetiza, conecta apartados y aporta cierre sólido.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Incluyo <strong>bibliografía</strong> actualizada y fidedigna.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Incluyo <strong>referencias normativas</strong> o estándares pertinentes.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">La redacción es <strong>clara, precisa y técnicamente correcta</strong>.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">El contenido presenta <strong>profundización, concreción y actualización</strong>.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Incluyo <strong>juicio crítico y argumentación fundamentada</strong>.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Ilustro con <strong>ejemplos, esquemas o gráficos</strong>.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Uso <strong>lenguaje técnico correcto y actualizado</strong>.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Hago <strong>referencias a bibliografía o normativa durante el desarrollo</strong>, no solo al final.</div>
+      </div>
+    </div>
+
+    <div class="nota-bar" style="margin-top:10px;">
+      <div>
+        <div class="nota-num" id="nota4">0/12</div>
+        <div class="nota-label">control rúbrica</div>
+      </div>
+      <div class="nota-progress">
+        <div class="nota-fill" id="nota4-fill" style="width:0%"></div>
+      </div>
+      <div class="nota-label" id="nota4-msg">Revisa antes de entregar</div>
+    </div>
+
+    <div class="timer-row" style="margin-top:32px;">
+      <div class="timer-display" id="timer4">02:00:00</div>
+      <div class="timer-btns">
+        <button class="btn primary" onclick="startTimer(4,7200)">▶ Iniciar 2h</button>
+        <button class="btn" onclick="startTimer(4,5400)">01:30:00</button>
+        <button class="btn" onclick="startTimer(4,900)">15 min</button>
+        <button class="btn danger" onclick="resetTimer(4)">✕ Reset</button>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      Este entrenador reproduce una lógica de preparación personal.
+      La rúbrica que inspira la checklist se centra en estructura del tema,
+      expresión y presentación, y contenidos específicos.
+    </div>
+
+    <button class="btn" onclick="switchTab('fase1')" style="margin-top:12px;">← Volver a fase 1</button>
+  </div>
+
+</main>
+
+<script>
+const temas = [
+  "Tema 1. Representación y comunicación de la información.",
+  "Tema 2. Elementos funcionales de un ordenador digital.",
+  "Tema 3. Componentes, estructura y funcionamiento de la Unidad Central de Proceso.",
+  "Tema 4. Memoria interna. Tipos. Direccionamiento. Características y funciones.",
+  "Tema 5. Microprocesadores. Estructura. Tipos. Comunicación con el exterior.",
+  "Tema 6. Sistemas de almacenamiento externo. Tipos. Características y funcionamiento.",
+  "Tema 7. Dispositivos periféricos de entrada/salida. Características y funcionamiento.",
+  "Tema 8. Hardware comercial de un ordenador. Placa base. Tarjetas controladoras de dispositivos y de entrada/salida.",
+  "Tema 9. Lógica de circuitos. Circuitos combinacionales y secuenciales.",
+  "Tema 10. Representación interna de los datos.",
+  "Tema 11. Organización lógica de los datos. Estructuras estáticas.",
+  "Tema 12. Organización lógica de los datos. Estructuras dinámicas.",
+  "Tema 13. Ficheros. Tipos. Características. Organizaciones.",
+  "Tema 14. Utilización de ficheros según su organización.",
+  "Tema 15. Sistemas operativos. Componentes. Estructura. Funciones. Tipos.",
+  "Tema 16. Sistemas operativos: Gestión de procesos.",
+  "Tema 17. Sistemas operativos: Gestión de memoria.",
+  "Tema 18. Sistemas operativos: Gestión de entradas/salidas.",
+  "Tema 19. Sistemas operativos: Gestión de archivos y dispositivos.",
+  "Tema 20. Explotación y Administración de sistemas operativos monousuario y multiusuario.",
+  "Tema 21. Sistemas informáticos. Estructura física y funcional.",
+  "Tema 22. Planificación y explotación de sistemas informáticos. Configuración. Condiciones de instalación. Medidas de seguridad. Procedimientos de uso.",
+  "Tema 23. Diseño de algoritmos. Técnicas descriptivas.",
+  "Tema 24. Lenguajes de programación. Tipos. Características.",
+  "Tema 25. Programación estructurada. Estructuras básicas. Funciones y Procedimientos.",
+  "Tema 26. Programación modular. Diseño de funciones. Recursividad. Librerías.",
+  "Tema 27. Programación orientada a objetos. Objetos. Clases. Herencia. Polimorfismo. Lenguajes.",
+  "Tema 28. Programación en tiempo real. Interrupciones. Sincronización y comunicación entre tareas. Lenguajes.",
+  "Tema 29. Utilidades para el desarrollo y prueba de programas. Compiladores. Intérpretes. Depuradores.",
+  "Tema 30. Prueba y documentación de programas. Técnicas.",
+  "Tema 31. Lenguaje C: Características generales. Elementos del lenguaje. Estructura de un programa. Funciones de librería y usuario. Entorno de compilación. Herramientas para la elaboración y depuración de programas en lenguaje C.",
+  "Tema 32. Lenguaje C: Manipulación de estructuras de datos dinámicas y estáticas. Entrada y salida de datos. Gestión de punteros. Punteros a funciones.",
+  "Tema 33. Programación en lenguaje ensamblador. Instrucciones básicas. Formatos. Direccionamientos.",
+  "Tema 34. Sistemas gestores de base de datos. Funciones. Componentes. Arquitecturas de referencia y operacionales. Tipos de sistemas.",
+  "Tema 35. La definición de datos. Niveles de descripción. Lenguajes. Diccionario de datos.",
+  "Tema 36. La manipulación de datos. Operaciones. Lenguajes. Optimización de consultas.",
+  "Tema 37. Modelo de datos jerárquico y en red. Estructuras. Operaciones.",
+  "Tema 38. Modelo de datos relacional. Estructuras. Operaciones. Álgebra relacional.",
+  "Tema 39. Lenguajes para la definición y manipulación de datos en sistemas de base de datos relacionales. Tipos. Características. Lenguaje SQL.",
+  "Tema 40. Diseño de bases de datos relacionales.",
+  "Tema 41. Utilidades de los sistemas gestores de base de datos para el desarrollo de aplicaciones. Tipos. Características.",
+  "Tema 42. Sistemas de base de datos distribuidos.",
+  "Tema 43. Administración de sistemas de base de datos.",
+  "Tema 44. Técnicas y procedimientos para la seguridad de los datos.",
+  "Tema 45. Sistemas de información. Tipos. Características. Sistemas de información en la empresa.",
+  "Tema 46. Aplicaciones informáticas de propósito general y para la gestión empresarial. Tipos. Funciones. Características.",
+  "Tema 47. Instalación y explotación de aplicaciones informáticas. Compartición de datos.",
+  "Tema 48. Ingeniería del software. Ciclo de desarrollo del software. Tipos de ciclos de desarrollo. Metodologías de desarrollo. Características distintivas de las principales metodologías de desarrollo utilizadas en la Unión Europea.",
+  "Tema 49. Análisis de sistemas: Modelización de tratamientos. Modelo de flujo de datos y control. Técnicas descriptivas. Documentación.",
+  "Tema 50. Análisis de sistemas: Modelización conceptual de datos. Técnicas descriptivas. Documentación.",
+  "Tema 51. Análisis de sistemas: Especificación funcional del sistema. Búsqueda y descripción de requisitos funcionales. Especificación de soluciones técnicas. Análisis de viabilidad técnica y económica.",
+  "Tema 52. Diseño lógico de funciones. Definición de funciones. Descomposición modular. Técnicas descriptivas. Documentación.",
+  "Tema 53. Diseño lógico de datos. Transformación del modelo conceptual a modelos lógicos. Análisis relacional de datos. Documentación.",
+  "Tema 54. Diseño de interfaces de usuario. Criterios de diseño. Descripción de interfaces. Documentación. Herramientas para la construcción de interfaces.",
+  "Tema 55. Diseño físico de datos y funciones. Criterios de diseño. Documentación.",
+  "Tema 56. Análisis y diseño orientado a objetos.",
+  "Tema 57. Calidad del software. Factores y métricas. Estrategias de prueba.",
+  "Tema 58. Ayudas automatizadas para el desarrollo de software (herramientas CASE). Tipos. Estructura. Prestaciones.",
+  "Tema 59. Gestión y control de proyectos informáticos. Estimación de recursos. Planificación temporal y organizativa. Seguimiento.",
+  "Tema 60. Sistemas basados en el conocimiento. Representación del conocimiento. Componentes y arquitectura.",
+  "Tema 61. Redes y servicios de comunicaciones.",
+  "Tema 62. Arquitecturas de sistemas de comunicaciones. Arquitecturas basadas en niveles. Estándares.",
+  "Tema 63. Funciones y servicios del nivel físico. Tipos y medios de transmisión. Adaptación al medio de transmisión. Limitaciones a la transmisión. Estándares.",
+  "Tema 64. Funciones y servicios del nivel de enlace. Técnicas. Protocolos.",
+  "Tema 65. Funciones y servicios del nivel de red y del nivel de transporte. Técnicas. Protocolos.",
+  "Tema 66. Funciones y servicios en niveles sesión, presentación y aplicación. Protocolos. Estándares.",
+  "Tema 67. Redes de área local. Componentes. Topologías. Estándares. Protocolos.",
+  "Tema 68. Software de sistemas en red. Componentes. Funciones. Estructura.",
+  "Tema 69. Integración de sistemas. Medios de interconexión. Estándares. Protocolos de acceso a redes de área extensa.",
+  "Tema 70. Diseño de sistemas en red local. Parámetros de diseño. Instalación y configuración de sistemas en red local.",
+  "Tema 71. Explotación y administración de sistemas en red local. Facilidades de gestión.",
+  "Tema 72. La seguridad en sistemas en red. Servicios de seguridad. Técnicas y sistemas de protección. Estándares.",
+  "Tema 73. Evaluación y mejora de prestaciones en un sistema en red. Técnicas y procedimientos de medidas.",
+  "Tema 74. Sistemas multimedia."
+];
+
+function shuffleArray(arr) {
+  const copy = [...arr];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+function generarBolas() {
+  const grid = document.getElementById('bolas-grid');
+  const selected = shuffleArray(temas).slice(0, 4);
+  grid.innerHTML = '';
+  selected.forEach((tema, i) => {
+    const div = document.createElement('div');
+    div.className = 'bola';
+    div.innerHTML = `
+      <div class="num">BOLA ${i + 1}</div>
+      <div class="tema">${tema}</div>
+    `;
+    div.onclick = () => elegirTema(div, tema);
+    grid.appendChild(div);
+  });
+  document.getElementById('banner-elegido').classList.remove('visible');
+  document.getElementById('banner-nombre').textContent = '—';
+}
+
+function elegirTema(el, tema) {
+  document.querySelectorAll('.bola').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('banner-nombre').textContent = tema;
+  document.getElementById('banner-elegido').classList.add('visible');
+}
+
+function switchTab(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.phase-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const idx = ['fase1','fase2','fase3','fase4'].indexOf(id);
+  document.querySelectorAll('.phase-tab')[idx].classList.add('active');
+}
+
+const timers = {};
+
+function fmtTime(s) {
+  if (s >= 3600) {
+    const h = Math.floor(s / 3600);
+    const m = Math.floor((s % 3600) / 60);
+    const sec = s % 60;
+    return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+  }
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+}
+
+function startTimer(id, seconds) {
+  if (timers[id]) clearInterval(timers[id].iv);
+  const el = document.getElementById(`timer${id}`);
+  let remaining = seconds;
+  el.className = 'timer-display running';
+  el.textContent = fmtTime(remaining);
+
+  timers[id] = {
+    iv: setInterval(() => {
+      remaining--;
+      if (remaining <= 10) el.className = 'timer-display danger';
+      if (remaining <= 0) {
+        clearInterval(timers[id].iv);
+        el.textContent = '⏱ TIEMPO';
+        el.className = 'timer-display danger';
+        return;
+      }
+      el.textContent = fmtTime(remaining);
+    }, 1000)
+  };
+}
+
+function resetTimer(id) {
+  if (timers[id]) clearInterval(timers[id].iv);
+  const el = document.getElementById(`timer${id}`);
+  el.className = 'timer-display';
+  const defaults = {
+    1: '00:45',
+    2: '02:00',
+    4: '02:00:00'
+  };
+  el.textContent = defaults[id] || '00:00';
+}
+
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+  const box = el.querySelector('.check-box');
+  box.textContent = el.classList.contains('checked') ? '✓' : '';
+  updateNotas();
+}
+
+function updateNotas() {
+  const ch1 = document.querySelectorAll('#checklist-seleccion .check-item.checked').length;
+  document.getElementById('nota1').textContent = `${ch1}/5`;
+  document.getElementById('nota1-fill').style.width = `${(ch1 / 5) * 100}%`;
+
+  const msgs1 = [
+    'Valora el tema elegido',
+    'Todavía flojo',
+    'Podría funcionar',
+    'Buen candidato',
+    'Muy buen candidato',
+    'Tema muy rentable'
+  ];
+  document.getElementById('nota1-msg').textContent = msgs1[ch1] || '';
+
+  const ch4 = document.querySelectorAll('#checklist-calidad .check-item.checked').length;
+  document.getElementById('nota4').textContent = `${ch4}/12`;
+  document.getElementById('nota4-fill').style.width = `${(ch4 / 12) * 100}%`;
+
+  const msgs4 = [
+    'Revisa antes de entregar',
+    'Muy incompleto',
+    'Falta bastante',
+    'Aún flojo',
+    'En progreso',
+    'Aceptable',
+    'Buen control',
+    'Sólido',
+    'Muy sólido',
+    'Nivel alto',
+    'Muy bien ajustado',
+    'Casi cerrado',
+    'Rúbrica muy cubierta'
+  ];
+  document.getElementById('nota4-msg').textContent = msgs4[ch4] || '';
+}
+
+let animIv = null;
+
+function animarEstructura() {
+  resetEstructura();
+  const chips = document.querySelectorAll('.est-chip');
+  let i = 0;
+  animIv = setInterval(() => {
+    if (i < chips.length) {
+      chips[i].classList.add('lit');
+      i++;
+    } else {
+      clearInterval(animIv);
+    }
+  }, 550);
+}
+
+function resetEstructura() {
+  if (animIv) clearInterval(animIv);
+  document.querySelectorAll('.est-chip').forEach(c => c.classList.remove('lit'));
+}
+
+generarBolas();
+</script>
+</body>
+</html>

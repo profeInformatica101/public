@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Rúbrica Genérica - Informática P.E.S. | Palabras Clave Coloreadas</title>
+    <!-- Bootstrap 5 + Icons + Font -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background: #f0f4f8;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+        .rubric-card {
+            border: none;
+            border-radius: 28px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+        .header-gradient {
+            background: linear-gradient(135deg, #0B2B40 0%, #1C4E6F 100%);
+            color: white;
+            padding: 1.8rem 2rem;
+            border-bottom: 4px solid #FFB347;
+        }
+        .badge-pond {
+            background-color: #FFD966;
+            color: #2d3e50;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 6px 12px;
+            border-radius: 40px;
+        }
+        .kw {
+            font-weight: 600;
+            transition: all 0.1s ease;
+            display: inline-block;
+        }
+        /* Palabras clave según categorías semánticas */
+        .kw-positive {
+            color: #1B7B4B;
+            background-color: #E0F2E9;
+            padding: 0 4px;
+            border-radius: 8px;
+        }
+        .kw-negative {
+            color: #B22234;
+            background-color: #FFE3E0;
+            padding: 0 4px;
+            border-radius: 8px;
+        }
+        .kw-method {
+            color: #C4450C;
+            background-color: #FFEEE5;
+            padding: 0 4px;
+            border-radius: 8px;
+        }
+        .kw-structure {
+            color: #1F6392;
+            background-color: #E3F0F9;
+            padding: 0 4px;
+            border-radius: 8px;
+        }
+        .kw-result {
+            color: #9B6A0C;
+            background-color: #FFF1CF;
+            padding: 0 4px;
+            border-radius: 8px;
+        }
+        .kw-tech {
+            color: #2C5F8A;
+            background-color: #E7F0FA;
+            padding: 0 4px;
+            border-radius: 8px;
+        }
+        .table-custom {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+        }
+        .table-custom th {
+            background-color: #EFF3F8;
+            border-bottom: 2px solid #C9D9E8;
+            font-weight: 700;
+            color: #1C3C54;
+        }
+        .table-custom td, .table-custom th {
+            padding: 1rem 1.2rem;
+            vertical-align: top;
+        }
+        .indicador-text {
+            font-size: 0.98rem;
+            line-height: 1.45;
+            text-align: justify;
+        }
+        .porc-badge {
+            background: #2C5F8A;
+            color: white;
+            font-weight: 600;
+            border-radius: 30px;
+            padding: 5px 12px;
+            font-size: 0.8rem;
+            display: inline-block;
+        }
+        .footer-note {
+            background: #E9F0F5;
+            border-radius: 20px;
+            padding: 1rem 1.5rem;
+        }
+        @media (max-width: 768px) {
+            .header-gradient {
+                padding: 1.2rem;
+            }
+            .table-custom td, .table-custom th {
+                padding: 0.8rem;
+            }
+        }
+        .hover-glow:hover {
+            background-color: #FEF9E6;
+            transition: 0.2s;
+        }
+        i.icon-margin {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container py-4 py-md-5">
+    <!-- Título principal con contextualización -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+        <div>
+            <h1 class="display-6 fw-bold" style="color: #0B2B40;"><i class="fas fa-laptop-code me-2" style="color: #E67E22;"></i>107 INFORMÁTICA P.E.S.</h1>
+            <p class="text-muted mt-1">Práctica profesional · Cuatro ejercicios independientes · Ponderación 25% c/u</p>
+        </div>
+        <div class="mt-2 mt-sm-0">
+            <span class="badge-pond"><i class="fas fa-chart-simple me-1"></i> Rúbrica genérica por apartados</span>
+        </div>
+    </div>
+
+    <!-- Tarjeta principal: explicación de ponderación y estructura -->
+    <div class="card rubric-card mb-4">
+        <div class="header-gradient">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                <div>
+                    <i class="fas fa-clipboard-list fa-2x mb-2 mb-md-0 me-3 float-md-start"></i>
+                    <h3 class="mb-1 fw-semibold">Criterios de evaluación comunes</h3>
+                    <p class="mb-0 opacity-90 small">Cada ejercicio se califica de 0 a 10 puntos · Aplicación por apartados con ponderaciones internas</p>
+                </div>
+                <div class="mt-2 mt-md-0">
+                    <span class="badge bg-light text-dark p-2 rounded-pill"><i class="far fa-check-circle text-success me-1"></i> Indicadores de logro</span>
+                    <span class="badge bg-light text-dark p-2 rounded-pill ms-2"><i class="fas fa-percent"></i> Ponderación 20% / 80%</span>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-custom table-bordered mb-0">
+                    <thead>
+                        <tr>
+                            <th style="width: 28%">INDICADOR DE LOGRO</th>
+                            <th style="width: 58%">Descripción cualitativa (MÍNIMO 0 → MÁXIMO 10)</th>
+                            <th style="width: 14%">PONDERACIÓN (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- FILA 1: Planteamiento, enfoque, presentación, claridad y coherencia -->
+                        <tr class="hover-glow">
+                            <td class="fw-bold align-middle">
+                                <i class="fas fa-lightbulb text-warning me-2"></i> 1. Planteamiento, enfoque, presentación, claridad y coherencia
+                            </td>
+                            <td class="indicador-text">
+                                <!-- Versión MINIMO (rojo) y MÁXIMO (verde) con palabras clave coloreadas -->
+                                <div class="mb-2 pb-1 border-bottom border-light">
+                                    <i class="fas fa-times-circle text-danger me-1"></i> <strong class="kw kw-negative">MÍNIMO - 0</strong>:
+                                    <span class="kw kw-negative">No identifica</span> correctamente el <span class="kw kw-method">problema planteado</span>, 
+                                    <span class="kw kw-negative">no justifica</span> el <span class="kw kw-method">enfoque seguido</span> ni 
+                                    <span class="kw kw-negative">describe de forma clara</span> los <span class="kw kw-tech">pasos necesarios</span> para su resolución. 
+                                    <span class="kw kw-negative">No presenta</span> de forma clara la <span class="kw kw-result">solución final</span>, 
+                                    <span class="kw kw-negative">no organiza adecuadamente</span> la información ni 
+                                    <span class="kw kw-negative">explica o interpreta</span> correctamente los <span class="kw kw-result">resultados obtenidos</span>. 
+                                    La respuesta es <span class="kw kw-negative">incompleta, incorrecta o inconexa</span> respecto a lo solicitado.
+                                </div>
+                                <div class="mt-2">
+                                    <i class="fas fa-check-circle text-success me-1"></i> <strong class="kw kw-positive">MÁXIMO - 10</strong>:
+                                    <span class="kw kw-positive">Identifica correctamente</span> el <span class="kw kw-method">problema planteado</span> y 
+                                    <span class="kw kw-positive">justifica de forma clara y ordenada</span> el <span class="kw kw-method">enfoque seguido</span>, 
+                                    <span class="kw kw-structure">describiendo los pasos necesarios</span> para la <span class="kw kw-tech">resolución completa</span> del ejercicio conforme a lo solicitado. 
+                                    <span class="kw kw-positive">Presenta de forma clara, limpia y ordenada</span> la <span class="kw kw-result">solución final</span>, 
+                                    <span class="kw kw-structure">organizando adecuadamente la información</span> y 
+                                    <span class="kw kw-positive">explicando o interpretando correctamente</span> los <span class="kw kw-result">resultados obtenidos</span>.
+                                </div>
+                                <div class="mt-2 small text-secondary bg-light p-2 rounded">
+                                    <i class="fas fa-graduation-cap me-1"></i> Indicadores de coherencia, claridad expositiva y estructura lógica.
+                                </div>
+                            </td>
+                            <td class="align-middle text-center fw-bold">
+                                <span class="porc-badge">20%</span>
+                            </td>
+                        </tr>
+                        <!-- FILA 2: Desarrollo técnico y corrección de los procedimientos -->
+                        <tr class="hover-glow">
+                            <td class="fw-bold align-middle">
+                                <i class="fas fa-microchip text-primary me-2"></i> 2. Desarrollo técnico y corrección de los procedimientos
+                            </td>
+                            <td class="indicador-text">
+                                <div class="mb-2 pb-1 border-bottom border-light">
+                                    <i class="fas fa-times-circle text-danger me-1"></i> <strong class="kw kw-negative">MÍNIMO - 0</strong>:
+                                    <span class="kw kw-negative">No desarrolla correctamente</span> los <span class="kw kw-tech">procedimientos técnicos necesarios</span> o 
+                                    <span class="kw kw-negative">comete errores graves</span> que <span class="kw kw-negative">impiden alcanzar el resultado final</span> solicitado en el ejercicio. 
+                                    La respuesta es <span class="kw kw-negative">incompleta, incorrecta o inconexa</span> respecto a lo solicitado.
+                                </div>
+                                <div class="mt-2">
+                                    <i class="fas fa-check-circle text-success me-1"></i> <strong class="kw kw-positive">MÁXIMO - 10</strong>:
+                                    <span class="kw kw-positive">Desarrolla de forma correcta, coherente y ordenada</span> los <span class="kw kw-tech">procedimientos técnicos necesarios</span>, 
+                                    <span class="kw kw-positive">aplicando adecuadamente</span> los <span class="kw kw-structure">conceptos, cálculos, configuraciones o diseños</span> requeridos 
+                                    para <span class="kw kw-positive">alcanzar el resultado final solicitado</span>.
+                                </div>
+                                <div class="mt-2 small text-secondary bg-light p-2 rounded">
+                                    <i class="fas fa-tools me-1"></i> Precisión técnica, corrección algorítmica, configuraciones o cálculos exactos.
+                                </div>
+                            </td>
+                            <td class="align-middle text-center fw-bold">
+                                <span class="porc-badge">80%</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer bg-white border-0 pt-0 pb-3 px-3 px-md-4">
+            <div class="footer-note mt-3">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <i class="fas fa-info-circle me-2" style="color:#1C6E8F;"></i>
+                        <span class="fw-semibold">Rúbrica genérica aplicable a cada uno de los 4 ejercicios:</span> 
+                        Cada apartado del ejercicio (ponderación variable) utiliza estos dos grandes indicadores. 
+                        La calificación final del ejercicio combina el logro en planteamiento (20%) y desarrollo técnico (80%).
+                    </div>
+                    <div class="col-md-4 text-md-end mt-2 mt-md-0">
+                        <span class="badge bg-secondary-subtle text-dark p-2 rounded-pill"><i class="far fa-file-alt"></i> Evaluación independiente</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leyenda de palabras clave + resumen visual (mejora comprensión) -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body py-3">
+                    <i class="fas fa-check-circle fa-lg me-2" style="color:#1B7B4B;"></i>
+                    <strong>Logro / positivo</strong>
+                    <div class="mt-1"><span class="kw kw-positive">Identifica correctamente</span> · <span class="kw kw-positive">justifica de forma clara</span> · <span class="kw kw-positive">presenta ordenada</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body py-3">
+                    <i class="fas fa-exclamation-triangle fa-lg me-2" style="color:#B22234;"></i>
+                    <strong>Deficiencia / negativo</strong>
+                    <div class="mt-1"><span class="kw kw-negative">No identifica</span> · <span class="kw kw-negative">no justifica</span> · <span class="kw kw-negative">incompleta</span> · <span class="kw kw-negative">errores graves</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body py-3">
+                    <i class="fas fa-diagram-project fa-lg me-2" style="color:#C4450C;"></i>
+                    <strong>Enfoque / método</strong>
+                    <div class="mt-1"><span class="kw kw-method">problema planteado</span> · <span class="kw kw-method">enfoque seguido</span> · <span class="kw kw-method">pasos necesarios</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body py-3">
+                    <i class="fas fa-code-branch fa-lg me-2" style="color:#1F6392;"></i>
+                    <strong>Desarrollo técnico</strong>
+                    <div class="mt-1"><span class="kw kw-tech">procedimientos técnicos</span> · <span class="kw kw-tech">cálculos/configuraciones</span> · <span class="kw kw-tech">resultado final</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección adicional: contextualización de ponderación por apartados (dentro de cada ejercicio) -->
+    <div class="alert alert-light border-start border-4 border-warning shadow-sm" role="alert">
+        <div class="d-flex">
+            <div class="me-3">
+                <i class="fas fa-layer-group fa-2x" style="color:#E67E22;"></i>
+            </div>
+            <div>
+                <h5 class="alert-heading fw-bold"><i class="fas fa-puzzle-piece me-1"></i> Ponderación por apartados dentro de cada ejercicio</h5>
+                <p class="mb-0">Cada ejercicio puede constar de varios apartados o fases de desarrollo. <span class="kw kw-structure">Cada apartado tendrá una ponderación diferente</span> respecto al resto de apartados del mismo ejercicio, aplicándose en todos los casos los <span class="kw kw-tech">mismos indicadores y criterios</span> establecidos en esta <strong>rúbrica genérica</strong>. El peso del 20% (planteamiento) y 80% (desarrollo técnico) se distribuye internamente según el peso de cada apartado.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ejemplo ilustrativo de aplicación: tabla de ponderación hipotética para entender mejor -->
+    <div class="card rubric-card mt-2">
+        <div class="card-header bg-white border-0 pt-3 px-4">
+            <h5 class="mb-0 fw-semibold"><i class="fas fa-chalkboard-user me-2 text-info"></i>Ejemplo de aplicación por apartados (ejercicio hipotético)</h5>
+            <p class="text-muted small mt-1">Ilustración de cómo se combina la rúbrica con apartados de diferente peso específico</p>
+        </div>
+        <div class="card-body pt-0">
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Apartado</th>
+                            <th>Ponderación dentro del ejercicio</th>
+                            <th>Puntuación sobre 10 (Planteamiento 20%)</th>
+                            <th>Puntuación sobre 10 (Desarrollo técnico 80%)</th>
+                            <th>Puntuación ponderada apartado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="kw kw-structure">1. Análisis y diseño</span></td>
+                            <td class="text-center">30%</td>
+                            <td class="text-center">8.0</td>
+                            <td class="text-center">7.5</td>
+                            <td class="text-center fw-bold">(8×0.2 + 7.5×0.8) × 0.30 = <span class="kw kw-positive">2.28</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="kw kw-tech">2. Implementación técnica</span></td>
+                            <td class="text-center">50%</td>
+                            <td class="text-center">9.0</td>
+                            <td class="text-center">8.2</td>
+                            <td class="text-center fw-bold">(9×0.2 + 8.2×0.8) × 0.50 = <span class="kw kw-positive">4.18</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="kw kw-result">3. Resultados y presentación final</span></td>
+                            <td class="text-center">20%</td>
+                            <td class="text-center">7.0</td>
+                            <td class="text-center">9.0</td>
+                            <td class="text-center fw-bold">(7×0.2 + 9×0.8) × 0.20 = <span class="kw kw-positive">1.72</span></td>
+                        </tr>
+                        <tr class="table-secondary">
+                            <td colspan="4" class="text-end fw-bold">CALIFICACIÓN TOTAL EJERCICIO (sobre 10):</td>
+                            <td class="text-center fw-bold bg-warning-subtle">2.28 + 4.18 + 1.72 = <span class="kw kw-positive">8.18</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="small text-secondary mt-2">
+                <i class="fas fa-calculator"></i> Se aplica la misma rúbrica genérica (20% planteamiento / 80% desarrollo técnico) a <strong>cada apartado</strong>, según su ponderación específica. 
+                Así se garantiza coherencia en toda la prueba práctica.
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer con refuerzo de palabras clave + meta evaluación -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="d-flex flex-wrap justify-content-between align-items-center border-top pt-3">
+                <div class="small text-muted">
+                    <i class="far fa-registered"></i> Rúbrica basada en normativa P.E.S. · Informática · Cuatro ejercicios independientes
+                </div>
+                <div>
+                    <span class="badge bg-light text-dark me-1"><i class="fas fa-tag"></i> #Planteamiento</span>
+                    <span class="badge bg-light text-dark me-1"><i class="fas fa-microchip"></i> #DesarrolloTécnico</span>
+                    <span class="badge bg-light text-dark"><i class="fas fa-chart-line"></i> #CorrecciónProcedimental</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script de Bootstrap opcional para interacciones (no obligatorio, pero mejora) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

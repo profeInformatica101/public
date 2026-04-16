@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linux Monitoring Tools • 2026 Ultimate Interactive Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0e17;
+      --surface: #111827;
+      --surface2: #1a2332;
+      --border: rgba(99,179,237,0.12);
+      --border-hover: rgba(99,179,237,0.35);
+      --accent: #38bdf8;
+      --accent2: #818cf8;
+      --accent3: #34d399;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --muted2: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      min-height: 100vh;
+    }
+    /* HERO */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 64px 24px 80px;
+      text-align: center;
+      background: linear-gradient(180deg, #0d1520 0%, var(--bg) 100%);
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 50% -10%, rgba(56,189,248,0.12) 0%, transparent 70%),
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(99,179,237,0.04) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(99,179,237,0.04) 40px);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(56,189,248,0.1);
+      border: 1px solid rgba(56,189,248,0.25);
+      border-radius: 100px;
+      padding: 6px 18px;
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: clamp(2.2rem, 6vw, 4.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+    .hero h1 span { color: var(--accent); }
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--muted2);
+      max-width: 560px;
+      margin: 0 auto 40px;
+      line-height: 1.6;
+      font-weight: 400;
+    }
+    .stats-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .stat-pill {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 8px 20px;
+      font-size: 13px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--muted2);
+    }
+    .stat-pill b { color: var(--accent); }
+
+    /* SEARCH & FILTERS */
+    .controls {
+      max-width: 1200px;
+      margin: -40px auto 0;
+      padding: 0 20px;
+      position: relative;
+      z-index: 10;
+    }
+    .controls-inner {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px 28px;
+    }
+    .search-wrap {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 16px;
+      pointer-events: none;
+    }
+    #searchInput {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      padding: 13px 16px 13px 44px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    #searchInput::placeholder { color: var(--muted); }
+    #searchInput:focus { border-color: var(--accent); }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .chip {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted2);
+      cursor: pointer;
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .chip:hover { border-color: var(--accent); color: var(--accent); }
+    .chip.active { background: rgba(56,189,248,0.12); border-color: var(--accent); color: var(--accent); }
+
+    .result-info {
+      margin-top: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .result-info b { color: var(--accent3); }
+
+    /* GRID */
+    .grid-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: border-color 0.2s, transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cat-color, var(--accent)), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+    .card:hover::before { opacity: 1; }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .tool-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .tool-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 6px;
+    }
+    .card-title-wrap { flex: 1; min-width: 0; }
+    .card-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-name a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .card-name a:hover { color: var(--accent); }
+    .ext-icon {
+      font-size: 11px;
+      color: var(--muted);
+      opacity: 0.7;
+    }
+    .cat-badge {
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 100px;
+      margin-top: 3px;
+      display: inline-block;
+    }
+    .card-desc {
+      font-size: 13px;
+      color: var(--muted2);
+      line-height: 1.5;
+      font-weight: 400;
+    }
+
+    /* INSTALL BLOCK */
+    .install-block {
+      background: #0d1520;
+      border: 1px solid rgba(99,179,237,0.1);
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+    .install-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+    .install-cmds {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .install-cmd {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      color: var(--accent3);
+    }
+    .install-cmd .distro {
+      color: var(--muted);
+      min-width: 52px;
+      font-size: 10px;
+    }
+    .copy-btn {
+      margin-left: auto;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--muted);
+      font-size: 11px;
+      padding: 2px 8px;
+      cursor: pointer;
+      font-family: 'JetBrains Mono', monospace;
+      transition: all 0.15s;
+    }
+    .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    .tags-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .tag {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 3px 10px;
+      font-size: 11px;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* EMPTY STATE */
+    .empty {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--muted);
+    }
+    .empty b { display: block; font-size: 1.5rem; color: var(--muted2); margin-bottom: 12px; }
+
+    /* RESET BTN */
+    .reset-wrap { text-align: center; margin-top: 24px; }
+    .reset-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      color: var(--muted2);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      padding: 10px 28px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .reset-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    @media (max-width: 640px) {
+      .grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 2rem; }
+      .controls-inner { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-badge">
+    <span>●</span> 80+ herramientas · actualizado 2026
+  </div>
+  <h1>Linux<br><span>Monitoring</span> Toolkit</h1>
+  <p>Referencia interactiva completa: desde CLI clásico hasta observabilidad moderna. Con enlaces oficiales, logos e instrucciones de instalación.</p>
+  <div class="stats-row">
+    <div class="stat-pill"><b>80+</b> herramientas</div>
+    <div class="stat-pill"><b>8</b> categorías</div>
+    <div class="stat-pill"><b>apt · dnf · brew</b> install</div>
+    <div class="stat-pill"><b>links</b> oficiales</div>
+  </div>
+</section>
+
+<div class="controls">
+  <div class="controls-inner">
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input type="text" id="searchInput" placeholder="Buscar herramienta... (ej: htop, iotop, Zabbix, tcpdump)">
+    </div>
+    <div class="chips" id="chips">
+      <span class="chip active" data-cat="all">Todas</span>
+      <span class="chip" data-cat="cli">CLI clásico</span>
+      <span class="chip" data-cat="network">Red</span>
+      <span class="chip" data-cat="performance">Rendimiento / IO</span>
+      <span class="chip" data-cat="infra">Infraestructura</span>
+      <span class="chip" data-cat="log">Logs</span>
+      <span class="chip" data-cat="hardware">Hardware</span>
+      <span class="chip" data-cat="security">Seguridad</span>
+    </div>
+    <div class="result-info" id="resultInfo">Cargando herramientas...</div>
+  </div>
+</div>
+
+<div class="grid-wrap">
+  <div class="grid" id="grid"></div>
+  <div class="reset-wrap">
+    <button class="reset-btn" id="resetBtn">↺ Limpiar filtros</button>
+  </div>
+</div>
+
+<footer>
+  Linux Monitoring 2026 · Basado en el original "80 Linux Monitoring Tools" ·
+  Enriquecido con <a href="https://ebpf.io" target="_blank">eBPF</a>,
+  <a href="https://grafana.com" target="_blank">Grafana</a> y herramientas modernas
+</footer>
+
+<script>
+const CAT_COLORS = {
+  cli: '#38bdf8', network: '#818cf8', performance: '#f59e0b',
+  infra: '#34d399', log: '#fb923c', hardware: '#e879f9',
+  security: '#f87171'
+};
+const CAT_LABELS = {
+  cli: '⌨ CLI', network: '🌐 Red', performance: '⚡ Perf/IO',
+  infra: '🏗 Infra', log: '📜 Log', hardware: '🖥 Hardware', security: '🔒 Seg'
+};
+
+const TOOLS = [
+  {
+    name: "top", cat: "cli",
+    desc: "Monitor de procesos preinstalado. Vista en tiempo real de CPU, memoria, tareas. Pilar del monitoreo Linux.",
+    url: "https://www.man7.org/linux/man-pages/man1/top.1.html",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["Preinstalado","(incluido en procps-ng)"]],
+    tags: ["cpu","procesos","real-time"]
+  },
+  {
+    name: "htop", cat: "cli",
+    desc: "Visor de procesos interactivo con colores, soporte de ratón y ordenación avanzada. Superior a top.",
+    url: "https://htop.dev",
+    logo: "https://htop.dev/favicon.png",
+    install: [["apt","sudo apt install htop"],["dnf","sudo dnf install htop"],["brew","brew install htop"]],
+    tags: ["interactivo","colores","ncurses"]
+  },
+  {
+    name: "atop", cat: "cli",
+    desc: "Monitor avanzado con registro diario para análisis histórico. Resalta recursos críticos.",
+    url: "https://www.atoptool.nl",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["apt","sudo apt install atop"],["dnf","sudo dnf install atop"]],
+    tags: ["histórico","logging","avanzado"]
+  },
+  {
+    name: "glances", cat: "cli",
+    desc: "Monitoreo multiplataforma en modo cliente/servidor con interfaz web. Máxima densidad de información.",
+    url: "https://nicolargo.github.io/glances/",
+    logo: "https://nicolargo.github.io/glances/logo.png",
+    install: [["pip","pip install glances"],["apt","sudo apt install glances"],["brew","brew install glances"]],
+    tags: ["remote","web","python"]
+  },
+  {
+    name: "nmon", cat: "cli",
+    desc: "Rendimiento: CPU, memoria, red, filesystems, discos. Salida CSV para integración con RRDtool.",
+    url: "https://nmon.sourceforge.net/pmwiki.php",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["apt","sudo apt install nmon"],["dnf","sudo dnf install nmon"]],
+    tags: ["csv","rendimiento","ibm"]
+  },
+  {
+    name: "dstat", cat: "cli",
+    desc: "Sustituto de vmstat, iostat, netstat, ifstat. Vista de recursos en tiempo real, plugins, exportación CSV.",
+    url: "https://dag.wiee.rs/home-made/dstat/",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["apt","sudo apt install dstat"],["dnf","sudo dnf install dstat"]],
+    tags: ["plugins","versátil","csv"]
+  },
+  {
+    name: "uptime", cat: "cli",
+    desc: "Muestra tiempo de actividad del sistema, usuarios y cargas medias (1, 5, 15 min). Diagnóstico rápido.",
+    url: "https://www.man7.org/linux/man-pages/man1/uptime.1.html",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["Preinstalado","(incluido en procps)"]],
+    tags: ["rápido","carga","built-in"]
+  },
+  {
+    name: "mpstat", cat: "cli",
+    desc: "Estadísticas de CPU por procesador. Usa 'mpstat -P ALL' para detalle por núcleo.",
+    url: "https://man7.org/linux/man-pages/man1/mpstat.1.html",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["apt","sudo apt install sysstat"],["dnf","sudo dnf install sysstat"]],
+    tags: ["cpu","por-núcleo","sysstat"]
+  },
+  {
+    name: "ps", cat: "cli",
+    desc: "Snapshot de procesos actuales. 'ps aux' o 'ps -ef' para listado completo.",
+    url: "https://man7.org/linux/man-pages/man1/ps.1.html",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["Preinstalado","(incluido en procps)"]],
+    tags: ["procesos","snapshot","built-in"]
+  },
+  {
+    name: "sar", cat: "cli",
+    desc: "Navaja suiza de sysstat: CPU histórico, memoria, I/O, red. Recopila y reporta.",
+    url: "https://man7.org/linux/man-pages/man1/sar.1.html",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["apt","sudo apt install sysstat"],["dnf","sudo dnf install sysstat"]],
+    tags: ["histórico","sysstat","informes"]
+  },
+  {
+    name: "free", cat: "cli",
+    desc: "Muestra memoria física y swap totales, usadas/libres, más buffers del kernel.",
+    url: "https://man7.org/linux/man-pages/man1/free.1.html",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["Preinstalado","(incluido en procps)"]],
+    tags: ["memoria","swap","built-in"]
+  },
+  {
+    name: "df", cat: "cli",
+    desc: "Disk free: muestra el uso de espacio en disco de los sistemas de archivos.",
+    url: "https://man7.org/linux/man-pages/man1/df.1.html",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["Preinstalado","(GNU coreutils)"]],
+    tags: ["disco","filesystems","built-in"]
+  },
+  {
+    name: "lsof", cat: "performance",
+    desc: "Lista archivos y conexiones de red abiertos. Filtra por proceso o usuario. Esencial para debug.",
+    url: "https://man7.org/linux/man-pages/man8/lsof.8.html",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["apt","sudo apt install lsof"],["dnf","sudo dnf install lsof"]],
+    tags: ["archivos","debug","red"]
+  },
+  {
+    name: "iostat", cat: "performance",
+    desc: "Monitorea la carga de los dispositivos I/O del sistema. Ayuda a balancear el I/O de disco.",
+    url: "https://man7.org/linux/man-pages/man1/iostat.1.html",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["apt","sudo apt install sysstat"],["dnf","sudo dnf install sysstat"]],
+    tags: ["disco","io","sysstat"]
+  },
+  {
+    name: "vmstat", cat: "performance",
+    desc: "Estadísticas de memoria virtual: procesos, memoria, paginación, block IO, actividad CPU.",
+    url: "https://man7.org/linux/man-pages/man8/vmstat.8.html",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["Preinstalado","(incluido en procps)"]],
+    tags: ["memoria","paginación","virtual"]
+  },
+  {
+    name: "iotop", cat: "performance",
+    desc: "Muestra el uso de I/O por proceso, similar a top pero para lectura/escritura de disco.",
+    url: "http://guichaz.free.fr/iotop/",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["apt","sudo apt install iotop"],["dnf","sudo dnf install iotop"]],
+    tags: ["io","por-proceso","disco"]
+  },
+  {
+    name: "strace", cat: "performance",
+    desc: "Traza llamadas al sistema y señales. Depura problemas complejos de rendimiento.",
+    url: "https://strace.io",
+    logo: "https://strace.io/favicon.ico",
+    install: [["apt","sudo apt install strace"],["dnf","sudo dnf install strace"]],
+    tags: ["debug","syscall","tracing"]
+  },
+  {
+    name: "pmap", cat: "cli",
+    desc: "Reporta el mapa de memoria de un proceso. Excelente para análisis de cuellos de botella en memoria.",
+    url: "https://man7.org/linux/man-pages/man1/pmap.1.html",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["Preinstalado","(incluido en procps)"]],
+    tags: ["memoria","debug","procesos"]
+  },
+  {
+    name: "cpulimit", cat: "performance",
+    desc: "Limita el uso de CPU de un proceso. Ideal para trabajos en batch que no deben monopolizar CPU.",
+    url: "https://github.com/opsengine/cpulimit",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["apt","sudo apt install cpulimit"],["dnf","sudo dnf install cpulimit"]],
+    tags: ["throttle","cpu","batch"]
+  },
+  {
+    name: "ss", cat: "network",
+    desc: "Estadísticas de sockets, superior a netstat. Más rápido y con más información. 'ss -s' para resumen.",
+    url: "https://man7.org/linux/man-pages/man8/ss.8.html",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["Preinstalado","(iproute2)"]],
+    tags: ["sockets","moderno","red"]
+  },
+  {
+    name: "netstat", cat: "network",
+    desc: "Conexiones de red, tablas de enrutamiento, estadísticas de interfaces. Legacy pero muy conocido.",
+    url: "https://man7.org/linux/man-pages/man8/netstat.8.html",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["apt","sudo apt install net-tools"],["dnf","sudo dnf install net-tools"]],
+    tags: ["legacy","red","conexiones"]
+  },
+  {
+    name: "iftop", cat: "network",
+    desc: "Muestra el uso de ancho de banda en una interfaz. Como top pero para tráfico de red.",
+    url: "http://www.ex-parrot.com/pdw/iftop/",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["apt","sudo apt install iftop"],["dnf","sudo dnf install iftop"]],
+    tags: ["ancho-de-banda","real-time","interfaz"]
+  },
+  {
+    name: "nload", cat: "network",
+    desc: "Aplicación de consola que monitorea el throughput de red con gráficos de entrada/salida.",
+    url: "https://github.com/rolandriegel/nload",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["apt","sudo apt install nload"],["dnf","sudo dnf install nload"]],
+    tags: ["gráficos","throughput","consola"]
+  },
+  {
+    name: "tcpdump", cat: "network",
+    desc: "Potente analizador de paquetes. Captura y muestra paquetes que coincidan con expresiones.",
+    url: "https://www.tcpdump.org",
+    logo: "https://www.tcpdump.org/images/logo.png",
+    install: [["apt","sudo apt install tcpdump"],["dnf","sudo dnf install tcpdump"],["brew","brew install tcpdump"]],
+    tags: ["sniffer","paquetes","análisis"]
+  },
+  {
+    name: "traceroute", cat: "network",
+    desc: "Muestra la ruta y mide los retrasos de paquetes a través de los saltos de red.",
+    url: "https://man7.org/linux/man-pages/man8/traceroute.8.html",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["apt","sudo apt install traceroute"],["dnf","sudo dnf install traceroute"],["brew","brew install inetutils"]],
+    tags: ["diagnóstico","latencia","saltos"]
+  },
+  {
+    name: "MTR", cat: "network",
+    desc: "Combina traceroute + ping. Diagnóstico de red en tiempo real y pérdida de paquetes.",
+    url: "https://www.bitwizard.nl/mtr/",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["apt","sudo apt install mtr"],["dnf","sudo dnf install mtr"],["brew","brew install mtr"]],
+    tags: ["combinado","diagnóstico","pérdida"]
+  },
+  {
+    name: "nmap", cat: "network",
+    desc: "Escáner de seguridad: puertos abiertos, detección de OS, versiones de servicios.",
+    url: "https://nmap.org",
+    logo: "https://nmap.org/images/sitelogo.png",
+    install: [["apt","sudo apt install nmap"],["dnf","sudo dnf install nmap"],["brew","brew install nmap"]],
+    tags: ["seguridad","escaneo","puertos"]
+  },
+  {
+    name: "bmon", cat: "network",
+    desc: "Monitor de ancho de banda y estimador de tasa con salida curses o scripting.",
+    url: "https://github.com/tgraf/bmon",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["apt","sudo apt install bmon"],["dnf","sudo dnf install bmon"],["brew","brew install bmon"]],
+    tags: ["ancho-de-banda","interactivo","scripting"]
+  },
+  {
+    name: "ntopng", cat: "network",
+    desc: "Monitoreo de red basado en web. Geolocaliza hosts, análisis de tráfico, IP flow.",
+    url: "https://www.ntop.org/products/traffic-analysis/ntop/",
+    logo: "https://www.ntop.org/wp-content/uploads/2021/07/ntopng_logo.png",
+    install: [["apt","sudo apt install ntopng"],["dnf","sudo dnf install ntopng"]],
+    tags: ["web-ui","flows","geolocalización"]
+  },
+  {
+    name: "SmokePing", cat: "network",
+    desc: "Medición y visualización de latencia de red con soporte de plugins.",
+    url: "https://oss.oetiker.ch/smokeping/",
+    logo: "https://oss.oetiker.ch/smokeping/pub/smokeping-logo.png",
+    install: [["apt","sudo apt install smokeping"],["docker","docker run linuxserver/smokeping"]],
+    tags: ["latencia","gráficos","plugins"]
+  },
+  {
+    name: "GoAccess", cat: "log",
+    desc: "Analizador de logs web en tiempo real (Apache, Nginx, CloudFront). Terminal o salida HTML.",
+    url: "https://goaccess.io",
+    logo: "https://goaccess.io/images/logo-g.svg",
+    install: [["apt","sudo apt install goaccess"],["dnf","sudo dnf install goaccess"],["brew","brew install goaccess"]],
+    tags: ["analytics","html","nginx","apache"]
+  },
+  {
+    name: "Logwatch", cat: "log",
+    desc: "Sistema de análisis de logs personalizable. Reportes diarios por email de actividad del sistema.",
+    url: "https://sourceforge.net/projects/logwatch/",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["apt","sudo apt install logwatch"],["dnf","sudo dnf install logwatch"]],
+    tags: ["reportes","email","logs"]
+  },
+  {
+    name: "MultiTail", cat: "log",
+    desc: "Monitorea múltiples archivos de log en ventanas, con fusión de regex a colores.",
+    url: "https://www.vanheusden.com/multitail/",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["apt","sudo apt install multitail"],["dnf","sudo dnf install multitail"],["brew","brew install multitail"]],
+    tags: ["multi-ventana","color","regex"]
+  },
+  {
+    name: "apachetop", cat: "log",
+    desc: "Monitor de rendimiento de Apache en tiempo real: peticiones, bytes, 404s.",
+    url: "https://github.com/tessus/apachetop",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/1/10/Apache_HTTP_server_logo_%282019-present%29.svg",
+    install: [["apt","sudo apt install apachetop"],["brew","brew install apachetop"]],
+    tags: ["apache","webserver","real-time"]
+  },
+  {
+    name: "mytop", cat: "performance",
+    desc: "Monitorea hilos y consultas de MySQL en tiempo real. Rendimiento de base de datos.",
+    url: "https://jeremy.zawodny.com/mysql/mytop/",
+    logo: "https://labs.mysql.com/common/themes/sakila/favicon.ico",
+    install: [["apt","sudo apt install mytop"],["cpan","cpan -i mytop"]],
+    tags: ["mysql","database","queries"]
+  },
+  {
+    name: "powertop", cat: "hardware",
+    desc: "Diagnostica el consumo de energía. Ayuda a optimizar la vida de la batería y la gestión de energía.",
+    url: "https://01.org/powertop",
+    logo: "https://01.org/sites/default/files/pictures/intel_logo-200x91.png",
+    install: [["apt","sudo apt install powertop"],["dnf","sudo dnf install powertop"]],
+    tags: ["energía","batería","consumo"]
+  },
+  {
+    name: "lshw", cat: "hardware",
+    desc: "Configuración detallada de hardware: CPU, memoria, placa base, etc.",
+    url: "https://ezix.org/project/wiki/HardwareLiSter",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["apt","sudo apt install lshw"],["dnf","sudo dnf install lshw"]],
+    tags: ["hardware","inventario","cpu"]
+  },
+  {
+    name: "acct / psacct", cat: "security",
+    desc: "Monitorea comandos de usuario, resumen de uso de CPU/memoria mediante el comando 'sa'.",
+    url: "https://www.gnu.org/software/acct/",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["apt","sudo apt install acct"],["dnf","sudo dnf install psacct"]],
+    tags: ["auditoría","usuarios","accounting"]
+  },
+  {
+    name: "whowatch", cat: "security",
+    desc: "Monitoreo de usuarios en tiempo real: procesos que ejecuta cada usuario, vista en árbol.",
+    url: "https://www.sysadminworld.com/2018/whowatch-a-powerful-real-time-users-monitoring-tool-for-linux/",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["apt","sudo apt install whowatch"]],
+    tags: ["usuarios","real-time","árbol"]
+  },
+  {
+    name: "Monit", cat: "infra",
+    desc: "Monitoreo de servicios y auto-reinicio. Interfaz web, verificaciones con scripts personalizados.",
+    url: "https://mmonit.com/monit/",
+    logo: "https://mmonit.com/monit/img/logo.png",
+    install: [["apt","sudo apt install monit"],["dnf","sudo dnf install monit"],["brew","brew install monit"]],
+    tags: ["auto-healing","alertas","servicios"]
+  },
+  {
+    name: "collectd", cat: "infra",
+    desc: "Daemon Unix con arquitectura de plugins modular para recopilación de métricas de rendimiento.",
+    url: "https://collectd.org",
+    logo: "https://collectd.org/images/collectd-logo.svg",
+    install: [["apt","sudo apt install collectd"],["dnf","sudo dnf install collectd"]],
+    tags: ["daemon","plugins","métricas"]
+  },
+  {
+    name: "Nagios", cat: "infra",
+    desc: "Monitoreo de infraestructura estándar del sector. Extenso ecosistema de plugins.",
+    url: "https://www.nagios.org",
+    logo: "https://www.nagios.org/wp-content/uploads/2015/06/nagios_logo_black-tagline.svg",
+    install: [["apt","sudo apt install nagios4"],["docker","docker run jasonrivers/nagios"]],
+    tags: ["legacy","plugins","alertas"]
+  },
+  {
+    name: "Zabbix", cat: "infra",
+    desc: "Monitoreo open-source empresarial. Sin agente posible. Core en C + frontend PHP.",
+    url: "https://www.zabbix.com",
+    logo: "https://assets.zabbix.com/img/logo/zabbix_logo_500x131.png",
+    install: [["apt","sudo apt install zabbix-server-mysql"],["docker","docker run zabbix/zabbix-server-mysql"]],
+    tags: ["enterprise","alertas","agentless"]
+  },
+  {
+    name: "Munin", cat: "infra",
+    desc: "Monitoreo de red plug-and-play. Gráficos RRD, alertas por umbral. Fácil de configurar.",
+    url: "https://munin-monitoring.org",
+    logo: "https://munin-monitoring.org/static/img/logo.svg",
+    install: [["apt","sudo apt install munin"],["dnf","sudo dnf install munin"]],
+    tags: ["simple","gráficos","rrd"]
+  },
+  {
+    name: "Cacti", cat: "infra",
+    desc: "Solución de graficación de red basada en RRDtool. Polling y scripts personalizados.",
+    url: "https://www.cacti.net",
+    logo: "https://www.cacti.net/images/cacti_logo.gif",
+    install: [["apt","sudo apt install cacti"],["docker","docker run smcline06/cacti"]],
+    tags: ["gráficos","rrd","polling"]
+  },
+  {
+    name: "Prometheus", cat: "infra",
+    desc: "Sistema de monitoreo y alerta moderno. Pull-based, time-series DB, PromQL, integración con Grafana.",
+    url: "https://prometheus.io",
+    logo: "https://prometheus.io/assets/prometheus_logo_grey.svg",
+    install: [["apt","sudo apt install prometheus"],["docker","docker run prom/prometheus"],["brew","brew install prometheus"]],
+    tags: ["time-series","moderno","cloud-native"]
+  },
+  {
+    name: "Grafana", cat: "infra",
+    desc: "Plataforma de observabilidad y dashboards. Conecta con Prometheus, InfluxDB, Loki, etc.",
+    url: "https://grafana.com",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/3/3b/Grafana_icon.svg",
+    install: [["apt","sudo apt install grafana"],["docker","docker run grafana/grafana"],["brew","brew install grafana"]],
+    tags: ["dashboards","visualización","observabilidad"]
+  },
+  {
+    name: "Netdata", cat: "infra",
+    desc: "Monitoreo en tiempo real con resolución por segundo. Web UI inmediato, sin configuración.",
+    url: "https://www.netdata.cloud",
+    logo: "https://www.netdata.cloud/img/netdata.svg",
+    install: [["curl","bash <(curl -Ss https://my-netdata.io/kickstart.sh)"],["docker","docker run netdata/netdata"]],
+    tags: ["real-time","zero-config","web-ui"]
+  },
+  {
+    name: "PCP", cat: "infra",
+    desc: "Performance Co-Pilot — métricas distribuidas, framework de plugins, sistemas grandes.",
+    url: "https://pcp.io",
+    logo: "https://pcp.io/images/pcp-logo.png",
+    install: [["apt","sudo apt install pcp"],["dnf","sudo dnf install pcp"]],
+    tags: ["distribuido","escalable","métricas"]
+  },
+  {
+    name: "RRDtool", cat: "infra",
+    desc: "Herramienta de base de datos round-robin para datos de series temporales y graficación.",
+    url: "https://oss.oetiker.ch/rrdtool/",
+    logo: "https://oss.oetiker.ch/rrdtool/inc/rrdtool-logo-dark.png",
+    install: [["apt","sudo apt install rrdtool"],["dnf","sudo dnf install rrdtool"],["brew","brew install rrdtool"]],
+    tags: ["base-datos","series-tiempo","gráficos"]
+  },
+  {
+    name: "monitorix", cat: "infra",
+    desc: "Monitoreo de sistema ligero. Servidor HTTP incorporado, graficación de métricas enriquecida.",
+    url: "https://www.monitorix.org",
+    logo: "https://www.monitorix.org/imgs/monitorix-logo2.png",
+    install: [["apt","sudo apt install monitorix"],["rpm","rpm -Uvh monitorix-*.noarch.rpm"]],
+    tags: ["ligero","http","rrd"]
+  },
+  {
+    name: "OpenNMS", cat: "infra",
+    desc: "Gestión de eventos, monitoreo de servicios, recopilación de datos. Altamente personalizable.",
+    url: "https://www.opennms.com",
+    logo: "https://www.opennms.com/wp-content/uploads/2021/01/opennms-horizon-logo.svg",
+    install: [["apt","sudo apt install opennms"],["docker","docker run opennms/horizon"]],
+    tags: ["eventos","provisioning","java"]
+  },
+  {
+    name: "eBPF / bpftrace", cat: "performance",
+    desc: "Trazado dinámico del kernel Linux con eBPF. Perfilado de rendimiento sin parches de kernel.",
+    url: "https://ebpf.io",
+    logo: "https://ebpf.io/static/logo-big-hy-ell3sm0g35l9p5h.svg",
+    install: [["apt","sudo apt install bpftrace"],["dnf","sudo dnf install bpftrace"]],
+    tags: ["ebpf","kernel","tracing"]
+  },
+  {
+    name: "OpenTelemetry", cat: "infra",
+    desc: "Framework de observabilidad unificado: trazas, métricas y logs. Estándar Cloud Native.",
+    url: "https://opentelemetry.io",
+    logo: "https://opentelemetry.io/img/logos/opentelemetry-horizontal-color.svg",
+    install: [["apt","sudo apt install opentelemetry-collector"],["docker","docker run otel/opentelemetry-collector"]],
+    tags: ["cloud-native","trazas","otel"]
+  },
+  {
+    name: "Loki", cat: "log",
+    desc: "Sistema de agregación de logs de Grafana Labs. Indexa solo metadatos. Integración con Grafana.",
+    url: "https://grafana.com/oss/loki/",
+    logo: "https://grafana.com/static/img/logos/logo-loki.svg",
+    install: [["docker","docker run grafana/loki"],["brew","brew install loki"]],
+    tags: ["logs","grafana","índice-metadatos"]
+  },
+  {
+    name: "Swatch", cat: "log",
+    desc: "Vigila logs con triggers regex. Alertas vía email o consola para detección de intrusiones.",
+    url: "https://swatch.sourceforge.net/",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["apt","sudo apt install swatch"],["cpan","cpan -i File::Tail"]],
+    tags: ["alertas","regex","intrusión"]
+  },
+  {
+    name: "ethtool", cat: "network",
+    desc: "Muestra y modifica parámetros y diagnósticos del controlador de red.",
+    url: "https://www.kernel.org/pub/software/network/ethtool/",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["apt","sudo apt install ethtool"],["dnf","sudo dnf install ethtool"]],
+    tags: ["driver","ethernet","parámetros"]
+  },
+  {
+    name: "iptraf", cat: "network",
+    desc: "Monitor interactivo de IP LAN: conexiones TCP, conteo de paquetes, estadísticas de interfaz.",
+    url: "https://iptraf-ng.org/",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["apt","sudo apt install iptraf-ng"],["dnf","sudo dnf install iptraf-ng"]],
+    tags: ["tcp","detallado","interactivo"]
+  },
+  {
+    name: "ngrep", cat: "network",
+    desc: "Network grep — coincidencia regex con conciencia pcap en payloads de paquetes.",
+    url: "https://github.com/jpr5/ngrep",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["apt","sudo apt install ngrep"],["dnf","sudo dnf install ngrep"],["brew","brew install ngrep"]],
+    tags: ["paquetes","grep","pcap"]
+  },
+  {
+    name: "darkstat", cat: "network",
+    desc: "Analizador de tráfico de red ligero. Captura uso y estadísticas HTTP vía web UI.",
+    url: "https://unix4lyfe.org/darkstat/",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["apt","sudo apt install darkstat"],["dnf","sudo dnf install darkstat"]],
+    tags: ["web","ligero","estadísticas"]
+  },
+  {
+    name: "bandwidthd", cat: "network",
+    desc: "Rastrea el uso de subnet TCP/IP y genera gráficos HTML con PNG.",
+    url: "https://bandwidthd.sourceforge.net/",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["apt","sudo apt install bandwidthd"]],
+    tags: ["gráfico","web","subnet"]
+  },
+  {
+    name: "Observium", cat: "infra",
+    desc: "Plataforma de monitoreo de red con auto-discovery. Interfaz web atractiva.",
+    url: "https://www.observium.org",
+    logo: "https://www.observium.org/images/observium_logo.png",
+    install: [["manual","https://www.observium.org/docs/"]],
+    tags: ["autodiscovery","snmp","web"]
+  },
+  {
+    name: "collectl", cat: "cli",
+    desc: "Métricas de rendimiento de alta resolución (<1s). CPU, red, disco, procesos.",
+    url: "https://collectl.sourceforge.net/",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["apt","sudo apt install collectl"],["dnf","sudo dnf install collectl"]],
+    tags: ["alta-resolución","plotting","métricas"]
+  },
+  {
+    name: "ulimit", cat: "cli",
+    desc: "Monitorea y restringe recursos del sistema por proceso. Previene fork bombs.",
+    url: "https://man7.org/linux/man-pages/man1/ulimit.1p.html",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["Preinstalado","(bash builtin)"]],
+    tags: ["límites","seguridad","recursos"]
+  },
+  {
+    name: "w", cat: "cli",
+    desc: "Muestra los usuarios conectados y su actividad actual.",
+    url: "https://man7.org/linux/man-pages/man1/w.1.html",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["Preinstalado","(procps)"]],
+    tags: ["usuarios","sesiones","quick"]
+  },
+  {
+    name: "stat", cat: "cli",
+    desc: "Muestra el estado de un archivo o sistema de archivos (tiempo de modificación/acceso, permisos).",
+    url: "https://man7.org/linux/man-pages/man1/stat.1.html",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["Preinstalado","(GNU coreutils)"]],
+    tags: ["metadatos","archivos","permisos"]
+  },
+  {
+    name: "webmin", cat: "infra",
+    desc: "Administración del sistema basada en web con módulos de monitoreo incluidos.",
+    url: "https://www.webmin.com",
+    logo: "https://www.webmin.com/images/webmin-logo.png",
+    install: [["manual","https://www.webmin.com/install.html"],["apt","sudo apt install webmin"]],
+    tags: ["web-ui","administración","remoto"]
+  },
+  {
+    name: "incron", cat: "cli",
+    desc: "Cron de inotify — monitorea árboles de directorios y dispara acciones ante cambios.",
+    url: "http://inotify.aiken.cz/?section=incron&page=about",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["apt","sudo apt install incron"],["dnf","sudo dnf install incron"]],
+    tags: ["automatización","inotify","eventos"]
+  },
+  {
+    name: "Logrotate", cat: "log",
+    desc: "Gestión y rotación automática de archivos de log. Compresión, retención y scripts post-rotate.",
+    url: "https://github.com/logrotate/logrotate",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["Preinstalado","(en la mayoría de distros)"],["apt","sudo apt install logrotate"]],
+    tags: ["rotación","compresión","retención"]
+  },
+  {
+    name: "Filebeat", cat: "log",
+    desc: "Agente ligero de Elastic para enviar logs a Elasticsearch o Logstash.",
+    url: "https://www.elastic.co/beats/filebeat",
+    logo: "https://static-www.elastic.co/v3/assets/bltefdd0b53724fa2ce/blt6ae3d6980b5fd629/5d082a31ba6a8a9e3c0d3d36/logo-beats-32-color.svg",
+    install: [["apt","sudo apt install filebeat"],["dnf","sudo dnf install filebeat"]],
+    tags: ["elastic","log-shipping","agente"]
+  },
+  {
+    name: "Fail2Ban", cat: "security",
+    desc: "Analiza logs y banea IPs con demasiados intentos fallidos. Protección contra fuerza bruta.",
+    url: "https://www.fail2ban.org",
+    logo: "https://www.fail2ban.org/wiki/skins/Fail2ban/images/fail2ban.png",
+    install: [["apt","sudo apt install fail2ban"],["dnf","sudo dnf install fail2ban"]],
+    tags: ["seguridad","brute-force","firewall"]
+  },
+  {
+    name: "Auditd", cat: "security",
+    desc: "Framework de auditoría del kernel Linux. Registra llamadas al sistema y acceso a archivos.",
+    url: "https://linux.die.net/man/8/auditd",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png",
+    install: [["apt","sudo apt install auditd"],["dnf","sudo dnf install audit"]],
+    tags: ["kernel","auditoría","compliance"]
+  },
+  {
+    name: "Lynis", cat: "security",
+    desc: "Herramienta de auditoría de seguridad para sistemas Unix/Linux. Análisis y hardening.",
+    url: "https://cisofy.com/lynis/",
+    logo: "https://cisofy.com/files/lynis-logo.svg",
+    install: [["apt","sudo apt install lynis"],["brew","brew install lynis"],["git","git clone https://github.com/CISOfy/lynis"]],
+    tags: ["auditoría","hardening","seguridad"]
+  }
+];
+
+// Category colors
+function getCatColor(cat) { return CAT_COLORS[cat] || '#64748b'; }
+function getCatLabel(cat) { return CAT_LABELS[cat] || '🔧'; }
+
+let currentCat = 'all';
+let currentSearch = '';
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function getFallbackEmoji(cat) {
+  const map = { cli:'⌨', network:'🌐', performance:'⚡', infra:'🏗', log:'📜', hardware:'🖥', security:'🔒' };
+  return map[cat] || '🔧';
+}
+
+function renderCards() {
+  const q = currentSearch.toLowerCase().trim();
+  const filtered = TOOLS.filter(t => {
+    const catMatch = currentCat === 'all' || t.cat === currentCat;
+    const searchMatch = !q || t.name.toLowerCase().includes(q) || t.desc.toLowerCase().includes(q) || t.tags.some(tag => tag.includes(q));
+    return catMatch && searchMatch;
+  });
+
+  const grid = document.getElementById('grid');
+  const info = document.getElementById('resultInfo');
+  const label = currentCat !== 'all' ? ` en <b>${getCatLabel(currentCat)}</b>` : '';
+  info.innerHTML = `<b>${filtered.length}</b> herramientas${label} • actualizado 2026`;
+
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="empty"><b>Sin resultados</b>Prueba con otras palabras o resetea los filtros</div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(t => {
+    const color = getCatColor(t.cat);
+    const catLabel = getCatLabel(t.cat);
+    const primaryInstall = t.install[0];
+
+    const installCmds = t.install.map((cmd, i) => `
+      <div class="install-cmd">
+        <span class="distro">${escHtml(cmd[0])}</span>
+        <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(cmd[1])}</span>
+        ${i===0 ? `<button class="copy-btn" onclick="copyCmd(this,'${escHtml(cmd[1]).replace(/'/g,"\\'")}')">copiar</button>` : ''}
+      </div>
+    `).join('');
+
+    const tags = t.tags.slice(0,3).map(tag => `<span class="tag">#${escHtml(tag)}</span>`).join('');
+
+    return `
+    <div class="card" style="--cat-color:${color}">
+      <div class="card-head">
+        <div class="tool-logo">
+          <img src="${escHtml(t.logo)}" alt="${escHtml(t.name)}" onerror="this.style.display='none';this.nextSibling.style.display='flex'" loading="lazy">
+          <span style="display:none;font-size:20px;align-items:center;justify-content:center;width:100%;height:100%">${getFallbackEmoji(t.cat)}</span>
+        </div>
+        <div class="card-title-wrap">
+          <div class="card-name">
+            <a href="${escHtml(t.url)}" target="_blank" rel="noopener">${escHtml(t.name)}</a>
+            <span class="ext-icon">↗</span>
+          </div>
+          <span class="cat-badge" style="background:${color}22;color:${color};border:1px solid ${color}44">${catLabel}</span>
+        </div>
+      </div>
+      <p class="card-desc">${escHtml(t.desc)}</p>
+      <div class="install-block">
+        <div class="install-label">Instalación</div>
+        <div class="install-cmds">${installCmds}</div>
+      </div>
+      <div class="tags-row">${tags}</div>
+    </div>`;
+  }).join('');
+}
+
+function copyCmd(btn, cmd) {
+  navigator.clipboard.writeText(cmd).then(() => {
+    btn.textContent = '✓';
+    setTimeout(() => { btn.textContent = 'copiar'; }, 1500);
+  });
+}
+
+// Events
+document.getElementById('searchInput').addEventListener('input', e => {
+  currentSearch = e.target.value;
+  renderCards();
+});
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    currentCat = chip.dataset.cat;
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    renderCards();
+  });
+});
+document.getElementById('resetBtn').addEventListener('click', () => {
+  currentCat = 'all';
+  currentSearch = '';
+  document.getElementById('searchInput').value = '';
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  document.querySelector('.chip[data-cat="all"]').classList.add('active');
+  renderCards();
+});
+
+renderCards();
+</script>
+</body>
+</html>

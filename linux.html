@@ -1,638 +1,950 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Carpetas Linux (FP) — Mapa mental</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Carpetas Linux — FP / Mapa mental</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+<style>
+:root{
+  --bg0:#060c16;
+  --bg1:#0d1728;
+  --bg2:#131f32;
+  --bg3:#1b2a42;
+  --glass:rgba(255,255,255,.07);
+  --glass2:rgba(255,255,255,.12);
+  --border:rgba(255,255,255,.10);
+  --border2:rgba(255,255,255,.18);
+  --safe:#00e5a0;
+  --safe-dim:rgba(0,229,160,.18);
+  --caution:#fbbf24;
+  --caution-dim:rgba(251,191,36,.18);
+  --danger:#f43f5e;
+  --danger-dim:rgba(244,63,94,.18);
+  --accent:#38bdf8;
+  --accent2:#818cf8;
+  --text:#e8f0ff;
+  --muted:rgba(232,240,255,.60);
+  --mono:'JetBrains Mono',monospace;
+  --display:'Syne',sans-serif;
+  --radius:14px;
+  --radius-sm:8px;
+}
 
-  <!-- Bootstrap -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+*{box-sizing:border-box;margin:0;padding:0;}
 
-  <!-- p5.js -->
-  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+body{
+  font-family:var(--display);
+  background:var(--bg0);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
 
-  <style>
-    :root { --card-radius: 1.25rem; }
+/* ── BACKGROUND GRID ── */
+body::before{
+  content:'';
+  position:fixed;inset:0;z-index:0;
+  background-image:
+    linear-gradient(rgba(56,189,248,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56,189,248,.04) 1px, transparent 1px);
+  background-size:48px 48px;
+  pointer-events:none;
+}
+body::after{
+  content:'';
+  position:fixed;
+  top:-200px;left:-200px;
+  width:900px;height:900px;
+  background:radial-gradient(circle, rgba(56,189,248,.08) 0%, transparent 65%);
+  pointer-events:none;z-index:0;
+}
 
-    body{
-      background: radial-gradient(1200px 600px at 20% 0%, rgba(13,110,253,.18), transparent 60%),
-                  radial-gradient(1200px 600px at 90% 10%, rgba(32,201,151,.14), transparent 55%),
-                  #08101f;
-      color:#f1f5ff;
-    }
+/* ── NAVBAR ── */
+.topbar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(6,12,22,.88);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:.85rem 0;
+}
+.topbar-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:.75rem;
+}
+.brand{
+  display:flex;align-items:center;gap:.6rem;
+  font-size:1.05rem;font-weight:800;letter-spacing:-.01em;
+  text-decoration:none;color:var(--text);
+}
+.brand .slash{color:var(--accent);}
+.brand-sub{font-size:.72rem;font-weight:400;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin-top:1px;}
 
-    .navbar-blur{
-      background: rgba(6, 12, 22, .82) !important;
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255,255,255,.10);
-    }
+.legend{display:flex;gap:.5rem;flex-wrap:wrap;}
+.lbadge{
+  display:inline-flex;align-items:center;gap:.35rem;
+  font-family:var(--mono);font-size:.75rem;
+  padding:.28rem .6rem;border-radius:999px;
+  border:1px solid var(--border2);
+  background:var(--glass);color:var(--text);
+}
+.lbadge::before{content:'';width:7px;height:7px;border-radius:50%;}
+.lbadge.safe::before{background:var(--safe);}
+.lbadge.caution::before{background:var(--caution);}
+.lbadge.danger::before{background:var(--danger);}
 
-    .hero{ padding: 3.5rem 0 1.5rem; }
+/* ── HERO ── */
+.hero{
+  position:relative;z-index:1;
+  padding:3rem 0 2rem;
+}
+.hero-eyebrow{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--accent);
+  margin-bottom:.6rem;
+}
+.hero-title{
+  font-size:clamp(1.8rem,4vw,2.8rem);
+  font-weight:800;line-height:1.1;letter-spacing:-.03em;
+}
+.hero-title span{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero-desc{
+  font-size:.95rem;color:var(--muted);line-height:1.7;
+  max-width:520px;margin-top:.75rem;
+}
+.chip{
+  display:inline-flex;align-items:center;gap:.35rem;
+  font-family:var(--mono);font-size:.72rem;
+  padding:.3rem .75rem;border-radius:999px;
+  background:var(--glass);border:1px solid var(--border2);
+  color:var(--muted);
+}
+.chip.hi{background:rgba(56,189,248,.12);border-color:rgba(56,189,248,.3);color:var(--accent);}
 
-    .badge-soft{
-      background: rgba(13,110,253,.22);
-      border: 1px solid rgba(13,110,253,.45);
-      color:#eaf2ff;
-    }
+/* ── GLASS CARD ── */
+.gcard{
+  background:var(--glass);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  backdrop-filter:blur(10px);
+  overflow:hidden;
+}
+.gcard-head{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:.5rem;flex-wrap:wrap;
+  padding:.85rem 1.1rem;
+  border-bottom:1px solid var(--border);
+  background:var(--glass2);
+}
+.gcard-head-title{font-size:.92rem;font-weight:700;}
+.gcard-head-sub{font-size:.75rem;color:var(--muted);font-family:var(--mono);}
+.gcard-body{padding:1.1rem;}
 
-    .card{
-      background: rgba(255,255,255,.10);
-      border: 1px solid rgba(255,255,255,.14);
-      border-radius: var(--card-radius);
-      box-shadow: 0 10px 40px rgba(0,0,0,.30);
-    }
-    .card-header{
-      border-bottom: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.06);
-      border-top-left-radius: var(--card-radius);
-      border-top-right-radius: var(--card-radius);
-    }
+/* ── CANVAS ── */
+#p5-holder{width:100%;border-radius:0 0 var(--radius) var(--radius);}
 
-    .muted{ color: rgba(241,245,255,.82); }
+/* ── KBD ── */
+kbd{
+  font-family:var(--mono);font-size:.8rem;
+  background:rgba(0,0,0,.55);
+  border:1px solid var(--border2);
+  padding:.15rem .45rem;border-radius:5px;
+  color:var(--accent);letter-spacing:0;
+}
 
-    .kbd{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
-      background: rgba(0,0,0,.45);
-      border: 1px solid rgba(255,255,255,.16);
-      padding: .15rem .4rem;
-      border-radius: .5rem;
-      color: #fff;
-      white-space: nowrap;
-    }
+/* ── FILTER TABS ── */
+.filter-tabs{display:flex;gap:.4rem;flex-wrap:wrap;}
+.ftab{
+  font-family:var(--mono);font-size:.76rem;
+  padding:.35rem .8rem;border-radius:999px;
+  border:1px solid var(--border2);
+  background:var(--glass);
+  color:var(--muted);cursor:pointer;
+  transition:all .2s;
+}
+.ftab:hover{background:var(--glass2);color:var(--text);}
+.ftab.active{color:var(--bg0);font-weight:700;}
+.ftab.active.all{background:var(--accent);border-color:var(--accent);}
+.ftab.active.safe{background:var(--safe);border-color:var(--safe);}
+.ftab.active.caution{background:var(--caution);border-color:var(--caution);}
+.ftab.active.danger{background:var(--danger);border-color:var(--danger);}
 
-    .canvas-wrap{
-      border-radius: var(--card-radius);
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(0,0,0,.30);
-      overflow: hidden;
-    }
-    #p5-holder{ width:100%; }
+/* ── PANEL ── */
+#panelTitle{
+  font-family:var(--mono);font-size:1.1rem;font-weight:700;
+  letter-spacing:-.01em;
+}
+.level-pill{
+  font-family:var(--mono);font-size:.7rem;font-weight:700;
+  padding:.2rem .55rem;border-radius:999px;
+  display:inline-block;
+}
+.level-pill.safe{background:var(--safe-dim);color:var(--safe);border:1px solid rgba(0,229,160,.3);}
+.level-pill.caution{background:var(--caution-dim);color:var(--caution);border:1px solid rgba(251,191,36,.3);}
+.level-pill.danger{background:var(--danger-dim);color:var(--danger);border:1px solid rgba(244,63,94,.3);}
 
-    .legend-dot{
-      width:10px;height:10px;border-radius:50%;
-      display:inline-block;margin-right:.4rem;
-      background: rgba(255,255,255,.5);
-    }
-    .dot-safe{ background: rgba(32,201,151,.95); }
-    .dot-caution{ background: rgba(255,193,7,.98); }
-    .dot-danger{ background: rgba(220,53,69,.98); }
+.panel-tag{
+  font-family:var(--mono);font-size:.7rem;
+  padding:.2rem .55rem;border-radius:999px;
+  background:rgba(129,140,248,.15);border:1px solid rgba(129,140,248,.25);
+  color:var(--accent2);
+}
 
-    .pill{
-      display:inline-flex; gap:.4rem; align-items:center;
-      padding:.35rem .6rem;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.08);
-      color: rgba(241,245,255,.90);
-      font-size:.9rem;
-    }
+.callout{
+  padding:.85rem 1rem;border-radius:var(--radius-sm);
+  border:1px solid var(--border);background:rgba(56,189,248,.08);
+  border-left:3px solid var(--accent);font-size:.85rem;line-height:1.6;
+}
+.callout.warn{background:rgba(251,191,36,.08);border-left-color:var(--caution);}
+.callout.err{background:rgba(244,63,94,.08);border-left-color:var(--danger);}
+.callout.ok{background:rgba(0,229,160,.08);border-left-color:var(--safe);}
 
-    .divider{ height:1px; background: rgba(255,255,255,.12); margin:1rem 0; }
+/* ── PANEL ANIMATE ── */
+#panelContent{
+  transition:opacity .2s,transform .2s;
+}
+#panelContent.fade-out{opacity:0;transform:translateY(6px);}
 
-    .callout{
-      border-left:4px solid rgba(13,110,253,.9);
-      padding:.9rem 1rem;
-      background: rgba(13,110,253,.14);
-      border-radius: 1rem;
-      border:1px solid rgba(13,110,253,.26);
-    }
-    .callout-warning{
-      border-left-color: rgba(255,193,7,.98);
-      background: rgba(255,193,7,.14);
-      border-color: rgba(255,193,7,.26);
-    }
-    .callout-danger{
-      border-left-color: rgba(220,53,69,.98);
-      background: rgba(220,53,69,.14);
-      border-color: rgba(220,53,69,.26);
-    }
+/* ── SUMMARY CARDS ── */
+.sumcard{
+  background:var(--glass);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  padding:.85rem 1rem;
+  transition:all .2s;cursor:pointer;
+  position:relative;overflow:hidden;
+}
+.sumcard::before{
+  content:'';position:absolute;inset:0;opacity:0;
+  transition:opacity .2s;border-radius:inherit;
+}
+.sumcard:hover{border-color:var(--border2);transform:translateY(-2px);}
+.sumcard.safe::before{background:radial-gradient(circle at top left,rgba(0,229,160,.08),transparent 60%);}
+.sumcard.caution::before{background:radial-gradient(circle at top left,rgba(251,191,36,.08),transparent 60%);}
+.sumcard.danger::before{background:radial-gradient(circle at top left,rgba(244,63,94,.08),transparent 60%);}
+.sumcard:hover::before{opacity:1;}
 
-    :focus-visible{
-      outline: 3px solid rgba(154, 209, 255, .95);
-      outline-offset: 2px;
-      border-radius: .6rem;
-    }
+.sumcard-key{
+  font-family:var(--mono);font-size:.88rem;font-weight:700;
+  display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem;
+}
+.sumcard-key .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.dot.safe{background:var(--safe);}
+.dot.caution{background:var(--caution);}
+.dot.danger{background:var(--danger);}
+.sumcard-desc{font-size:.78rem;color:var(--muted);line-height:1.5;}
 
-    .form-select{
-      background-color: rgba(255,255,255,.10);
-      color:#f1f5ff;
-      border:1px solid rgba(255,255,255,.18);
-    }
-    .form-select option{ color:#0b1220; }
+/* ── QUIZ ── */
+.quiz-q{font-size:.9rem;font-weight:600;margin-bottom:.75rem;line-height:1.5;}
+.quiz-opts{display:flex;flex-direction:column;gap:.45rem;}
+.qopt{
+  font-family:var(--mono);font-size:.82rem;
+  padding:.6rem .9rem;border-radius:var(--radius-sm);
+  background:var(--glass);border:1px solid var(--border2);
+  color:var(--text);cursor:pointer;text-align:left;
+  transition:all .18s;display:flex;align-items:center;gap:.6rem;
+}
+.qopt::before{
+  content:'';width:14px;height:14px;border-radius:50%;
+  border:2px solid var(--border2);flex-shrink:0;transition:all .18s;
+}
+.qopt:hover{background:var(--glass2);border-color:var(--accent);}
+.qopt:hover::before{border-color:var(--accent);}
+.qopt.correct{background:rgba(0,229,160,.15);border-color:var(--safe);color:var(--safe);}
+.qopt.correct::before{background:var(--safe);border-color:var(--safe);}
+.qopt.wrong{background:rgba(244,63,94,.12);border-color:var(--danger);color:var(--danger);}
+.qopt.wrong::before{background:var(--danger);border-color:var(--danger);}
+.qopt:disabled{cursor:default;}
 
-    .footer{
-      border-top:1px solid rgba(255,255,255,.10);
-      color: rgba(241,245,255,.70);
-      padding:2rem 0;
-    }
-  </style>
+.quiz-progress{height:4px;background:var(--bg3);border-radius:999px;overflow:hidden;margin-bottom:1rem;}
+.quiz-progress-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:999px;transition:width .3s;}
+
+.score-circle{
+  width:80px;height:80px;border-radius:50%;
+  border:3px solid var(--safe);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.5rem;font-weight:800;font-family:var(--mono);
+  color:var(--safe);margin:0 auto 1rem;
+  background:var(--safe-dim);
+}
+
+/* ── BUTTONS ── */
+.btn-ghost{
+  font-family:var(--mono);font-size:.78rem;font-weight:600;
+  padding:.4rem .9rem;border-radius:var(--radius-sm);
+  background:transparent;border:1px solid var(--border2);
+  color:var(--muted);cursor:pointer;transition:all .18s;
+}
+.btn-ghost:hover{background:var(--glass2);color:var(--text);}
+.btn-primary-glow{
+  font-family:var(--mono);font-size:.78rem;font-weight:700;
+  padding:.4rem .9rem;border-radius:var(--radius-sm);
+  background:var(--accent);border:none;
+  color:var(--bg0);cursor:pointer;transition:all .18s;
+}
+.btn-primary-glow:hover{filter:brightness(1.1);transform:translateY(-1px);}
+
+/* ── SURVIVAL RULES ── */
+.rule-item{
+  display:flex;align-items:flex-start;gap:.75rem;
+  padding:.6rem 0;border-bottom:1px solid var(--border);font-size:.85rem;
+}
+.rule-item:last-child{border:none;}
+.rule-num{
+  font-family:var(--mono);font-size:.7rem;font-weight:700;
+  width:22px;height:22px;border-radius:50%;flex-shrink:0;
+  background:rgba(56,189,248,.15);border:1px solid rgba(56,189,248,.3);
+  color:var(--accent);display:flex;align-items:center;justify-content:center;
+  margin-top:1px;
+}
+
+/* ── DIVIDER ── */
+.div{height:1px;background:var(--border);margin:.75rem 0;}
+
+/* ── FOOTER ── */
+footer{
+  position:relative;z-index:1;
+  border-top:1px solid var(--border);
+  padding:1.5rem 0;
+  font-family:var(--mono);font-size:.78rem;color:var(--muted);
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
+.anim-1{animation:fadeUp .5s ease both;}
+.anim-2{animation:fadeUp .5s .1s ease both;}
+.anim-3{animation:fadeUp .5s .2s ease both;}
+.anim-4{animation:fadeUp .5s .3s ease both;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:991px){
+  .topbar-inner{gap:.4rem;}
+  .legend{display:none;}
+}
+</style>
 </head>
-
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark navbar-blur sticky-top">
-    <div class="container">
-      <a class="navbar-brand fw-semibold" href="#">
-        🐧 Linux en FP <span class="text-info">/</span> Mapa de carpetas
+
+<!-- TOPBAR -->
+<nav class="topbar">
+  <div class="container">
+    <div class="topbar-inner">
+      <a class="brand" href="#">
+        <div>
+          <div>🐧 Linux FP <span class="slash">/</span> Directorios</div>
+          <div class="brand-sub">SMR · ASIR · DAW · DevOps</div>
+        </div>
       </a>
-      <div class="d-flex gap-2 align-items-center">
-        <span class="pill"><span class="legend-dot dot-safe"></span> ok tocar poco</span>
-        <span class="pill"><span class="legend-dot dot-caution"></span> cuidado</span>
-        <span class="pill"><span class="legend-dot dot-danger"></span> no tocar</span>
+      <div class="legend">
+        <span class="lbadge safe">ok — aprendiz</span>
+        <span class="lbadge caution">cuidado</span>
+        <span class="lbadge danger">no tocar</span>
       </div>
     </div>
-  </nav>
+  </div>
+</nav>
 
-  <header class="hero">
-    <div class="container">
-      <div class="row g-4 align-items-center">
-        <div class="col-lg-7">
-          <div class="text-uppercase small muted" style="letter-spacing:.08em;">SMR · ASIR · DAW · DevOps básico</div>
-          <h1 class="display-5 fw-bold lh-1 mt-2">¿Qué significa cada carpeta en Linux?</h1>
-          <p class="lead muted mt-3">
-            Mapa mental interactivo para FP. Haz clic en una carpeta y verás qué es, ejemplos y qué NO tocar.
-          </p>
-          <div class="d-flex flex-wrap gap-2 mt-3">
-            <span class="badge badge-soft rounded-pill px-3 py-2">✅ Para prácticas de servidor</span>
-            <span class="badge badge-soft rounded-pill px-3 py-2">✅ Para DAW/DevOps</span>
-            <span class="badge badge-soft rounded-pill px-3 py-2">✅ Para exámenes de sistemas</span>
+<div class="container" style="position:relative;z-index:1;">
+
+<!-- HERO -->
+<div class="hero anim-1">
+  <div class="hero-eyebrow">Mapa mental interactivo</div>
+  <h2><a href="https://makelinux.github.io/kernel/map/">Mapa Kernel de Linux </a></h2>
+  <h1 class="hero-title">¿Qué hace cada<br><span>carpeta en Linux?</span></h1>
+  <p class="hero-desc">Haz clic en un directorio del mapa → panel con descripción, ejemplos y qué NO tocar. Diseñado para FP y preparación de exámenes.</p>
+  <div class="d-flex flex-wrap gap-2 mt-3">
+    <span class="chip hi">✦ Clic en el mapa</span>
+    <span class="chip">Filtro por peligrosidad</span>
+    <span class="chip">Mini-test 5 preguntas</span>
+  </div>
+</div>
+
+<!-- MAIN GRID -->
+<div class="row g-3 mb-3 anim-2">
+
+  <!-- MAPA -->
+  <div class="col-lg-7">
+    <div class="gcard">
+      <div class="gcard-head">
+        <div>
+          <div class="gcard-head-title">Árbol de directorios</div>
+          <div class="gcard-head-sub">Clic en un nodo para seleccionar</div>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+          <div class="filter-tabs" id="filterTabs">
+            <button class="ftab active all" data-f="all">Todos</button>
+            <button class="ftab safe" data-f="safe">Seguros</button>
+            <button class="ftab caution" data-f="caution">Cuidado</button>
+            <button class="ftab danger" data-f="danger">Peligro</button>
           </div>
-          <div class="callout mt-4">
-            <strong>Uso:</strong> clic en el mapa → panel de la derecha con explicación y ejemplos.
-          </div>
+          <button class="btn-ghost" id="btnRandom">⟳ Sugerir</button>
+        </div>
+      </div>
+      <div id="p5-holder"></div>
+    </div>
+  </div>
+
+  <!-- PANEL -->
+  <div class="col-lg-5">
+    <div class="gcard h-100" style="display:flex;flex-direction:column;">
+      <div class="gcard-head">
+        <div>
+          <div id="panelTitle" style="font-family:var(--mono);font-size:1rem;font-weight:700;">Selecciona una carpeta</div>
+          <div id="panelSub" class="gcard-head-sub">clic en el mapa →</div>
+        </div>
+        <div id="panelLevelBadge"></div>
+      </div>
+      <div class="gcard-body" style="flex:1;overflow-y:auto;" id="panelContent">
+
+        <p id="panelDesc" style="font-size:.88rem;color:var(--muted);line-height:1.7;">
+          Haz clic en cualquier directorio del mapa para ver su descripción, ejemplos prácticos y qué operaciones son seguras.
+        </p>
+
+        <div id="panelTags" class="d-flex flex-wrap gap-1 mb-3"></div>
+
+        <div id="panelExBlock" style="display:none;">
+          <div style="font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;">Ejemplos típicos</div>
+          <ul id="panelExamples" style="font-family:var(--mono);font-size:.8rem;line-height:2;padding-left:1.1rem;"></ul>
         </div>
 
-        <div class="col-lg-5">
-          <div class="card">
-            <div class="card-header"><strong>Mini-reglas de supervivencia</strong></div>
-            <div class="card-body">
-              <ul class="mb-0">
-                <li><span class="kbd">/home</span>: tu zona segura.</li>
-                <li><span class="kbd">/etc</span>: configuración (copia antes de editar).</li>
-                <li><span class="kbd">/usr</span>: software instalado (lo gestiona el sistema).</li>
-                <li><span class="kbd">/var</span>: logs/datos variables (diagnóstico).</li>
-                <li><span class="kbd">/dev</span> · <span class="kbd">/proc</span> · <span class="kbd">/sys</span>: especiales (no “carpetas normales”).</li>
-              </ul>
-              <div class="divider"></div>
-              <div class="muted">Tip FP: si algo falla, mira <span class="kbd">/var/log</span> y <span class="kbd">journalctl</span>.</div>
-            </div>
-          </div>
+        <div id="panelDoDont" class="mt-2"></div>
+
+        <div class="div"></div>
+
+        <div style="font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:.6rem;">Comandos de diagnóstico</div>
+        <div class="d-flex flex-column gap-1">
+          <div style="font-size:.8rem;"><kbd>ls -la /ruta</kbd> <span style="color:var(--muted);margin-left:.4rem;">permisos y contenido</span></div>
+          <div style="font-size:.8rem;"><kbd>stat fichero</kbd> <span style="color:var(--muted);margin-left:.4rem;">metadatos completos</span></div>
+          <div style="font-size:.8rem;"><kbd>du -sh /ruta</kbd> <span style="color:var(--muted);margin-left:.4rem;">tamaño en disco</span></div>
+          <div style="font-size:.8rem;"><kbd>journalctl -xe</kbd> <span style="color:var(--muted);margin-left:.4rem;">logs systemd</span></div>
         </div>
 
+        <div class="callout warn mt-3" style="font-size:.82rem;">
+          <strong>Regla de oro:</strong> antes de editar cualquier config:<br>
+          <kbd style="margin-top:.4rem;display:inline-block;">sudo cp archivo archivo.bak</kbd>
+        </div>
       </div>
     </div>
-  </header>
+  </div>
 
-  <main class="pb-5">
-    <div class="container">
-      <div class="row g-4">
+</div>
 
-        <!-- MAPA -->
-        <div class="col-lg-7">
-          <div class="card">
-            <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
-              <div>
-                <strong>Mapa mental interactivo</strong>
-                <div class="muted small">Responsive (móvil ok) · Clic para seleccionar</div>
-              </div>
-              <div class="d-flex gap-2">
-                <button id="btnReset" class="btn btn-sm btn-outline-light">Reiniciar</button>
-                <button id="btnRandom" class="btn btn-sm btn-outline-info">Sugerir</button>
-              </div>
-            </div>
-            <div class="card-body">
-              <div class="canvas-wrap">
-                <div id="p5-holder"></div>
-              </div>
-              <div class="mt-3 d-flex flex-wrap gap-2">
-                <span class="pill"><span class="legend-dot dot-safe"></span> zona “aprendiz”</span>
-                <span class="pill"><span class="legend-dot dot-caution"></span> toca con cuidado</span>
-                <span class="pill"><span class="legend-dot dot-danger"></span> no tocar</span>
-              </div>
-            </div>
-          </div>
-        </div>
+<!-- SURVIVAL RULES + RESUMEN -->
+<div class="row g-3 mb-3 anim-3">
 
-        <!-- PANEL -->
-        <div class="col-lg-5">
-          <div class="card h-100">
-            <div class="card-header">
-              <strong id="panelTitle">Selecciona una carpeta</strong>
-            </div>
-            <div class="card-body">
-              <p id="panelDesc" class="muted">Haz clic en el mapa para ver explicación y ejemplos.</p>
-
-              <div id="panelTags" class="d-flex flex-wrap gap-2 mb-3"></div>
-
-              <h6 class="mt-3">Ejemplos típicos</h6>
-              <ul id="panelExamples"></ul>
-
-              <div id="panelDoDont" class="mt-3"></div>
-
-              <div class="divider"></div>
-
-              <h6>Comandos útiles (FP)</h6>
-              <ul>
-                <li><span class="kbd">ls -la /ruta</span> permisos y contenido</li>
-                <li><span class="kbd">cat archivo</span> lectura rápida</li>
-                <li><span class="kbd">sudo nano archivo</span> edición controlada</li>
-                <li><span class="kbd">journalctl -xe</span> logs systemd</li>
-              </ul>
-
-              <div class="callout callout-warning mt-3">
-                <strong>Regla de oro:</strong> antes de tocar config:
-                <div class="mt-2"><span class="kbd">sudo cp archivo archivo.bak</span></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
+  <div class="col-md-4">
+    <div class="gcard h-100">
+      <div class="gcard-head">
+        <div class="gcard-head-title">Mini-reglas FP</div>
+        <span class="chip">Memoriza esto</span>
       </div>
-
-      <!-- RESUMEN -->
-      <div class="row g-4 mt-2">
-        <div class="col-12">
-          <div class="card">
-            <div class="card-header">
-              <strong>Resumen rápido (para estudiar)</strong>
-              <div class="muted small">Memoriza el “para qué”</div>
-            </div>
-            <div class="card-body">
-              <div class="row g-3" id="cards"></div>
-            </div>
-          </div>
-        </div>
+      <div class="gcard-body">
+        <div class="rule-item"><div class="rule-num">1</div><div><kbd>/home</kbd> — tu zona segura. Mete tus proyectos aquí.</div></div>
+        <div class="rule-item"><div class="rule-num">2</div><div><kbd>/etc</kbd> — config en texto. Copia <em>antes</em> de tocar.</div></div>
+        <div class="rule-item"><div class="rule-num">3</div><div><kbd>/var/log</kbd> — primer sitio a mirar cuando algo falla.</div></div>
+        <div class="rule-item"><div class="rule-num">4</div><div><kbd>/proc</kbd> <kbd>/sys</kbd> — virtuales del kernel, no son carpetas reales.</div></div>
+        <div class="rule-item"><div class="rule-num">5</div><div><kbd>/usr</kbd> — software gestionado por el sistema. No editar a mano.</div></div>
+        <div class="rule-item"><div class="rule-num">6</div><div><kbd>/tmp</kbd> — se puede borrar. No guardes cosas importantes aquí.</div></div>
       </div>
-
-      <!-- MINI TEST -->
-      <div class="row g-4 mt-2">
-        <div class="col-12">
-          <div class="card">
-            <div class="card-header">
-              <strong>Mini-test</strong>
-              <div class="muted small">Cierre de clase (5 min)</div>
-            </div>
-            <div class="card-body">
-              <div class="row g-3 align-items-end">
-                <div class="col-md-7">
-                  <label class="form-label">Si un servicio falla, ¿dónde miras primero?</label>
-                  <select id="quiz1" class="form-select">
-                    <option value="">Elige una opción…</option>
-                    <option>/home</option>
-                    <option>/var/log</option>
-                    <option>/bin</option>
-                    <option>/dev</option>
-                  </select>
-                </div>
-                <div class="col-md-5">
-                  <button id="quizCheck" class="btn btn-info w-100">Comprobar</button>
-                </div>
-              </div>
-              <div id="quizResult" class="mt-3"></div>
-
-              <div class="callout callout-danger mt-3">
-                <strong>Trampa típica:</strong> <span class="kbd">/proc</span> y <span class="kbd">/sys</span> son virtuales (kernel).
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div>
-  </main>
+  </div>
 
-  <footer class="footer">
-    <div class="container d-flex flex-wrap justify-content-between gap-2">
-      <div>Hecho para FP: claro, visual y práctico.</div>
-      <div class="muted">Úsalo como póster + práctica guiada.</div>
+  <div class="col-md-8">
+    <div class="gcard">
+      <div class="gcard-head">
+        <div>
+          <div class="gcard-head-title">Resumen visual</div>
+          <div class="gcard-head-sub">Clic para seleccionar en el mapa</div>
+        </div>
+        <div class="legend d-flex">
+          <span class="lbadge safe" style="font-size:.68rem;">seguros</span>
+          <span class="lbadge caution" style="font-size:.68rem;margin-left:.3rem;">cuidado</span>
+          <span class="lbadge danger" style="font-size:.68rem;margin-left:.3rem;">peligro</span>
+        </div>
+      </div>
+      <div class="gcard-body">
+        <div class="row g-2" id="sumCards"></div>
+      </div>
     </div>
-  </footer>
+  </div>
 
-  <script>
-    // --- Datos ---
-    const FS = [
-      { key:"/etc",  level:"caution", title:"/etc — configuración", desc:"Config del sistema y servicios. Son archivos de texto.", tags:["config","servicios"], examples:["/etc/nginx/nginx.conf","/etc/ssh/sshd_config"], do:["Copia antes de editar","Documenta cambios"], dont:["Editar a ciegas","Borrar sin saber"] },
-      { key:"/home", level:"safe",   title:"/home — usuarios", desc:"Zona segura del usuario: proyectos, docs, repos.", tags:["usuario","proyectos"], examples:["/home/alumno/proyecto","/home/alumno/.ssh"], do:["Guardar proyectos","Config personal"], dont:["Meter config global aquí"] },
-      { key:"/usr",  level:"caution",title:"/usr — software", desc:"Software instalado (binarios, librerías, recursos).", tags:["paquetes","software"], examples:["/usr/bin/python3","/usr/share/"], do:["Gestionar con apt/dnf","Usar /usr/local si procede"], dont:["Editar a mano (actualizaciones lo pisan)"] },
-      { key:"/var",  level:"safe",   title:"/var — datos variables", desc:"Logs, cachés y datos que cambian. Diagnóstico.", tags:["logs","servicios"], examples:["/var/log/","/var/cache/"], do:["Revisar logs","Controlar tamaño"], dont:["Borrar logs sin criterio"] },
-      { key:"/opt",  level:"safe",   title:"/opt — terceros", desc:"Apps externas o instalaciones manuales/autocontenidas.", tags:["apps","manual"], examples:["/opt/postman","/opt/google/chrome"], do:["Instalar apps autocontenidas"], dont:["Mezclar config del sistema"] },
-      { key:"/bin",  level:"danger", title:"/bin — comandos", desc:"Comandos esenciales (a menudo enlazado a /usr/bin).", tags:["sistema","crítico"], examples:["/bin/ls","/bin/cp"], do:["Usar comandos"], dont:["Borrar/reemplazar binarios"] },
-      { key:"/sbin", level:"danger", title:"/sbin — admin", desc:"Herramientas de administración (muchas en /usr/sbin).", tags:["admin","crítico"], examples:["/sbin/reboot","/usr/sbin/*"], do:["Usar con sudo cuando toque"], dont:["Tocar binarios"] },
-      { key:"/lib",  level:"danger", title:"/lib — librerías", desc:"Librerías del sistema (tipo DLL). Gestionadas por el SO.", tags:["dependencias","crítico"], examples:["/lib/x86_64-linux-gnu/","/lib64/"], do:["Conocer (teoría)"], dont:["No tocar"] },
-      { key:"/dev",  level:"danger", title:"/dev — dispositivos", desc:"Dispositivos como archivos. Ojo con dd y discos.", tags:["hardware","kernel"], examples:["/dev/sda","/dev/null"], do:["Aprender concepto"], dont:["Escribir a discos sin saber"] },
-      { key:"/boot", level:"danger", title:"/boot — arranque", desc:"Kernel/GRUB. Tocar aquí puede dejar el sistema sin arrancar.", tags:["arranque","crítico"], examples:["/boot/grub/","/boot/vmlinuz-*"], do:["Entender qué hay"], dont:["Borrar kernels/GRUB"] },
-      { key:"/media",level:"safe",   title:"/media — montajes", desc:"Montaje automático de USB/discos externos.", tags:["usb","montaje"], examples:["/media/usuario/USB"], do:["Copiar desde USB"], dont:["Desconectar sin desmontar (según caso)"] },
-      { key:"/tmp",  level:"safe",   title:"/tmp — temporales", desc:"Temporales. Se puede limpiar solo.", tags:["temporal"], examples:["/tmp/build-XXXX"], do:["Pruebas rápidas"], dont:["Guardar algo importante"] },
-      { key:"/proc", level:"danger", title:"/proc — virtual", desc:"Info del kernel/procesos. No son archivos normales.", tags:["virtual","kernel"], examples:["/proc/cpuinfo","/proc/meminfo"], do:["Consultar info"], dont:["Tratarlo como carpeta de datos"] },
-      { key:"/sys",  level:"danger", title:"/sys — virtual", desc:"Interfaz del kernel/hardware. Cambios impactan al momento.", tags:["virtual","hardware"], examples:["/sys/class/net/"], do:["Consultar (avanzado)"], dont:["Cambiar valores sin guía"] },
-    ];
+</div>
 
-    const byKey = Object.fromEntries(FS.map(x => [x.key, x]));
+<!-- QUIZ -->
+<div class="row g-3 mb-4 anim-4">
+  <div class="col-12">
+    <div class="gcard">
+      <div class="gcard-head">
+        <div>
+          <div class="gcard-head-title">Test de repaso</div>
+          <div class="gcard-head-sub">5 preguntas tipo examen FP · 1 min</div>
+        </div>
+        <button class="btn-ghost" id="btnRestart">↺ Reiniciar test</button>
+      </div>
+      <div class="gcard-body">
+        <div class="quiz-progress"><div class="quiz-progress-bar" id="quizBar" style="width:0%"></div></div>
+        <div id="quizWrap"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
-    function badgeFor(level){
-      if(level==="safe") return `<span class="badge text-bg-success">Seguro</span>`;
-      if(level==="caution") return `<span class="badge text-bg-warning">Cuidado</span>`;
-      return `<span class="badge text-bg-danger">No tocar</span>`;
+</div><!-- /container -->
+
+<footer>
+  <div class="container d-flex justify-content-between flex-wrap gap-2">
+    <span>Recurso libre para FP: SMR · ASIR · DAW · DevOps básico</span>
+    <span>GNU/Linux · Estructura FHS (Filesystem Hierarchy Standard)</span>
+  </div>
+</footer>
+
+<script>
+// ══════════════════════════════════════════════
+// DATOS
+// ══════════════════════════════════════════════
+const FS = [
+  { key:"/etc",   level:"caution", desc:"Configuración del sistema y servicios. Archivos de texto editables.",
+    tags:["config","servicios","editable"],
+    examples:["/etc/nginx/nginx.conf","/etc/ssh/sshd_config","/etc/fstab","/etc/passwd"],
+    do:["Hacer copia antes de editar","Documentar cambios","Usar sudo nano"],
+    dont:["Editar sin copia de seguridad","Borrar archivos sin saber qué hacen"] },
+  { key:"/home",  level:"safe",    desc:"Directorios personales de cada usuario. Tu zona segura de trabajo.",
+    tags:["usuario","proyectos","seguro"],
+    examples:["/home/alumno/proyectos/","/home/alumno/.ssh/","/home/alumno/.bashrc"],
+    do:["Guardar proyectos y código","Personalizar entorno (.bashrc, .profile)"],
+    dont:["Meter configuración global del sistema aquí"] },
+  { key:"/usr",   level:"caution", desc:"Software instalado: binarios, librerías, documentación y recursos.",
+    tags:["paquetes","software","binarios"],
+    examples:["/usr/bin/python3","/usr/lib/","/usr/share/","/usr/local/bin/"],
+    do:["Instalar apps con apt/dnf","Usar /usr/local para software propio"],
+    dont:["Editar a mano (las actualizaciones lo sobreescriben)"] },
+  { key:"/var",   level:"safe",    desc:"Datos variables: logs, cachés, bases de datos, colas de correo.",
+    tags:["logs","datos","diagnóstico"],
+    examples:["/var/log/syslog","/var/log/nginx/","/var/cache/","/var/lib/mysql/"],
+    do:["Revisar logs ante fallos","Monitorizar tamaño (puede llenarse)"],
+    dont:["Borrar logs sin criterio","Ignorar si el disco se llena"] },
+  { key:"/opt",   level:"safe",    desc:"Aplicaciones opcionales de terceros instaladas de forma autocontenida.",
+    tags:["apps","manual","terceros"],
+    examples:["/opt/postman/","/opt/google/chrome/","/opt/miapp/"],
+    do:["Instalar apps autocontenidas aquí","Crear subdirectorio propio /opt/miapp"],
+    dont:["Mezclar ficheros del sistema con apps de terceros"] },
+  { key:"/bin",   level:"danger",  desc:"Comandos esenciales del sistema (ls, cp, mv, bash…). Enlazado a /usr/bin.",
+    tags:["crítico","sistema","comandos"],
+    examples:["/bin/ls","/bin/cp","/bin/bash","/bin/cat"],
+    do:["Usar los comandos normalmente"],
+    dont:["Borrar o reemplazar binarios","Sobrescribir comandos del sistema"] },
+  { key:"/sbin",  level:"danger",  desc:"Herramientas de administración del sistema (shutdown, fsck, reboot…).",
+    tags:["admin","crítico","root"],
+    examples:["/sbin/reboot","/sbin/fdisk","/usr/sbin/nginx"],
+    do:["Usar con sudo cuando corresponda"],
+    dont:["Tocar o eliminar binarios de administración"] },
+  { key:"/lib",   level:"danger",  desc:"Librerías compartidas del sistema (equivalente a DLL en Windows).",
+    tags:["dependencias","crítico","kernel"],
+    examples:["/lib/x86_64-linux-gnu/","/lib64/","/lib/modules/"],
+    do:["Entender su función (teoría de SO)"],
+    dont:["Modificar o borrar librerías manualmente"] },
+  { key:"/dev",   level:"danger",  desc:"Dispositivos representados como archivos. Discos, terminales, /dev/null.",
+    tags:["hardware","kernel","dispositivos"],
+    examples:["/dev/sda","/dev/sdb1","/dev/null","/dev/tty"],
+    do:["Aprender el concepto (todo es un fichero)","Usar /dev/null para descartar salida"],
+    dont:["Escribir en discos sin saber qué haces","Usar dd sin supervisión"] },
+  { key:"/boot",  level:"danger",  desc:"Kernel de Linux, initrd y GRUB. Si falla esto, el sistema no arranca.",
+    tags:["arranque","grub","crítico"],
+    examples:["/boot/grub/grub.cfg","/boot/vmlinuz-*","/boot/initrd.img-*"],
+    do:["Entender la secuencia de arranque","Actualizar con apt (gestiona automáticamente)"],
+    dont:["Borrar kernels sin grub-update","Editar grub.cfg a mano sin conocimiento"] },
+  { key:"/media", level:"safe",    desc:"Punto de montaje automático para medios extraíbles (USB, CD, discos externos).",
+    tags:["usb","montaje","externo"],
+    examples:["/media/usuario/Pendrive/","/media/usuario/CDROM/"],
+    do:["Copiar datos desde USB","Usar el gestor de archivos para montar"],
+    dont:["Desconectar el USB sin desmontar (puede corromper datos)"] },
+  { key:"/tmp",   level:"safe",    desc:"Ficheros temporales. Se limpia en cada reinicio o de forma periódica.",
+    tags:["temporal","limpiable"],
+    examples:["/tmp/build-XXXX/","/tmp/sesion-cache"],
+    do:["Pruebas rápidas y temporales","Ficheros de sesión que no necesitas guardar"],
+    dont:["Guardar datos importantes aquí","Confiar en que persistan tras el reinicio"] },
+  { key:"/proc",  level:"danger",  desc:"Sistema de ficheros virtual: información en tiempo real de procesos y kernel.",
+    tags:["virtual","kernel","procesos"],
+    examples:["/proc/cpuinfo","/proc/meminfo","/proc/1/status","/proc/net/"],
+    do:["Leer para diagnóstico: cat /proc/cpuinfo","Usar para scripting avanzado de monitorización"],
+    dont:["Tratarlo como carpeta normal","Intentar copiar o mover sus 'ficheros'"] },
+  { key:"/sys",   level:"danger",  desc:"Interfaz del kernel con el hardware (sysfs). Cambios en tiempo real.",
+    tags:["virtual","hardware","kernel"],
+    examples:["/sys/class/net/eth0/","/sys/block/sda/"],
+    do:["Consultar para diagnóstico avanzado"],
+    dont:["Cambiar valores sin documentación oficial","Automatizar cambios sin pruebas exhaustivas"] },
+];
+
+const byKey = Object.fromEntries(FS.map(x=>[x.key,x]));
+
+// ══════════════════════════════════════════════
+// PANEL
+// ══════════════════════════════════════════════
+let selectedKey = null;
+let activeFilter = "all";
+
+function setPanel(key){
+  const item = byKey[key];
+  if(!item) return;
+  selectedKey = key;
+
+  const content = document.getElementById("panelContent");
+  content.classList.add("fade-out");
+  setTimeout(()=>{
+    document.getElementById("panelTitle").textContent = item.key;
+    document.getElementById("panelSub").textContent = item.key.replace("/"," ").trim() + " — directorio";
+    document.getElementById("panelDesc").textContent = item.desc;
+
+    const lb = document.getElementById("panelLevelBadge");
+    const labels={safe:"✔ Seguro",caution:"⚠ Cuidado",danger:"✕ No tocar"};
+    lb.innerHTML = `<span class="level-pill ${item.level}">${labels[item.level]}</span>`;
+
+    const tags = document.getElementById("panelTags");
+    tags.innerHTML = item.tags.map(t=>`<span class="panel-tag">${t}</span>`).join("");
+
+    const exBlock = document.getElementById("panelExBlock");
+    exBlock.style.display = "block";
+    const ex = document.getElementById("panelExamples");
+    ex.innerHTML = item.examples.map(e=>`<li><kbd>${e}</kbd></li>`).join("");
+
+    const doClass={safe:"ok",caution:"warn",danger:"err"};
+    document.getElementById("panelDoDont").innerHTML = `
+      <div class="callout ${doClass[item.level]}">
+        <div class="row g-2">
+          <div class="col-6">
+            <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;color:var(--safe)">✔ Recomendado</div>
+            <ul style="font-size:.8rem;line-height:1.8;padding-left:1rem;">${item.do.map(x=>`<li>${x}</li>`).join("")}</ul>
+          </div>
+          <div class="col-6">
+            <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;color:var(--danger)">✕ Evita</div>
+            <ul style="font-size:.8rem;line-height:1.8;padding-left:1rem;">${item.dont.map(x=>`<li>${x}</li>`).join("")}</ul>
+          </div>
+        </div>
+      </div>`;
+
+    content.classList.remove("fade-out");
+  }, 180);
+}
+
+// ══════════════════════════════════════════════
+// SUMMARY CARDS
+// ══════════════════════════════════════════════
+function buildSumCards(filter="all"){
+  const wrap = document.getElementById("sumCards");
+  wrap.innerHTML = "";
+  FS.filter(x=> filter==="all" || x.level===filter).forEach(item=>{
+    const col = document.createElement("div");
+    col.className = "col-6 col-md-4 col-lg-3";
+    col.innerHTML = `
+      <div class="sumcard ${item.level}" data-key="${item.key}">
+        <div class="sumcard-key">
+          <span class="dot ${item.level}"></span>
+          ${item.key}
+        </div>
+        <div class="sumcard-desc">${item.desc.split(".")[0]}.</div>
+      </div>`;
+    wrap.appendChild(col);
+  });
+  wrap.querySelectorAll(".sumcard").forEach(c=>{
+    c.addEventListener("click",()=>{
+      setPanel(c.dataset.key);
+      document.getElementById("p5-holder").scrollIntoView({behavior:"smooth",block:"center"});
+    });
+  });
+}
+buildSumCards();
+
+// ── FILTER TABS ──
+document.getElementById("filterTabs").addEventListener("click",e=>{
+  const btn = e.target.closest(".ftab");
+  if(!btn) return;
+  document.querySelectorAll(".ftab").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  activeFilter = btn.dataset.f;
+  buildSumCards(activeFilter);
+  // also highlight in canvas
+  if(window._p5sketch) window._p5sketch._filterChanged = true;
+});
+
+document.getElementById("btnRandom").addEventListener("click",()=>{
+  const pool = activeFilter==="all" ? FS : FS.filter(x=>x.level===activeFilter);
+  setPanel(pool[Math.floor(Math.random()*pool.length)].key);
+});
+
+// ══════════════════════════════════════════════
+// P5 SKETCH — RADIAL LAYOUT
+// ══════════════════════════════════════════════
+const sketch = p=>{
+  let nodes=[], hov=null;
+  const COLORS={
+    safe:  [0,229,160],
+    caution:[251,191,36],
+    danger:[244,63,94],
+    root:  [56,189,248]
+  };
+
+  p.setup=()=>{
+    const holder=document.getElementById("p5-holder");
+    const w=holder.clientWidth;
+    const h=Math.max(420, Math.min(w*0.75, 520));
+    const c=p.createCanvas(w,h);
+    c.parent("p5-holder");
+    c.style("display","block");
+    build();
+    setPanel("/home");
+    window._p5sketch = p;
+  };
+
+  p.windowResized=()=>{
+    const holder=document.getElementById("p5-holder");
+    const w=holder.clientWidth;
+    const h=Math.max(420, Math.min(w*0.75, 520));
+    p.resizeCanvas(w,h);
+    build();
+  };
+
+  function build(){
+    nodes=[];
+    const cx=p.width/2, cy=p.height/2;
+    nodes.push({key:"/",x:cx,y:cy,r:30,level:"root",isRoot:true});
+
+    const leftKeys  =["/bin","/sbin","/etc","/home","/lib","/boot","/media"];
+    const rightKeys =["/usr","/var","/opt","/dev","/tmp","/proc","/sys"];
+
+    const isMobile = p.width < 520;
+    const spread = isMobile ? p.height * 0.42 : p.height * 0.44;
+    const lx = cx - (isMobile ? p.width*0.33 : p.width*0.36);
+    const rx = cx + (isMobile ? p.width*0.33 : p.width*0.36);
+    const topY = 45, botY = p.height-45;
+    const nr = isMobile ? 17 : 20;
+
+    leftKeys.forEach((k,i)=>{
+      const t = (i+1)/(leftKeys.length+1);
+      const y = topY + t*(botY-topY);
+      const d = byKey[k];
+      nodes.push({key:k,x:lx,y,r:nr,level:d?.level||"safe"});
+    });
+    rightKeys.forEach((k,i)=>{
+      const t = (i+1)/(rightKeys.length+1);
+      const y = topY + t*(botY-topY);
+      const d = byKey[k];
+      nodes.push({key:k,x:rx,y,r:nr,level:d?.level||"safe"});
+    });
+  }
+
+  function col(level,alpha=255){
+    const c=COLORS[level]||COLORS.safe;
+    return p.color(c[0],c[1],c[2],alpha);
+  }
+
+  function hit(mx,my,n){
+    return p.dist(mx,my,n.x,n.y)<=n.r+8;
+  }
+
+  p.draw=()=>{
+    p.clear();
+    p.background(13,23,40,255);
+
+    // subtle dot grid
+    p.noStroke();
+    p.fill(255,255,255,18);
+    for(let x=0;x<p.width;x+=32) for(let y=0;y<p.height;y+=32)
+      p.circle(x,y,2);
+
+    const root=nodes[0];
+
+    // spine
+    p.stroke(255,255,255,35);
+    p.strokeWeight(2);
+    p.line(p.width/2, 40, p.width/2, p.height-40);
+
+    // branches
+    nodes.forEach(n=>{
+      if(n.isRoot) return;
+      const lvlFilter = activeFilter;
+      const dimmed = lvlFilter!=="all" && n.level!==lvlFilter;
+
+      p.stroke(255,255,255,dimmed?15:50);
+      p.strokeWeight(1.5);
+      // elbow from spine
+      const sx=root.x, sy=n.y;
+      p.line(sx,sy,n.x,n.y);
+      // tick from spine
+      p.stroke(255,255,255,dimmed?10:30);
+      p.strokeWeight(1);
+      p.line(sx,n.y-6,sx,n.y+6);
+    });
+
+    // hover detect
+    hov=null;
+    nodes.forEach(n=>{ if(!n.isRoot && hit(p.mouseX,p.mouseY,n)) hov=n.key; });
+
+    // nodes
+    nodes.forEach(n=>{
+      const isSel = selectedKey===n.key;
+      const isHov = hov===n.key;
+      const lvlFilter = activeFilter;
+      const dimmed = !n.isRoot && lvlFilter!=="all" && n.level!==lvlFilter;
+
+      // glow ring
+      if(isSel){
+        p.noFill(); p.stroke(col(n.level,160)); p.strokeWeight(3);
+        p.circle(n.x,n.y,(n.r+13)*2);
+        p.stroke(col(n.level,60)); p.strokeWeight(8);
+        p.circle(n.x,n.y,(n.r+18)*2);
+      }
+
+      // node fill
+      const alpha = dimmed ? 60 : (isHov ? 255 : 210);
+      p.noStroke();
+      p.fill(col(n.level, alpha));
+      p.circle(n.x,n.y,n.r*2);
+
+      // inner highlight
+      if(!dimmed){
+        p.fill(255,255,255,40);
+        p.circle(n.x-n.r*.28,n.y-n.r*.28,n.r*.7);
+      }
+
+      // label
+      const fsize = n.isRoot ? (p.width<520?14:16) : (p.width<520?10:12);
+      p.textAlign(p.CENTER,p.CENTER);
+      p.textStyle(p.BOLD);
+      p.textSize(fsize);
+
+      p.fill(0,0,0,dimmed?80:160);
+      p.text(n.key,n.x+1,n.y+1);
+      p.fill(255,255,255,dimmed?100:250);
+      p.text(n.key,n.x,n.y);
+    });
+
+    // tooltip
+    if(hov && byKey[hov]){
+      const info=byKey[hov];
+      const n=nodes.find(x=>x.key===hov);
+      const short = info.desc.length>60 ? info.desc.slice(0,58)+"…" : info.desc;
+
+      p.textStyle(p.NORMAL); p.textSize(11.5);
+      const bw=Math.min(p.width-32, p.textWidth(short)+32);
+      const bh=46;
+      let tx=n.x+(n.x<p.width/2?n.r+10:-(bw+n.r+10));
+      let ty=p.constrain(n.y-bh/2,8,p.height-bh-8);
+
+      p.noStroke();
+      p.fill(0,0,0,200);
+      p.rect(tx,ty,bw,bh,8);
+      p.stroke(col(info.level,100));
+      p.strokeWeight(1);
+      p.rect(tx,ty,bw,bh,8);
+
+      p.noStroke();
+      p.fill(255,255,255,240);
+      p.textAlign(p.LEFT,p.TOP);
+      p.text(hov, tx+10, ty+8);
+      p.fill(180,200,220,200);
+      p.text(short, tx+10, ty+24);
     }
+  };
 
-    function setPanel(key){
-      const item = byKey[key];
-      if(!item) return;
-      document.getElementById("panelTitle").innerHTML = `${item.title} ${badgeFor(item.level)}`;
-      document.getElementById("panelDesc").textContent = item.desc;
+  p.mousePressed=()=>{
+    nodes.forEach(n=>{
+      if(!n.isRoot && hit(p.mouseX,p.mouseY,n)) setPanel(n.key);
+    });
+  };
 
-      const tags = document.getElementById("panelTags");
-      tags.innerHTML = "";
-      item.tags.forEach(t=>{
-        const b=document.createElement("span");
-        b.className="badge rounded-pill text-bg-secondary";
-        b.textContent=t;
-        tags.appendChild(b);
+  p.touchStarted=()=>{
+    if(p.touches.length>0){
+      const t=p.touches[0];
+      nodes.forEach(n=>{
+        if(!n.isRoot && p.dist(t.x,t.y,n.x,n.y)<=n.r+12) setPanel(n.key);
       });
+    }
+    return false;
+  };
+};
 
-      const ex=document.getElementById("panelExamples");
-      ex.innerHTML="";
-      item.examples.forEach(e=>{
-        const li=document.createElement("li");
-        li.innerHTML = `<span class="kbd">${e}</span>`;
-        ex.appendChild(li);
+new p5(sketch);
+
+// ══════════════════════════════════════════════
+// QUIZ — 5 PREGUNTAS
+// ══════════════════════════════════════════════
+const QUESTIONS=[
+  {q:"Si un servicio web falla al iniciarse, ¿dónde miras primero?",
+   opts:["/home","/var/log/nginx","/bin","/opt"],correct:1,
+   exp:"<kbd>/var/log</kbd> contiene los registros del sistema. <kbd>journalctl -u nginx</kbd> también es útil."},
+  {q:"¿Qué directorio contiene la configuración del servidor SSH?",
+   opts:["/home/.ssh","/etc/ssh","/usr/ssh","/var/ssh"],correct:1,
+   exp:"<kbd>/etc/ssh/sshd_config</kbd> — aquí se configura el demonio SSH del servidor."},
+  {q:"Un compañero quiere instalar una app autocontenida descargada manualmente. ¿Dónde la instala?",
+   opts:["/bin","/sys","/opt","/proc"],correct:2,
+   exp:"<kbd>/opt</kbd> es la ubicación estándar para software de terceros autocontenido."},
+  {q:"¿Cuál de estos directorios es un sistema de ficheros VIRTUAL (no existe en disco)?",
+   opts:["/etc","/home","/var","/proc"],correct:3,
+   exp:"<kbd>/proc</kbd> es un pseudosistema generado por el kernel en RAM. No ocupa espacio en disco."},
+  {q:"Antes de editar /etc/nginx/nginx.conf, ¿qué debes hacer?",
+   opts:["Nada, es solo texto","sudo cp nginx.conf nginx.conf.bak","chmod 777 nginx.conf","mv nginx.conf nginx.conf.old"],correct:1,
+   exp:"Siempre haz una copia de seguridad antes de editar configuración. La opción <kbd>mv</kbd> eliminaría el original."},
+];
+
+let qi=0, score=0, answered=false;
+
+function renderQuiz(){
+  const wrap=document.getElementById("quizWrap");
+  document.getElementById("quizBar").style.width=`${(qi/QUESTIONS.length)*100}%`;
+
+  if(qi>=QUESTIONS.length){
+    wrap.innerHTML=`
+      <div class="text-center py-3">
+        <div class="score-circle">${score}/${QUESTIONS.length}</div>
+        <div style="font-size:1.1rem;font-weight:700;margin-bottom:.5rem;">${score>=4?"¡Excelente!":score>=3?"Bien, repasa los fallos":"Repasa el material"}</div>
+        <div style="color:var(--muted);font-size:.88rem;">Respuestas correctas: ${score} de ${QUESTIONS.length}</div>
+      </div>`;
+    document.getElementById("quizBar").style.width="100%";
+    return;
+  }
+
+  const q=QUESTIONS[qi]; answered=false;
+  wrap.innerHTML=`
+    <div style="font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-bottom:.5rem;">Pregunta ${qi+1} de ${QUESTIONS.length}</div>
+    <div class="quiz-q">${q.q}</div>
+    <div class="quiz-opts" id="qopts">
+      ${q.opts.map((o,i)=>`<button class="qopt" data-i="${i}">${o}</button>`).join("")}
+    </div>
+    <div id="qexp" class="callout mt-3" style="display:none;font-size:.83rem;"></div>`;
+
+  document.querySelectorAll(".qopt").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      if(answered) return;
+      answered=true;
+      const chosen=+btn.dataset.i;
+      const isCorrect=chosen===q.correct;
+      if(isCorrect) score++;
+      document.querySelectorAll(".qopt").forEach((b,i)=>{
+        b.disabled=true;
+        if(i===q.correct) b.classList.add("correct");
+        else if(i===chosen && !isCorrect) b.classList.add("wrong");
       });
-
-      const cls = item.level==="safe" ? "callout" : item.level==="caution" ? "callout callout-warning" : "callout callout-danger";
-      document.getElementById("panelDoDont").innerHTML = `
-        <div class="${cls}">
-          <div class="row g-3">
-            <div class="col-12 col-md-6">
-              <strong>✅ Recomendado</strong>
-              <ul class="mt-2 mb-0">${item.do.map(x=>`<li>${x}</li>`).join("")}</ul>
-            </div>
-            <div class="col-12 col-md-6">
-              <strong>⛔ Evita</strong>
-              <ul class="mt-2 mb-0">${item.dont.map(x=>`<li>${x}</li>`).join("")}</ul>
-            </div>
-          </div>
-        </div>`;
-    }
-
-    // Cards resumen
-    const cardsRoot = document.getElementById("cards");
-    FS.forEach(item=>{
-      const col=document.createElement("div");
-      col.className="col-12 col-md-6 col-xl-4";
-      col.innerHTML=`
-        <div class="card h-100">
-          <div class="card-header d-flex justify-content-between align-items-center">
-            <strong>${item.key}</strong> ${badgeFor(item.level)}
-          </div>
-          <div class="card-body">
-            <div class="muted">${item.desc}</div>
-            <div class="mt-3">
-              <button class="btn btn-sm btn-outline-info w-100" data-pick="${item.key}">Ver en el mapa</button>
-            </div>
-          </div>
-        </div>`;
-      cardsRoot.appendChild(col);
+      const exp=document.getElementById("qexp");
+      exp.style.display="block";
+      exp.innerHTML=(isCorrect?"✅ Correcto. ":"❌ Incorrecto. ")+q.exp;
+      exp.className="callout mt-3 "+(isCorrect?"ok":"err");
+      setTimeout(()=>{ qi++; renderQuiz(); },2200);
     });
+  });
+}
 
-    function scrollToMap(){
-      document.querySelector("#p5-holder").scrollIntoView({behavior:"smooth", block:"center"});
-    }
+renderQuiz();
 
-    // Mini test
-    document.getElementById("quizCheck").addEventListener("click", ()=>{
-      const val=document.getElementById("quiz1").value;
-      const box=document.getElementById("quizResult");
-      if(!val){ box.innerHTML=`<div class="alert alert-secondary mb-0">Elige una opción 🙂</div>`; return; }
-      if(val==="/var/log"){
-        box.innerHTML=`<div class="alert alert-success mb-0">✅ Correcto. Logs = pistas del fallo. También <span class="kbd">journalctl -xe</span>.</div>`;
-      }else{
-        box.innerHTML=`<div class="alert alert-danger mb-0">❌ No. Lo más útil suele ser <span class="kbd">/var/log</span> (y <span class="kbd">journalctl</span>).</div>`;
-      }
-    });
+document.getElementById("btnRestart").addEventListener("click",()=>{
+  qi=0; score=0; renderQuiz();
+});
+</script>
 
-    // ==========================
-    // p5.js — MAPA ARBOL REAL
-    // ==========================
-    let nodes = [];
-    let selected = "/home";
-    let hovered = null;
-
-    function selectNode(key){
-      selected = key;
-      setPanel(key);
-    }
-
-    function levelColor(level, p){
-      if(level==="safe") return p.color(32,201,151,235);
-      if(level==="caution") return p.color(255,193,7,240);
-      return p.color(220,53,69,240);
-    }
-
-    function hit(p, mx, my, n){
-      return p.dist(mx,my,n.x,n.y) <= n.r + 6;
-    }
-
-    const sketch = (p)=>{
-      p.setup = ()=>{
-        const holder=document.getElementById("p5-holder");
-        const w=holder.clientWidth;
-        const h = (w < 520) ? 520 : 440; // más alto en móvil
-        const canvas=p.createCanvas(w,h);
-        canvas.parent("p5-holder");
-        buildLayout();
-        selectNode("/home");
-      };
-
-      p.windowResized = ()=>{
-        const holder=document.getElementById("p5-holder");
-        const w=holder.clientWidth;
-        const h = (w < 520) ? 520 : 440;
-        p.resizeCanvas(w,h);
-        buildLayout();
-      };
-
-      function buildLayout(){
-        nodes = [];
-
-        const w = p.width;
-        const h = p.height;
-
-        // tronco central (vertical)
-        const trunkX = w * 0.50;
-        const trunkTopY = 70;
-        const trunkBotY = h - 70;
-
-        // raíz "/"
-        const rootY = h * 0.52;
-        nodes.push({ key:"/", x: trunkX, y: rootY, r: 26, level:"safe", root:true });
-
-        // Reparto equilibrado: izquierda y derecha con espaciado adaptativo
-        const leftKeys  = ["/bin","/sbin","/etc","/home","/lib"];
-        const rightKeys = ["/usr","/var","/opt","/dev","/boot","/media","/tmp","/proc","/sys"];
-
-        const leftYStep  = (trunkBotY - trunkTopY) / (leftKeys.length + 1);
-        const rightYStep = (trunkBotY - trunkTopY) / (rightKeys.length + 1);
-
-        // Distancia horizontal de ramas (responsive)
-        const leftX  = Math.max(90,  trunkX - Math.min(220, w*0.36));
-        const rightX = Math.min(w-90, trunkX + Math.min(220, w*0.36));
-
-        leftKeys.forEach((k,i)=>{
-          const y = trunkTopY + leftYStep*(i+1);
-          nodes.push({ key:k, x:leftX, y, r:(w<520?20:22) });
-        });
-
-        rightKeys.forEach((k,i)=>{
-          const y = trunkTopY + rightYStep*(i+1);
-          nodes.push({ key:k, x:rightX, y, r:(w<520?18:20) });
-        });
-
-        // guardar para líneas
-        p._layout = { trunkX, trunkTopY, trunkBotY, rootY, leftX, rightX };
-      }
-
-      function drawBranch(fromX, fromY, toX, toY){
-        // línea con codo (└─)
-        const midX = (fromX + toX) / 2;
-        p.line(fromX, fromY, midX, fromY);
-        p.line(midX, fromY, midX, toY);
-        p.line(midX, toY, toX, toY);
-      }
-
-      p.draw = ()=>{
-        p.clear();
-
-        // fondo suave dentro del canvas (para contraste)
-        p.noStroke();
-        p.fill(255,255,255,10);
-        for(let i=0;i<12;i++){
-          p.circle((i*97)%p.width, (i*73)%p.height, 140);
-        }
-
-        const L = p._layout;
-
-        // tronco
-        p.stroke(255,255,255,80);
-        p.strokeWeight(4);
-        p.line(L.trunkX, L.trunkTopY, L.trunkX, L.trunkBotY);
-
-        const root = nodes.find(n=>n.key==="/");
-
-        // ramas con codo desde tronco hacia cada nodo
-        p.stroke(255,255,255,85);
-        p.strokeWeight(2);
-
-        nodes.forEach(n=>{
-          if(n.key==="/") return;
-          // punto de salida desde tronco a la altura del nodo
-          const fromX = L.trunkX;
-          const fromY = n.y;
-          drawBranch(fromX, fromY, n.x, n.y);
-        });
-
-        // hover detect
-        hovered = null;
-
-        // nodos
-        nodes.forEach(n=>{
-          const key = n.key;
-          const level = (key==="/") ? "safe" : byKey[key]?.level || "safe";
-          const isSel = (selected === key);
-          const isHover = hit(p, p.mouseX, p.mouseY, n);
-          if(isHover && key !== "/") hovered = key;
-
-          // halo selección
-          if(isSel){
-            p.noFill();
-            p.stroke(154,209,255,220);
-            p.strokeWeight(5);
-            p.circle(n.x, n.y, (n.r+14)*2);
-          }
-
-          // círculo
-          p.noStroke();
-          p.fill(levelColor(level,p));
-          p.circle(n.x, n.y, n.r*2);
-
-          // texto SIEMPRE BLANCO + sombra
-          p.textAlign(p.CENTER, p.CENTER);
-          p.textStyle(p.BOLD);
-          p.textSize(key==="/" ? 18 : (p.width<520 ? 13 : 14));
-
-          p.fill(0,0,0,190);
-          p.text(key, n.x+1.2, n.y+1.2);
-          p.fill(255,255,255,250);
-          p.text(key, n.x, n.y);
-        });
-
-        // tooltip
-        if(hovered && byKey[hovered]){
-          const info = byKey[hovered];
-          const text = `${hovered} — ${info.desc}`;
-
-          const pad=12;
-          p.textStyle(p.NORMAL);
-          p.textSize(12);
-
-          const maxW = Math.min(p.width - 32, 420);
-          // recorte simple por ancho
-          let shown = text;
-          while(p.textWidth(shown) > (maxW - pad*2) && shown.length > 12) shown = shown.slice(0,-1);
-          if(shown !== text) shown = shown.slice(0,-3) + "...";
-
-          const boxW = Math.min(maxW, p.textWidth(shown) + pad*2);
-          const boxH = 54;
-
-          const x = p.constrain(p.mouseX + 14, 16, p.width - boxW - 16);
-          const y = p.constrain(p.mouseY + 14, 16, p.height - boxH - 16);
-
-          p.noStroke();
-          p.fill(0,0,0,190);
-          p.rect(x,y,boxW,boxH,12);
-
-          p.fill(255,255,255,245);
-          p.textAlign(p.LEFT, p.TOP);
-          p.text(shown, x+pad, y+10);
-          p.fill(210,210,210,235);
-          p.text("clic para ver detalles", x+pad, y+30);
-        }
-
-        // cabecera canvas
-        p.noStroke();
-        p.fill(255,255,255,175);
-        p.textAlign(p.LEFT, p.TOP);
-        p.textSize(12);
-        p.text("Árbol de directorios (FP) · clic en un nodo", 12, 10);
-      };
-
-      p.mousePressed = ()=>{
-        for(const n of nodes){
-          if(n.key==="/") continue;
-          if(hit(p, p.mouseX, p.mouseY, n)){
-            selectNode(n.key);
-            return;
-          }
-        }
-      };
-    };
-
-    new p5(sketch);
-
-    // Botones
-    document.getElementById("btnReset").addEventListener("click", ()=> selectNode("/home"));
-    document.getElementById("btnRandom").addEventListener("click", ()=>{
-      const keys = FS.map(x=>x.key);
-      selectNode(keys[Math.floor(Math.random()*keys.length)]);
-    });
-
-    // Cards click
-    cardsRoot.addEventListener("click",(e)=>{
-      const btn=e.target.closest("[data-pick]");
-      if(!btn) return;
-      selectNode(btn.getAttribute("data-pick"));
-      scrollToMap();
-    });
-  </script>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

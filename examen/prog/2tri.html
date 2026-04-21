@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prueba 2TRI - Programación</title>
+
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    code{
+  font-family: "Fira Code", "Consolas", "Courier New", monospace;
+  font-weight: 600;
+  font-size: 0.95rem;
+
+  color: #0b0f14;
+  background: linear-gradient(135deg, #fff3a3, #ffe066);
+
+  padding: 3px 8px;
+  border-radius: 6px;
+
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+    .value {
+      color:#0b1220;
+    }
+    .label{
+      color:#0d6efd;
+    }
+    :root{
+      --brand:#0d6efd;
+      --brand-soft:#eaf2ff;
+      --ink:#1f2937;
+      --muted:#6b7280;
+      --line:#dbe4f0;
+      --surface:#ffffff;
+      --bg:#f5f7fb;
+      --success-soft:#eafaf1;
+      --warning-soft:#fff8e6;
+      --danger-soft:#fff1f2;
+      --shadow:0 14px 36px rgba(15, 23, 42, .08);
+      --radius:20px;
+    }
+
+    html{scroll-behavior:smooth;}
+
+    body{
+      background:
+        radial-gradient(circle at top left, rgba(13,110,253,.08), transparent 20%),
+        radial-gradient(circle at top right, rgba(25,135,84,.06), transparent 18%),
+        var(--bg);
+      color:var(--ink);
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      line-height:1.55;
+    }
+
+    .exam-shell{
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px 14px 48px;
+    }
+
+    .hero{
+      background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 55%, #084298 100%);
+      color:#fff;
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:auto -60px -60px auto;
+      width:220px;
+      height:220px;
+      background:rgba(255,255,255,.08);
+      border-radius:50%;
+    }
+
+    .hero-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:.5rem;
+      background: rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.18);
+      color:#fff;
+      padding:.45rem .8rem;
+      border-radius:999px;
+      font-size:.92rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .card-soft{
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .section-title{
+      display:flex;
+      align-items:center;
+      gap:.75rem;
+      margin:0;
+      font-size:1.15rem;
+      font-weight:700;
+      color:#0f172a;
+    }
+
+    .section-title .icon{
+      width:42px;
+      height:42px;
+      display:grid;
+      place-items:center;
+      border-radius:12px;
+      background:var(--brand-soft);
+      color:var(--brand);
+      flex-shrink:0;
+    }
+
+    .info-list li{
+      margin-bottom:.55rem;
+    }
+
+    .mini-label{
+      display:inline-block;
+      padding:.3rem .7rem;
+      border-radius:999px;
+      font-size:.86rem;
+      font-weight:600;
+      border:1px solid transparent;
+    }
+
+    .mini-primary{
+      background:var(--brand-soft);
+      color:var(--brand);
+      border-color:#cfe2ff;
+    }
+
+    .mini-success{
+      background:var(--success-soft);
+      color:#146c43;
+      border-color:#c7eed8;
+    }
+
+    .mini-warning{
+      background:var(--warning-soft);
+      color:#997404;
+      border-color:#fde8a5;
+    }
+
+    .mini-danger{
+      background:var(--danger-soft);
+      color:#b42318;
+      border-color:#fecdd3;
+    }
+
+    .meta-grid{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap:14px;
+    }
+
+    .meta-item{
+      background:#fff;
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:18px;
+      padding:14px 16px;
+      min-height:86px;
+      backdrop-filter: blur(8px);
+    }
+
+    .meta-item .label{
+      font-size:.85rem;
+      opacity:.9;
+      margin-bottom:.3rem;
+    }
+
+    .meta-item .value{
+      font-weight:700;
+      font-size:1rem;
+    }
+
+    .exercise-card{
+      border:1px solid var(--line);
+      border-radius:22px;
+      overflow:hidden;
+      background:#fff;
+      box-shadow: var(--shadow);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+
+    .exercise-card:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 18px 42px rgba(15, 23, 42, .10);
+    }
+
+    .exercise-head{
+      background: linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%);
+      border-bottom:1px solid var(--line);
+      padding:18px 20px;
+    }
+
+    .exercise-title{
+      margin:0;
+      font-size:1.15rem;
+      font-weight:800;
+      color:#0f172a;
+    }
+
+    .exercise-body{
+      padding:20px;
+    }
+
+    .score-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:.45rem;
+      background:#fff;
+      color:#0d6efd;
+      border:1px solid #cfe2ff;
+      border-radius:999px;
+      padding:.45rem .8rem;
+      font-weight:700;
+      font-size:.9rem;
+    }
+
+    .package-box,
+    .code-box{
+      background:#0b1220;
+      color:#e5edf7;
+      border-radius:18px;
+      padding:16px;
+      border:1px solid #1f2a3a;
+      overflow:auto;
+    }
+
+    .package-box code,
+    .code-box code,
+    .code-box pre{
+      color:inherit;
+      background:transparent;
+      margin:0;
+      white-space:pre-wrap;
+      word-break:break-word;
+      font-family: Consolas, "Courier New", monospace;
+      font-size:.95rem;
+    }
+
+    .requirement-list li,
+    .subpoints li{
+      margin-bottom:.55rem;
+    }
+
+    .subpoints li strong{
+      color:#0f172a;
+    }
+
+    .divider-soft{
+      height:1px;
+      background:linear-gradient(90deg, transparent, #dbe4f0, transparent);
+      margin:1.2rem 0;
+    }
+
+    .copy-btn{
+      white-space:nowrap;
+    }
+
+    .footer-note{
+      color:var(--muted);
+      font-size:.95rem;
+    }
+
+    .sticky-nav{
+      position: sticky;
+      top: 12px;
+      z-index: 10;
+    }
+
+    .quick-nav .list-group-item{
+      border:none;
+      border-radius:14px !important;
+      margin-bottom:8px;
+      background:#fff;
+      border:1px solid var(--line);
+      font-weight:600;
+    }
+
+    .quick-nav .list-group-item:hover{
+      background:#f8fbff;
+      border-color:#bfd3f7;
+      color:#0d6efd;
+    }
+
+    .table-soft{
+      --bs-table-bg: transparent;
+      --bs-table-striped-bg: #f8fbff;
+      --bs-table-border-color: #dbe4f0;
+      margin-bottom:0;
+    }
+
+    .callout{
+      border-left:5px solid var(--brand);
+      background:#f8fbff;
+      border-radius:16px;
+      padding:14px 16px;
+    }
+
+    @media (max-width: 991.98px){
+      .meta-grid{
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .sticky-nav{
+        position: static;
+      }
+    }
+
+    @media (max-width: 575.98px){
+      .meta-grid{
+        grid-template-columns: 1fr;
+      }
+      .exercise-title{
+        font-size:1.05rem;
+      }
+      .hero{
+        border-radius:22px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="exam-shell">
+
+  <section class="hero p-4 p-lg-5 mb-4">
+  <div class="row g-4 align-items-center">
+    <div class="col-12">
+      <span class="hero-badge mb-3">
+        <i class="bi bi-mortarboard-fill"></i>
+        Técnico Superior en Desarrollo de Aplicaciones Multiplataforma · [0485 - Programación]
+      </span>
+
+      <h1 class="display-6 fw-bold mb-3">Prueba 2TRI · Programación</h1>
+
+      <p class="mb-4 fs-5 opacity-75">
+        Evaluación práctica orientada a POO, interfaces, herencia, matrices y ordenación con Comparable y Comparator.
+      </p>
+
+      <div class="meta-grid meta-grid-compact">
+        <div class="meta-item">
+          <div class="label">Centro</div>
+          <div class="value">IES Camas - Antonio Brisquet</div>
+        </div>
+
+        <div class="meta-item">
+          <div class="label">Fecha</div>
+          <div class="value">17/03/26</div>
+        </div>
+
+        <div class="meta-item">
+          <div class="label">Curso</div>
+          <div class="value">2025/2026</div>
+        </div>
+
+        <div class="meta-item">
+          <div class="label">Duración</div>
+          <div class="value">2 horas</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+    <div class="row g-4">
+      <div class="col-lg-4 col-xl-3">
+        <div class="sticky-nav">
+          <div class="card-soft p-3 mb-4">
+            <h2 class="section-title mb-3">
+              <span class="icon"><i class="bi bi-compass-fill"></i></span>
+              Navegación rápida
+            </h2>
+            <div class="list-group quick-nav">
+              <a class="list-group-item list-group-item-action" href="#instrucciones">Instrucciones</a>
+              <a class="list-group-item list-group-item-action" href="#maven">Comando Maven</a>
+              <a class="list-group-item list-group-item-action" href="#entrega">Entrega</a>
+              <a class="list-group-item list-group-item-action" href="#ej1">Ejercicio 1</a>
+              <a class="list-group-item list-group-item-action" href="#ej2">Ejercicio 2</a>
+              <a class="list-group-item list-group-item-action" href="#ej3">Ejercicio 3</a>
+              <a class="list-group-item list-group-item-action" href="#ej4">Ejercicio 4</a>
+            </div>
+          </div>
+
+          <div class="card-soft p-3">
+            <h2 class="section-title mb-3">
+              <span class="icon"><i class="bi bi-award-fill"></i></span>
+              Reparto de puntos
+            </h2>
+            <table class="table table-sm table-soft align-middle">
+              <tbody>
+                <tr><td>Ejercicio 1</td><td class="text-end fw-bold">2,5</td></tr>
+                <tr><td>Ejercicio 2</td><td class="text-end fw-bold">2,5</td></tr>
+                <tr><td>Ejercicio 3</td><td class="text-end fw-bold">2,5</td></tr>
+                <tr><td>Ejercicio 4</td><td class="text-end fw-bold">2,5</td></tr>
+                <tr class="table-primary">
+                  <td class="fw-bold">Total</td>
+                  <td class="text-end fw-bold">10</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-8 col-xl-9">
+
+        <section id="instrucciones" class="card-soft p-4 mb-4">
+          <h2 class="section-title mb-3">
+            <span class="icon"><i class="bi bi-exclamation-diamond-fill"></i></span>
+            Instrucciones
+          </h2>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="p-3 rounded-4 h-100 border bg-light">
+                <span class="mini-label mini-primary mb-2">Normas generales</span>
+                <ul class="info-list mb-0">
+                  <li><strong>Duración:</strong> 2 horas.</li>
+                  <li><strong>Integridad académica:</strong> copiar, compartir respuestas o utilizar IA (ChatGPT, Copilot u otras) supondrá la anulación inmediata del examen con calificación de 0.</li>
+                  <li><strong>Salidas del aula:</strong> no está permitido salir al servicio durante la prueba. Si el alumno abandona el aula por cualquier motivo, no podrá continuar el examen.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="p-3 rounded-4 h-100 border bg-light">
+                <span class="mini-label mini-success mb-2">Se valorará</span>
+                <ul class="info-list mb-0">
+                  <li>Corrección del código.</li>
+                  <li>Orden y legibilidad.</li>
+                  <li>Nombres claros y coherentes.</li>
+                  <li>Uso correcto de POO, interfaces y herencia.</li>
+                  <li>Manejo de errores cuando proceda.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="maven" class="card-soft p-4 mb-4">
+          <h2 class="section-title mb-3">
+            <span class="icon"><i class="bi bi-terminal-fill"></i></span>
+            Comando Maven para crear el proyecto
+          </h2>
+
+          <div class="callout mb-3">
+            Puedes generar la estructura inicial del proyecto con el siguiente comando:
+          </div>
+
+          <div class="code-box mb-3">
+<code id="mavenCommand">mvn archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.5 -DgroupId=es.iescamas.programacion -DartifactId=Prueba2TRI -Dversion=1.0.0-SNAPSHOT -DjavaCompilerVersion=17 -DjunitVersion=5.11.0 -DinteractiveMode=false</code>
+          </div>
+
+          <div class="d-flex flex-wrap gap-2 align-items-center">
+            <button class="btn btn-primary copy-btn" onclick="copiarComando()">
+              <i class="bi bi-copy me-2"></i>Copiar comando
+            </button>
+            <span id="copyStatus" class="text-success fw-semibold" aria-live="polite"></span>
+          </div>
+        </section>
+
+        <section id="entrega" class="card-soft p-4 mb-4">
+          <h2 class="section-title mb-3">
+            <span class="icon"><i class="bi bi-cloud-arrow-up-fill"></i></span>
+            Entrega en Moodle
+          </h2>
+
+          <p class="mb-3">
+            Entrega un <strong>.zip</strong> con tu proyecto. Tu código debe estar dentro de
+            <code>src/main/java</code> siguiendo estos paquetes obligatorios:
+          </p>
+
+          <div class="package-box">
+<code>Ejercicio 1: es.iescamas.programacion.ej1
+Ejercicio 2: es.iescamas.programacion.ej2
+Ejercicio 3: es.iescamas.programacion.ej3
+Ejercicio 4: es.iescamas.programacion.ej4</code>
+          </div>
+        </section>
+
+        <section id="ej1" class="exercise-card mb-4">
+          <div class="exercise-head d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+            <div>
+              <h2 class="exercise-title">Ejercicio 1 · POO básica y estructuras de control</h2>
+              <div class="text-secondary">Clase, atributos privados, constructor, getters/setters, if-else y bucle for</div>
+            </div>
+            <span class="score-badge"><i class="bi bi-star-fill"></i> 2,5 puntos</span>
+          </div>
+
+          <div class="exercise-body">
+            <p>
+              Crea la clase <strong>Libro</strong> con los atributos privados
+              <code>titulo</code> (<code>String</code>), <code>autor</code> (<code>String</code>),
+              <code>anyo</code> (<code>int</code>) y <code>precio</code> (<code>double</code>).
+            </p>
+
+            <ol class="subpoints ps-3">
+              <li><strong>a)</strong> Constructor con los cuatro parámetros. Getters y setters para cada atributo. <span class="mini-label mini-primary">[1,0 pt]</span></li>
+              <li><strong>b)</strong> Método <code>mostrarFicha()</code> que imprima:
+                <code>[año] Título — Autor (X,XX €)</code>. <span class="mini-label mini-primary">[0,5 pts]</span></li>
+              <li><strong>c)</strong> En el <code>main</code>: crea dos objetos <code>Libro</code> y usa <code>if-else</code> para mostrar cuál es más reciente. Si son iguales, imprime <code>"Misma edición"</code>. <span class="mini-label mini-primary">[0,5 pts]</span></li>
+              <li><strong>d)</strong> Con un bucle <code>for</code>, muestra el precio de un libro aplicando descuentos del 5 %, 10 %, 15 % y 20 %, indicando el porcentaje en cada línea. <span class="mini-label mini-primary">[0,5 pts]</span></li>
+            </ol>
+          </div>
+        </section>
+
+        <section id="ej2" class="exercise-card mb-4">
+          <div class="exercise-head d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+            <div>
+              <h2 class="exercise-title">Ejercicio 2 · Interfaz Catalogable y herencia</h2>
+              <div class="text-secondary">Interfaz, implementación, herencia, sobrescritura y polimorfismo</div>
+            </div>
+            <span class="score-badge"><i class="bi bi-star-fill"></i> 2,5 puntos</span>
+          </div>
+
+          <div class="exercise-body">
+            <p>
+              El sistema de la biblioteca necesita estandarizar cómo se muestran los objetos en el catálogo.
+            </p>
+
+            <ol class="subpoints ps-3">
+              <li><strong>a)</strong> Define la interfaz <code>Catalogable</code> con dos métodos:
+                <ul class="requirement-list mt-2">
+                  <li><code>String getCodigo()</code></li>
+                  <li><code>void mostrarEnCatalogo()</code></li>
+                </ul>
+                <span class="text-secondary">(Nota: <code>mostrarEnCatalogo()</code> imprime por consola, no devuelve <code>String</code>)</span>
+                <span class="mini-label mini-primary ms-1">[0,5 pts]</span>
+              </li>
+
+              <li><strong>b)</strong> Haz que <code>Libro</code> implemente <code>Catalogable</code>.
+                <ul class="requirement-list mt-2">
+                  <li>El código se forma concatenando <code>"LIB-"</code>, el año y las tres primeras letras del título en mayúsculas.</li>
+                  <li>El método <code>mostrarEnCatalogo()</code> llamará a <code>mostrarFicha()</code> y añadirá el código entre corchetes al final.</li>
+                </ul>
+
+                <div class="code-box mt-2">
+<code>[2020] ... (9,99 €) [LIB-2020-SOL]</code>
+                </div>
+              </li>
+
+              <li><strong>c)</strong> Crea <code>LibroDigital</code> que herede de <code>Libro</code> y añada el atributo privado <code>formato</code> (<code>String</code>, p. ej. <code>"EPUB"</code>).
+                Añade constructor con <code>super()</code>, getter/setter y sobreescribe <code>mostrarEnCatalogo()</code> para mostrar también el formato.
+                <span class="mini-label mini-primary">[0,75 pts]</span></li>
+
+              <li><strong>d)</strong> En el <code>main</code>: crea un <code>Libro</code> y un <code>LibroDigital</code>, guárdalos en un array <code>Catalogable[]</code> y recórrelo llamando a <code>mostrarEnCatalogo()</code>.
+                Añade un comentario explicando qué concepto OOP demuestra.
+                <span class="mini-label mini-primary">[0,5 pts]</span></li>
+            </ol>
+          </div>
+        </section>
+
+        <section id="ej3" class="exercise-card mb-4">
+          <div class="exercise-head d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+            <div>
+              <h2 class="exercise-title">Ejercicio 3 · Interfaz OperableMatriz y herencia</h2>
+              <div class="text-secondary">Matrices, interfaz, clase base, herencia y polimorfismo</div>
+            </div>
+            <span class="score-badge"><i class="bi bi-star-fill"></i> 2,5 puntos</span>
+          </div>
+
+          <div class="exercise-body">
+            <p>
+              El sistema necesita estandarizar cómo se trabajan las matrices de datos.
+            </p>
+
+            <ol class="subpoints ps-3">
+              <li><strong>a)</strong> Define la interfaz <code>OperableMatriz</code> con dos métodos:
+                <ul class="requirement-list mt-2">
+                  <li><code>int[][] sumar(int[][] otra)</code></li>
+                  <li><code>void mostrarResultado()</code></li>
+                </ul>
+                <span class="text-secondary">(Nota: <code>mostrarResultado()</code> imprime por consola, no devuelve <code>String</code>)</span>
+                <span class="mini-label mini-primary ms-1">[0,5 pts]</span>
+              </li>
+
+              <li><strong>b)</strong> Crea la clase <code>MatrizDatos</code> con el atributo privado <code>datos</code> (<code>int[][]</code>).
+                Añade constructor, getter y setter. Haz que implemente <code>OperableMatriz</code>.
+                <ul class="requirement-list mt-2">
+                  <li>El método <code>sumar(int[][] otra)</code> devolverá una nueva matriz resultado de sumar ambas matrices.</li>
+                  <li>Si <code>otra</code> es <code>null</code> o no tiene las mismas dimensiones, lanzará <code>IllegalArgumentException</code>.</li>
+                  <li>El método <code>mostrarResultado()</code> imprimirá la matriz por consola.</li>
+                </ul>
+                <span class="mini-label mini-primary">[1,0 pt]</span>
+              </li>
+
+              <li><strong>c)</strong> Crea <code>MatrizCuadrada</code> que herede de <code>MatrizDatos</code>.
+                Sobrescribe <code>mostrarResultado()</code> para añadir al final el tamaño de la matriz, por ejemplo:
+                <div class="code-box mt-2">
+<code>Matriz cuadrada: 3 x 3</code>
+                </div>
+                <span class="mini-label mini-primary mt-2">[0,5 pts]</span>
+              </li>
+
+              <li><strong>d)</strong> En el <code>main</code>: crea un objeto <code>MatrizDatos</code> y un objeto <code>MatrizCuadrada</code>, guárdalos en un array <code>OperableMatriz[]</code> y recórrelo llamando a <code>mostrarResultado()</code>.
+                Añade un comentario explicando qué concepto OOP demuestra.
+                <span class="mini-label mini-primary">[0,5 pts]</span></li>
+            </ol>
+          </div>
+        </section>
+
+        <section id="ej4" class="exercise-card mb-4">
+          <div class="exercise-head d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+            <div>
+              <h2 class="exercise-title">Ejercicio 4 · Comparable y Comparator</h2>
+              <div class="text-secondary">Orden natural, comparadores externos y ordenación de arrays de objetos</div>
+            </div>
+            <span class="score-badge"><i class="bi bi-star-fill"></i> 2,5 puntos</span>
+          </div>
+
+          <div class="exercise-body">
+            <p>
+              El sistema necesita ordenar los libros de diferentes maneras.
+            </p>
+
+            <ol class="subpoints ps-3">
+              <li><strong>a)</strong> Haz que la clase <code>Libro</code> implemente la interfaz <code>Comparable&lt;Libro&gt;</code> para definir el orden natural por título en orden alfabético.
+                Implementa el método <code>compareTo(Libro otro)</code>.
+                <span class="mini-label mini-primary">[0,75 pts]</span></li>
+
+              <li><strong>b)</strong> Crea la clase <code>ComparadorPorAnyo</code> que implemente <code>Comparator&lt;Libro&gt;</code>.
+                Debe permitir ordenar los libros por año de publicación, del más antiguo al más reciente.
+                <span class="mini-label mini-primary">[0,5 pts]</span></li>
+
+              <li><strong>c)</strong> Crea la clase <code>ComparadorPorPrecio</code> que implemente <code>Comparator&lt;Libro&gt;</code>.
+                Debe permitir ordenar los libros por precio, de menor a mayor.
+                <span class="mini-label mini-primary">[0,5 pts]</span></li>
+
+              <li><strong>d)</strong> En el <code>main</code>:
+                <ul class="requirement-list mt-2">
+                  <li>Crea un array de al menos 4 objetos <code>Libro</code>.</li>
+                  <li>Ordénalo primero usando el orden natural (<code>Comparable</code>).</li>
+                  <li>Después ordénalo por año usando <code>ComparadorPorAnyo</code>.</li>
+                  <li>Finalmente ordénalo por precio usando <code>ComparadorPorPrecio</code>.</li>
+                  <li>Muestra el contenido del array tras cada ordenación usando <code>mostrarFicha()</code>.</li>
+                </ul>
+                <span class="mini-label mini-primary">[0,5 pts]</span>
+              </li>
+
+              <li><strong>e)</strong> Añade un comentario explicando qué diferencia hay entre <code>Comparable</code> y <code>Comparator</code>.
+                <span class="mini-label mini-primary">[0,25 pts]</span></li>
+            </ol>
+          </div>
+        </section>
+
+        <section class="card-soft p-4">
+          <h2 class="section-title mb-3">
+            <span class="icon"><i class="bi bi-check2-square"></i></span>
+            Recordatorio final
+          </h2>
+
+          <div class="row g-3">
+            <div class="col-md-4">
+              <div class="p-3 border rounded-4 h-100 bg-light">
+                <span class="mini-label mini-success mb-2">Antes de entregar</span>
+                <ul class="mb-0">
+                  <li>Revisa nombres de clases y métodos.</li>
+                  <li>Comprueba paquetes correctos.</li>
+                  <li>Verifica que el proyecto compila.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="p-3 border rounded-4 h-100 bg-light">
+                <span class="mini-label mini-warning mb-2">Cuida</span>
+                <ul class="mb-0">
+                  <li>Orden y presentación.</li>
+                  <li>Comentarios breves y útiles.</li>
+                  <li>Uso correcto de herencia e interfaces.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="p-3 border rounded-4 h-100 bg-light">
+                <span class="mini-label mini-danger mb-2">Evita</span>
+                <ul class="mb-0">
+                  <li>Duplicar código sin necesidad.</li>
+                  <li>Nombres poco descriptivos.</li>
+                  <li>Entregar fuera de la estructura pedida.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="divider-soft"></div>
+          <p class="footer-note mb-0">
+            Documento preparado para incrustación en Moodle. Diseño responsive con Bootstrap 5.
+          </p>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function copiarComando() {
+      const texto = document.getElementById('mavenCommand').innerText.trim();
+      const estado = document.getElementById('copyStatus');
+
+      navigator.clipboard.writeText(texto)
+        .then(() => {
+          estado.textContent = 'Comando copiado al portapapeles.';
+          setTimeout(() => estado.textContent = '', 2500);
+        })
+        .catch(() => {
+          estado.textContent = 'No se pudo copiar automáticamente.';
+          setTimeout(() => estado.textContent = '', 2500);
+        });
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

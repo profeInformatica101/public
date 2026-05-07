@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía Completa: Crear un Club Deportivo en Sevilla 2026</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --sevilla-red: #C0392B;
+    --sevilla-gold: #D4A017;
+    --sevilla-dark: #1A1A2E;
+    --sevilla-navy: #16213E;
+    --accent-blue: #0F3460;
+    --accent-green: #1A7A4A;
+    --light-cream: #FBF9F4;
+    --warm-white: #FFFEF9;
+    --text-primary: #1A1A2E;
+    --text-muted: #6B6B8A;
+    --border-soft: #E8E2D5;
+    --shadow-gold: rgba(212, 160, 23, 0.15);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--light-cream);
+    color: var(--text-primary);
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+
+  /* ====== HERO ====== */
+  .hero {
+    background: linear-gradient(135deg, var(--sevilla-dark) 0%, var(--accent-blue) 50%, #0a1a3a 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 50%, rgba(212,160,23,0.12) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(192,57,43,0.10) 0%, transparent 40%),
+      radial-gradient(circle at 60% 80%, rgba(15,52,96,0.3) 0%, transparent 40%);
+  }
+
+  .hero-pattern {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: linear-gradient(90deg, var(--sevilla-gold), #f0c040);
+    color: var(--sevilla-dark);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    border-radius: 50px;
+    margin-bottom: 1.5rem;
+    animation: fadeInDown 0.6s ease both;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    animation: fadeInUp 0.7s ease 0.1s both;
+  }
+
+  .hero-title .highlight {
+    color: var(--sevilla-gold);
+    position: relative;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.7);
+    font-weight: 300;
+    max-width: 580px;
+    line-height: 1.7;
+    animation: fadeInUp 0.7s ease 0.2s both;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-top: 2.5rem;
+    animation: fadeInUp 0.7s ease 0.3s both;
+  }
+
+  .hero-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255,255,255,0.65);
+    font-size: 0.88rem;
+  }
+
+  .hero-meta-item i { color: var(--sevilla-gold); }
+
+  .hero-cta {
+    background: linear-gradient(135deg, var(--sevilla-gold), #e8b420);
+    color: var(--sevilla-dark);
+    border: none;
+    font-weight: 700;
+    padding: 14px 32px;
+    border-radius: 50px;
+    font-size: 0.95rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    margin-top: 2rem;
+    animation: fadeInUp 0.7s ease 0.35s both;
+    box-shadow: 0 8px 30px rgba(212,160,23,0.4);
+  }
+
+  .hero-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(212,160,23,0.5);
+    color: var(--sevilla-dark);
+  }
+
+  .hero-escudo {
+    position: absolute;
+    right: -60px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 500px;
+    height: 500px;
+    opacity: 0.04;
+    font-size: 420px;
+    line-height: 1;
+    animation: float 6s ease-in-out infinite;
+  }
+
+  /* ====== PROGRESS NAV ====== */
+  .progress-nav {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid var(--border-soft);
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+  }
+
+  .progress-nav .nav-inner {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 0 1rem;
+  }
+
+  .progress-nav .nav-inner::-webkit-scrollbar { display: none; }
+
+  .nav-step {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 14px 16px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+    letter-spacing: 0.02em;
+  }
+
+  .nav-step:hover, .nav-step.active {
+    color: var(--accent-blue);
+    border-bottom-color: var(--sevilla-gold);
+  }
+
+  .nav-step .step-num {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--border-soft);
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    transition: all 0.2s ease;
+  }
+
+  .nav-step.active .step-num {
+    background: var(--sevilla-gold);
+    color: var(--sevilla-dark);
+  }
+
+  /* ====== SECTIONS ====== */
+  .section-wrapper {
+    padding: 5rem 0;
+  }
+
+  .section-wrapper:nth-child(even) {
+    background: var(--warm-white);
+  }
+
+  .section-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--sevilla-gold);
+    margin-bottom: 0.5rem;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    color: var(--sevilla-dark);
+    line-height: 1.2;
+    margin-bottom: 1.2rem;
+  }
+
+  .section-lead {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    line-height: 1.8;
+    max-width: 680px;
+  }
+
+  /* ====== STEP CARDS ====== */
+  .step-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 2.2rem;
+    border: 1px solid var(--border-soft);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .step-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--sevilla-gold), var(--sevilla-red));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+
+  .step-card:hover::before { transform: scaleX(1); }
+
+  .step-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+  }
+
+  .step-number {
+    width: 52px;
+    height: 52px;
+    background: linear-gradient(135deg, var(--accent-blue), #1a4a7a);
+    color: #fff;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+    box-shadow: 0 6px 20px rgba(15,52,96,0.3);
+  }
+
+  .step-card h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--sevilla-dark);
+    margin-bottom: 0.6rem;
+  }
+
+  /* ====== INFO BOXES ====== */
+  .info-box {
+    border-radius: 16px;
+    padding: 1.5rem 1.8rem;
+    margin: 1.5rem 0;
+    border-left: 5px solid;
+    position: relative;
+  }
+
+  .info-box-warning {
+    background: #FFF8EC;
+    border-color: var(--sevilla-gold);
+  }
+
+  .info-box-danger {
+    background: #FFF5F5;
+    border-color: var(--sevilla-red);
+  }
+
+  .info-box-success {
+    background: #F0FBF4;
+    border-color: var(--accent-green);
+  }
+
+  .info-box-info {
+    background: #F0F6FF;
+    border-color: var(--accent-blue);
+  }
+
+  .info-box-title {
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ====== CHECKLIST ====== */
+  .checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px dashed var(--border-soft);
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .checklist-item:last-child { border-bottom: none; }
+
+  .checklist-item .check-box {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--border-soft);
+    border-radius: 7px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    margin-top: 1px;
+    cursor: pointer;
+  }
+
+  .checklist-item.checked .check-box {
+    background: var(--accent-green);
+    border-color: var(--accent-green);
+    color: #fff;
+  }
+
+  .checklist-item.checked .check-label { text-decoration: line-through; color: var(--text-muted); }
+
+  /* ====== COMPARISON TABLE ====== */
+  .comparison-table {
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+    border: 1px solid var(--border-soft);
+  }
+
+  .comparison-table .table-header {
+    display: grid;
+    grid-template-columns: 2fr 1.5fr 1.5fr;
+    background: var(--sevilla-dark);
+    color: #fff;
+  }
+
+  .comparison-table .th {
+    padding: 1.2rem 1.5rem;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .comparison-table .th.con { color: #6defa7; }
+  .comparison-table .th.sin { color: #ff8a80; }
+
+  .comparison-table .table-row {
+    display: grid;
+    grid-template-columns: 2fr 1.5fr 1.5fr;
+    border-bottom: 1px solid var(--border-soft);
+    transition: background 0.2s ease;
+  }
+
+  .comparison-table .table-row:hover { background: var(--light-cream); }
+  .comparison-table .table-row:last-child { border-bottom: none; }
+
+  .comparison-table .td {
+    padding: 1.1rem 1.5rem;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .comparison-table .td.feature { font-weight: 600; color: var(--sevilla-dark); }
+  .comparison-table .td.con { color: var(--accent-green); }
+  .comparison-table .td.sin { color: var(--sevilla-red); }
+
+  /* ====== PROCESS STEPPER ====== */
+  .process-step {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid var(--border-soft);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .process-step:hover {
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    transform: translateX(4px);
+    border-color: var(--sevilla-gold);
+  }
+
+  .process-step-num {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--sevilla-gold), #e8b420);
+    color: var(--sevilla-dark);
+    font-weight: 700;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(212,160,23,0.4);
+  }
+
+  .process-step h5 {
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 4px;
+    color: var(--sevilla-dark);
+  }
+
+  /* ====== CONTACT CARDS ====== */
+  .contact-card {
+    background: linear-gradient(135deg, var(--sevilla-dark) 0%, var(--accent-blue) 100%);
+    color: #fff;
+    border-radius: 20px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .contact-card::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: rgba(212,160,23,0.1);
+  }
+
+  .contact-card .contact-icon {
+    width: 48px; height: 48px;
+    background: rgba(212,160,23,0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--sevilla-gold);
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+
+  .contact-card h5 { font-weight: 700; margin-bottom: 1rem; }
+  .contact-card .contact-detail { font-size: 0.88rem; color: rgba(255,255,255,0.75); margin-bottom: 0.4rem; display: flex; align-items: flex-start; gap: 8px; }
+  .contact-card .contact-detail i { color: var(--sevilla-gold); flex-shrink: 0; margin-top: 1px; }
+
+  /* ====== SUMMARY TABLE ====== */
+  .summary-table {
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.06);
+    border: 1px solid var(--border-soft);
+  }
+
+  .summary-table table {
+    margin: 0;
+  }
+
+  .summary-table thead th {
+    background: var(--sevilla-dark);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 1.1rem 1.5rem;
+    border: none;
+  }
+
+  .summary-table tbody td {
+    padding: 1rem 1.5rem;
+    vertical-align: top;
+    border-color: var(--border-soft);
+    font-size: 0.9rem;
+  }
+
+  .summary-table tbody tr:hover { background: var(--light-cream); }
+
+  .summary-table .paso-badge {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--sevilla-gold), #e8b420);
+    color: var(--sevilla-dark);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin: 0 auto;
+  }
+
+  /* ====== FAQ ====== */
+  .faq-item {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid var(--border-soft);
+    overflow: hidden;
+    margin-bottom: 1rem;
+    transition: box-shadow 0.2s ease;
+  }
+
+  .faq-item:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.06); }
+
+  .faq-question {
+    padding: 1.3rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--sevilla-dark);
+    gap: 1rem;
+    user-select: none;
+  }
+
+  .faq-question:hover { background: var(--light-cream); }
+
+  .faq-question .faq-icon {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--light-cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+  }
+
+  .faq-item.open .faq-icon {
+    background: var(--sevilla-gold);
+    color: var(--sevilla-dark);
+    transform: rotate(45deg);
+  }
+
+  .faq-answer {
+    display: none;
+    padding: 0 1.5rem 1.3rem;
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    line-height: 1.8;
+    border-top: 1px solid var(--border-soft);
+    padding-top: 1.2rem;
+  }
+
+  .faq-item.open .faq-answer { display: block; }
+
+  /* ====== LINKS SECTION ====== */
+  .link-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.4rem;
+    border: 1px solid var(--border-soft);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-decoration: none;
+    color: var(--sevilla-dark);
+    transition: all 0.25s ease;
+  }
+
+  .link-card:hover {
+    background: var(--sevilla-dark);
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(26,26,46,0.2);
+  }
+
+  .link-card .link-icon {
+    width: 46px; height: 46px;
+    background: var(--light-cream);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: var(--accent-blue);
+    flex-shrink: 0;
+    transition: all 0.25s ease;
+  }
+
+  .link-card:hover .link-icon {
+    background: rgba(255,255,255,0.1);
+    color: var(--sevilla-gold);
+  }
+
+  .link-card .link-url {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    transition: color 0.25s ease;
+  }
+
+  .link-card:hover .link-url { color: rgba(255,255,255,0.6); }
+
+  .link-card .link-label { font-weight: 600; font-size: 0.9rem; margin-bottom: 2px; }
+
+  /* ====== BADGE PILL ====== */
+  .badge-free {
+    background: #E8F8EE;
+    color: var(--accent-green);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 50px;
+    letter-spacing: 0.05em;
+  }
+
+  .badge-obligatorio {
+    background: #FFF0F0;
+    color: var(--sevilla-red);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 50px;
+  }
+
+  .badge-opcional {
+    background: #FFF8E0;
+    color: #8A6A00;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 50px;
+  }
+
+  /* ====== DIVIDER ====== */
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-soft), transparent);
+    margin: 0;
+  }
+
+  /* ====== NOTA FINAL ====== */
+  .nota-final {
+    background: linear-gradient(135deg, #1A1A2E 0%, #0F3460 100%);
+    color: rgba(255,255,255,0.8);
+    border-radius: 24px;
+    padding: 3rem;
+    margin-top: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .nota-final::before {
+    content: '"';
+    position: absolute;
+    top: -20px; left: 30px;
+    font-family: 'Playfair Display', serif;
+    font-size: 200px;
+    color: rgba(212,160,23,0.08);
+    line-height: 1;
+  }
+
+  .nota-final h4 {
+    color: var(--sevilla-gold);
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 1rem;
+  }
+
+  /* ====== ANIMATIONS ====== */
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(-50%) rotate(0deg); }
+    50% { transform: translateY(-52%) rotate(3deg); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ====== PROGRESS BAR ====== */
+  .reading-progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--sevilla-gold), var(--sevilla-red));
+    z-index: 9999;
+    width: 0%;
+    transition: width 0.1s linear;
+  }
+
+  /* ====== FOOTER ====== */
+  .site-footer {
+    background: var(--sevilla-dark);
+    color: rgba(255,255,255,0.5);
+    padding: 2.5rem 0;
+    font-size: 0.85rem;
+    text-align: center;
+  }
+
+  .site-footer a { color: var(--sevilla-gold); text-decoration: none; }
+
+  /* ====== SCROLL TO TOP ====== */
+  #scrollTop {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 46px;
+    height: 46px;
+    background: var(--sevilla-dark);
+    color: var(--sevilla-gold);
+    border: none;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    z-index: 999;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  }
+
+  #scrollTop.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ====== RESPONSIVE ====== */
+  @media (max-width: 768px) {
+    .comparison-table .table-header,
+    .comparison-table .table-row { grid-template-columns: 1fr; }
+    .comparison-table .th.feature, .comparison-table .td.feature {
+      font-weight: 700;
+      background: var(--light-cream);
+      border-radius: 8px 8px 0 0;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="reading-progress" id="readingProgress"></div>
+
+<!-- ====== HERO ====== -->
+<section class="hero" id="inicio">
+  <div class="hero-pattern"></div>
+  <div class="container position-relative">
+    <div class="row justify-content-center">
+      <div class="col-lg-9">
+        <div class="hero-badge">
+          <i class="bi bi-trophy-fill me-1"></i> Guía Oficial · Actualizada 2026
+        </div>
+        <h1 class="hero-title">
+          Cómo crear tu <span class="highlight">club deportivo</span><br>en Sevilla capital
+        </h1>
+        <p class="hero-subtitle">
+          Guía completa, práctica y paso a paso para vecinos, entrenadores, padres y emprendedores deportivos. Desde el Acta Fundacional hasta el alta en el IMD.
+        </p>
+        <div class="hero-meta">
+          <div class="hero-meta-item"><i class="bi bi-list-check"></i> 5 pasos detallados</div>
+          <div class="hero-meta-item"><i class="bi bi-currency-euro"></i> Proceso mayoritariamente gratuito</div>
+          <div class="hero-meta-item"><i class="bi bi-clock"></i> 2–5 meses en total</div>
+          <div class="hero-meta-item"><i class="bi bi-geo-alt-fill"></i> Sevilla capital</div>
+        </div>
+        <a href="#introduccion" class="hero-cta">
+          <i class="bi bi-play-circle-fill"></i> Empezar la guía
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-escudo">⚽</div>
+</section>
+
+<!-- ====== STICKY NAV ====== -->
+<nav class="progress-nav">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="#introduccion" class="nav-step active"><span class="step-num">0</span> Intro</a>
+      <a href="#paso1" class="nav-step"><span class="step-num">1</span> Documentación</a>
+      <a href="#paso2" class="nav-step"><span class="step-num">2</span> RAED</a>
+      <a href="#paso3" class="nav-step"><span class="step-num">3</span> CIF</a>
+      <a href="#paso4" class="nav-step"><span class="step-num">4</span> IMD</a>
+      <a href="#paso5" class="nav-step"><span class="step-num">5</span> Federación</a>
+      <a href="#ventajas" class="nav-step"><span class="step-num">★</span> Ventajas</a>
+      <a href="#resumen" class="nav-step"><span class="step-num">≡</span> Resumen</a>
+      <a href="#faq" class="nav-step"><span class="step-num">?</span> FAQ</a>
+      <a href="#enlaces" class="nav-step"><span class="step-num">🔗</span> Enlaces</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ====== INTRODUCCION ====== -->
+<section class="section-wrapper" id="introduccion">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6 reveal">
+        <div class="section-eyebrow"><i class="bi bi-star-fill"></i> Por qué formalizar tu proyecto</div>
+        <h2 class="section-title">Introducción: Por qué crear un club en Sevilla</h2>
+        <p class="section-lead">Sevilla es una de las ciudades más deportivas de España. Formalizar un club abre puertas que la actividad informal no permite.</p>
+      </div>
+      <div class="col-lg-6 reveal">
+        <div class="row g-3">
+          <div class="col-6">
+            <div class="step-card text-center p-3">
+              <div class="fs-1 mb-2">🏆</div>
+              <div class="fw-700 small">Juegos Deportivos Municipales</div>
+              <div class="text-muted" style="font-size:0.8rem">Competición oficial del IMD</div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="step-card text-center p-3">
+              <div class="fs-1 mb-2">💶</div>
+              <div class="fw-700 small">Subvenciones del Ayuntamiento</div>
+              <div class="text-muted" style="font-size:0.8rem">Convocatorias anuales IMD</div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="step-card text-center p-3">
+              <div class="fs-1 mb-2">🏟️</div>
+              <div class="fw-700 small">Instalaciones municipales</div>
+              <div class="text-muted" style="font-size:0.8rem">Tarifas preferentes</div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="step-card text-center p-3">
+              <div class="fs-1 mb-2">🌍</div>
+              <div class="fw-700 small">Sin restricción jugadores</div>
+              <div class="text-muted" style="font-size:0.8rem">Con CIF y RAED en Sevilla</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-5 reveal">
+      <div class="col-12">
+        <div class="contact-card">
+          <div class="row align-items-center">
+            <div class="col-auto">
+              <div class="contact-icon"><i class="bi bi-building"></i></div>
+            </div>
+            <div class="col">
+              <h5 class="mb-3">Instituto Municipal de Deportes (IMD) de Sevilla</h5>
+              <div class="row g-2">
+                <div class="col-md-4"><div class="contact-detail"><i class="bi bi-geo-alt-fill"></i> C/ Química, 5, 41015 Sevilla</div></div>
+                <div class="col-md-3"><div class="contact-detail"><i class="bi bi-telephone-fill"></i> 955 47 21 00</div></div>
+                <div class="col-md-3"><div class="contact-detail"><i class="bi bi-globe"></i> <a href="http://www.imd.sevilla.org" target="_blank" style="color:var(--sevilla-gold)">www.imd.sevilla.org</a></div></div>
+                <div class="col-md-2"><div class="contact-detail"><i class="bi bi-card-text"></i> NIF: P9109101G</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ====== PASO 1 ====== -->
+<section class="section-wrapper" id="paso1">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 reveal">
+        <div class="section-eyebrow"><i class="bi bi-1-circle-fill"></i> Paso 1 · Obligatorio</div>
+        <h2 class="section-title">Requisitos previos y documentación inicial</h2>
+        <p class="section-lead">Antes de presentar nada en ningún registro, necesitas tener la documentación fundacional en orden.</p>
+      </div>
+    </div>
+
+    <div class="row g-4 mt-2">
+      <div class="col-md-4 reveal">
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <h4>Socios fundadores</h4>
+          <p class="text-muted small mb-0">Mínimo <strong>3 personas físicas mayores de edad</strong>. Sus nombres y DNI deben constar en el Acta Fundacional.</p>
+        </div>
+      </div>
+      <div class="col-md-4 reveal">
+        <div class="step-card">
+          <div class="step-number"><i class="bi bi-tag-fill" style="font-size:1.1rem"></i></div>
+          <h4>Nombre del club</h4>
+          <p class="text-muted small mb-0">Original y no coincidente con otro en el RAED. Verifica disponibilidad en <strong>www.juntadeandalucia.es/raed</strong></p>
+        </div>
+      </div>
+      <div class="col-md-4 reveal">
+        <div class="step-card">
+          <div class="step-number"><i class="bi bi-house-fill" style="font-size:1.1rem"></i></div>
+          <h4>Domicilio en Sevilla capital</h4>
+          <p class="text-muted small mb-0">El domicilio social <strong>debe estar en el término municipal de Sevilla capital</strong>. Puede ser un domicilio particular.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4 mt-1">
+      <div class="col-lg-6 reveal">
+        <div class="step-card h-auto">
+          <h4><i class="bi bi-file-earmark-text text-warning me-2"></i>El Acta Fundacional</h4>
+          <p class="text-muted small">Documento que certifica el nacimiento legal del club. Debe contener:</p>
+          <ul class="list-unstyled mb-0">
+            <li class="py-2 border-bottom" style="border-color:var(--border-soft)!important; font-size:0.88rem"><i class="bi bi-check-circle-fill text-success me-2"></i> Lugar y fecha exactos de la reunión</li>
+            <li class="py-2 border-bottom" style="border-color:var(--border-soft)!important; font-size:0.88rem"><i class="bi bi-check-circle-fill text-success me-2"></i> Nombre completo y DNI de los fundadores</li>
+            <li class="py-2 border-bottom" style="border-color:var(--border-soft)!important; font-size:0.88rem"><i class="bi bi-check-circle-fill text-success me-2"></i> Denominación oficial del club</li>
+            <li class="py-2 border-bottom" style="border-color:var(--border-soft)!important; font-size:0.88rem"><i class="bi bi-check-circle-fill text-success me-2"></i> Aprobación expresa de los Estatutos</li>
+            <li class="py-2 border-bottom" style="border-color:var(--border-soft)!important; font-size:0.88rem"><i class="bi bi-check-circle-fill text-success me-2"></i> Nombramiento de la Junta Directiva (Presidente, Secretario, Tesorero)</li>
+            <li class="py-2; font-size:0.88rem"><i class="bi bi-check-circle-fill text-success me-2"></i> Firma de todos los fundadores</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-lg-6 reveal">
+        <div class="step-card h-auto">
+          <h4><i class="bi bi-journal-bookmark text-primary me-2"></i>Los Estatutos</h4>
+          <p class="text-muted small">La "constitución" del club. Deben regular como mínimo:</p>
+          <ul class="list-unstyled mb-0">
+            <li class="py-2 border-bottom" style="border-color:var(--border-soft)!important; font-size:0.88rem"><i class="bi bi-dot fs-4 text-primary" style="vertical-align:middle"></i> Denominación y domicilio social</li>
+            <li class="py-2 border-bottom" style="border-color:var(--border-soft)!important; font-size:0.88rem"><i class="bi bi-dot fs-4 text-primary" style="vertical-align:middle"></i> Modalidad/es deportiva/s</li>
+            <li class="py-2 border-bottom" style="border-color:var(--border-soft)!important; font-size:0.88rem"><i class="bi bi-dot fs-4 text-primary" style="vertical-align:middle"></i> Órganos de gobierno (Asamblea + Junta Directiva)</li>
+            <li class="py-2 border-bottom" style="border-color:var(--border-soft)!important; font-size:0.88rem"><i class="bi bi-dot fs-4 text-primary" style="vertical-align:middle"></i> Régimen económico</li>
+            <li class="py-2 border-bottom" style="border-color:var(--border-soft)!important; font-size:0.88rem"><i class="bi bi-dot fs-4 text-primary" style="vertical-align:middle"></i> Régimen disciplinario</li>
+            <li class="py-2; font-size:0.88rem"><i class="bi bi-dot fs-4 text-primary" style="vertical-align:middle"></i> Procedimiento de disolución</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHECKLIST INTERACTIVO -->
+    <div class="row mt-4 reveal">
+      <div class="col-12">
+        <div class="step-card">
+          <h4 class="mb-1"><i class="bi bi-check2-square text-success me-2"></i>Checklist interactivo: antes de empezar</h4>
+          <p class="text-muted small mb-3">Haz clic en cada ítem para marcarlo como completado</p>
+          <div id="checklist">
+            <div class="checklist-item" onclick="toggleCheck(this)">
+              <div class="check-box"><i class="bi bi-check-lg" style="display:none"></i></div>
+              <div class="check-label">Tenemos al menos 3 personas mayores de edad dispuestas a fundar el club</div>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+              <div class="check-box"><i class="bi bi-check-lg" style="display:none"></i></div>
+              <div class="check-label">Hemos elegido un nombre y verificado que no está en el RAED</div>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+              <div class="check-box"><i class="bi bi-check-lg" style="display:none"></i></div>
+              <div class="check-label">Contamos con domicilio social en el término municipal de Sevilla capital</div>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+              <div class="check-box"><i class="bi bi-check-lg" style="display:none"></i></div>
+              <div class="check-label">Hemos redactado o encargado el Acta Fundacional con todos sus elementos obligatorios</div>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+              <div class="check-box"><i class="bi bi-check-lg" style="display:none"></i></div>
+              <div class="check-label">Hemos redactado o encargado los Estatutos conforme a la normativa andaluza</div>
+            </div>
+          </div>
+          <div class="mt-3">
+            <div class="d-flex align-items-center gap-2">
+              <div class="fw-600 small" id="checkProgress">0/5 completados</div>
+              <div class="flex-grow-1 bg-light rounded" style="height:6px"><div id="checkBar" class="rounded" style="height:6px;background:linear-gradient(90deg,var(--sevilla-gold),var(--accent-green));width:0%;transition:width 0.3s ease"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ====== PASO 2 RAED ====== -->
+<section class="section-wrapper" id="paso2">
+  <div class="container">
+    <div class="row align-items-start g-5">
+      <div class="col-lg-5 reveal">
+        <div class="section-eyebrow"><i class="bi bi-2-circle-fill"></i> Paso 2 · Obligatorio</div>
+        <h2 class="section-title">Inscripción en el RAED</h2>
+        <p class="section-lead">El Registro Andaluz de Entidades Deportivas es el organismo oficial de la Junta que da existencia legal a tu club en Andalucía.</p>
+
+        <div class="info-box info-box-danger mt-3">
+          <div class="info-box-title" style="color:var(--sevilla-red)"><i class="bi bi-exclamation-triangle-fill"></i> Obligatorio</div>
+          <p class="mb-0 small">Sin número RAED, el club no existe a efectos deportivos. No puede recibir subvenciones, participar en competiciones ni inscribirse en el IMD.</p>
+        </div>
+
+        <div class="contact-card mt-4">
+          <div class="contact-icon"><i class="bi bi-building-fill-gear"></i></div>
+          <h5>Delegación Territorial en Sevilla</h5>
+          <div class="contact-detail"><i class="bi bi-geo-alt-fill"></i> Avda. de la Palmera, 28-30, 41012 Sevilla</div>
+          <div class="contact-detail"><i class="bi bi-clock-fill"></i> Lunes a viernes, 9:00–14:00 h (cita previa recomendada)</div>
+          <div class="contact-detail"><i class="bi bi-globe"></i> sede.juntadeandalucia.es (opción telemática)</div>
+        </div>
+      </div>
+
+      <div class="col-lg-7 reveal">
+        <div class="step-card">
+          <h4 class="mb-4"><i class="bi bi-folder2-open text-warning me-2"></i>Documentación requerida</h4>
+          <div class="process-step">
+            <div class="process-step-num">1</div>
+            <div><h5>Solicitud oficial de inscripción</h5><p class="text-muted small mb-0">Impreso oficial disponible en la Delegación o en la sede electrónica</p></div>
+          </div>
+          <div class="process-step">
+            <div class="process-step-num">2</div>
+            <div><h5>Acta Fundacional firmada</h5><p class="text-muted small mb-0">Firmada por todos los socios fundadores presentes</p></div>
+          </div>
+          <div class="process-step">
+            <div class="process-step-num">3</div>
+            <div><h5>Estatutos de la entidad</h5><p class="text-muted small mb-0">Debidamente firmados y con todos los contenidos obligatorios</p></div>
+          </div>
+          <div class="process-step">
+            <div class="process-step-num">4</div>
+            <div><h5>Fotocopia del DNI de los fundadores</h5><p class="text-muted small mb-0">Anverso y reverso de cada socio fundador</p></div>
+          </div>
+
+          <div class="info-box info-box-warning mt-3">
+            <div class="info-box-title" style="color:#8A6A00"><i class="bi bi-hourglass-split"></i> Plazo de resolución</div>
+            <p class="mb-1 small">El plazo habitual es de <strong>1 a 3 meses</strong> desde la presentación de la documentación completa.</p>
+            <p class="mb-0 small">Resultado: <strong>Número de Registro Autonómico (RAED)</strong>, imprescindible para los siguientes pasos.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ====== PASO 3 CIF ====== -->
+<section class="section-wrapper" id="paso3">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6 reveal">
+        <div class="section-eyebrow"><i class="bi bi-3-circle-fill"></i> Paso 3 · Obligatorio</div>
+        <h2 class="section-title">Obtención del CIF en la Agencia Tributaria</h2>
+        <p class="section-lead">El CIF es el número que identifica a tu club ante Hacienda. Necesario para abrir cuentas bancarias, recibir subvenciones y firmar contratos.</p>
+
+        <div class="row g-3 mt-2">
+          <div class="col-6">
+            <div class="step-card text-center p-3">
+              <div class="fs-2 mb-1">🕐</div>
+              <div class="fw-700 small">Mismo día</div>
+              <div class="text-muted" style="font-size:0.78rem">CIF provisional inmediato</div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="step-card text-center p-3">
+              <div class="fs-2 mb-1">€0</div>
+              <div class="fw-700 small">Gratuito</div>
+              <div class="text-muted" style="font-size:0.78rem">Sin coste alguno</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6 reveal">
+        <div class="step-card">
+          <h4 class="mb-3"><i class="bi bi-bank2 text-primary me-2"></i>Agencia Tributaria en Sevilla</h4>
+          <div class="contact-detail mb-2" style="font-size:0.9rem; display:flex; gap:8px; align-items:flex-start"><i class="bi bi-geo-alt-fill text-warning"></i> <strong>C/ José Luis de Casso, 64, 41018 Sevilla</strong></div>
+          <div class="contact-detail mb-3" style="font-size:0.9rem; display:flex; gap:8px"><i class="bi bi-phone text-warning"></i> Cita previa: 91 553 00 71 o www.agenciatributaria.es</div>
+
+          <hr style="border-color:var(--border-soft)">
+
+          <h6 class="fw-700 mb-3">Documentación necesaria:</h6>
+          <ul class="list-unstyled">
+            <li class="mb-2 small"><i class="bi bi-check-circle-fill text-success me-2"></i>Acta Fundacional original</li>
+            <li class="mb-2 small"><i class="bi bi-check-circle-fill text-success me-2"></i>Estatutos de la entidad</li>
+            <li class="mb-2 small"><i class="bi bi-check-circle-fill text-success me-2"></i>Certificado de inscripción en el RAED</li>
+            <li class="mb-2 small"><i class="bi bi-check-circle-fill text-success me-2"></i>Modelo 036 cumplimentado</li>
+            <li class="mb-2 small"><i class="bi bi-check-circle-fill text-success me-2"></i>DNI original del Presidente/a</li>
+          </ul>
+
+          <div class="info-box info-box-success mt-3">
+            <div class="info-box-title" style="color:var(--accent-green)"><i class="bi bi-check2-all"></i> Resultado</div>
+            <p class="mb-0 small">CIF <strong>provisional el mismo día</strong>. CIF definitivo llega por correo postal en pocos días. <span class="badge-free ms-2">GRATIS</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ====== PASO 4 IMD ====== -->
+<section class="section-wrapper" id="paso4" style="background: linear-gradient(180deg, #fff 0%, #F0F6FF 100%)">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 text-center reveal mb-4">
+        <div class="section-eyebrow justify-content-center"><i class="bi bi-4-circle-fill"></i> Paso 4 · MÁS IMPORTANTE</div>
+        <h2 class="section-title">Alta en el IMD de Sevilla</h2>
+        <p class="section-lead mx-auto">La inscripción en el Instituto Municipal de Deportes es el paso que convierte a tu club en un actor pleno de la vida deportiva de Sevilla capital.</p>
+      </div>
+    </div>
+
+    <!-- TABLA COMPARATIVA -->
+    <div class="reveal mb-5">
+      <h5 class="fw-700 mb-3 text-center">¿Qué diferencia hace estar dado de alta en el IMD?</h5>
+      <div class="comparison-table">
+        <div class="table-header">
+          <div class="th feature">Beneficio</div>
+          <div class="th con"><i class="bi bi-check-circle-fill me-1"></i> Con alta en IMD</div>
+          <div class="th sin"><i class="bi bi-x-circle-fill me-1"></i> Sin alta en IMD</div>
+        </div>
+        <div class="table-row">
+          <div class="td feature"><i class="bi bi-trophy me-2 text-warning"></i>Juegos Deportivos Municipales</div>
+          <div class="td con"><i class="bi bi-check-lg"></i> Participación plena sin restricciones</div>
+          <div class="td sin"><i class="bi bi-x-lg"></i> Prohibida la participación</div>
+        </div>
+        <div class="table-row">
+          <div class="td feature"><i class="bi bi-cash-coin me-2 text-warning"></i>Subvenciones del IMD</div>
+          <div class="td con"><i class="bi bi-check-lg"></i> Acceso a convocatorias anuales</div>
+          <div class="td sin"><i class="bi bi-x-lg"></i> Excluido de toda subvención municipal</div>
+        </div>
+        <div class="table-row">
+          <div class="td feature"><i class="bi bi-building me-2 text-warning"></i>Instalaciones municipales</div>
+          <div class="td con"><i class="bi bi-check-lg"></i> Tarifas reducidas y reserva preferente</div>
+          <div class="td sin"><i class="bi bi-x-lg"></i> Tarifas generales de público</div>
+        </div>
+        <div class="table-row">
+          <div class="td feature"><i class="bi bi-flag me-2 text-warning"></i>Carreras y eventos del IMD</div>
+          <div class="td con"><i class="bi bi-check-lg"></i> Inscripción como entidad con descuentos</div>
+          <div class="td sin"><i class="bi bi-x-lg"></i> Sin ventajas especiales</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NORMATIVA 2025-2026 -->
+    <div class="row g-4 mb-5 reveal">
+      <div class="col-12">
+        <div class="step-card" style="border: 2px solid var(--sevilla-gold)">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div style="width:48px;height:48px;background:linear-gradient(135deg,var(--sevilla-gold),#e8b420);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem">📋</div>
+            <div>
+              <h4 class="mb-0">Normativa especial 2025–2026</h4>
+              <small class="text-muted">Juegos Deportivos Municipales · Regla de empadronamiento</small>
+            </div>
+          </div>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="info-box info-box-success">
+                <div class="info-box-title" style="color:var(--accent-green)"><i class="bi bi-check-circle-fill"></i> Con CIF + RAED en Sevilla capital</div>
+                <p class="mb-0 small"><strong>Sin limitación de jugadores.</strong> Puedes inscribir jugadores empadronados en cualquier municipio de España sin restricciones.</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="info-box info-box-danger">
+                <div class="info-box-title" style="color:var(--sevilla-red)"><i class="bi bi-exclamation-circle-fill"></i> Sin CIF/RAED en Sevilla capital</div>
+                <p class="mb-0 small"><strong>Máximo 25% de jugadores</strong> no empadronados en Sevilla. Restricción importante para clubes de fuera.</p>
+              </div>
+            </div>
+          </div>
+          <div class="info-box info-box-warning mt-3">
+            <div class="info-box-title" style="color:#8A6A00"><i class="bi bi-info-circle-fill"></i> ¿Por qué esta norma?</div>
+            <p class="mb-0 small">Esta medida responde a una demanda histórica de los clubes sevillanos: más del <strong>30% de los participantes</strong> en ediciones anteriores procedían de municipios distintos a Sevilla capital, generando agravios comparativos.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PASOS ALTA IMD -->
+    <div class="row reveal">
+      <div class="col-lg-7">
+        <h5 class="fw-700 mb-4"><i class="bi bi-laptop me-2"></i>Cómo darse de alta en el IMD (online, paso a paso)</h5>
+        <div class="process-step">
+          <div class="process-step-num">1</div>
+          <div><h5>Accede a www.imd.sevilla.org</h5><p class="text-muted small mb-0">Entra en la web oficial del Instituto Municipal de Deportes de Sevilla</p></div>
+        </div>
+        <div class="process-step">
+          <div class="process-step-num">2</div>
+          <div><h5>Ve a "Gestión de Entidades y Clubes"</h5><p class="text-muted small mb-0">Sección disponible en el menú principal de la web</p></div>
+        </div>
+        <div class="process-step">
+          <div class="process-step-num">3</div>
+          <div><h5>Crea un usuario para tu entidad</h5><p class="text-muted small mb-0">Si es la primera vez, registra una cuenta nueva con los datos del club</p></div>
+        </div>
+        <div class="process-step">
+          <div class="process-step-num">4</div>
+          <div><h5>Rellena el formulario de alta</h5><p class="text-muted small mb-0">Nombre oficial, CIF, número RAED, modalidad deportiva y domicilio en Sevilla</p></div>
+        </div>
+        <div class="process-step">
+          <div class="process-step-num">5</div>
+          <div><h5>Adjunta los documentos en PDF</h5><p class="text-muted small mb-0">CIF/NIF del club · Certificado RAED · Estatutos vigentes</p></div>
+        </div>
+        <div class="process-step">
+          <div class="process-step-num">6</div>
+          <div><h5>Envía y espera confirmación</h5><p class="text-muted small mb-0">Normalmente recibirás la confirmación en pocos días hábiles por email</p></div>
+        </div>
+      </div>
+      <div class="col-lg-5 d-flex align-items-center">
+        <div class="info-box info-box-success w-100" style="border-left-width:5px">
+          <div class="info-box-title" style="color:var(--accent-green); font-size:1rem"><i class="bi bi-check2-all"></i> Coste del alta en el IMD</div>
+          <div class="display-6 fw-700 text-success my-3">€0,00</div>
+          <p class="mb-0 small text-muted">El alta de una entidad deportiva en el IMD de Sevilla es completamente <strong>gratuita</strong>. Sin cuotas anuales de mantenimiento.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ====== PASO 5 ====== -->
+<section class="section-wrapper" id="paso5">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-5 reveal">
+        <div class="section-eyebrow"><i class="bi bi-5-circle-fill"></i> Paso 5 · Opcional</div>
+        <h2 class="section-title">Inscripción en la Federación Andaluza</h2>
+        <p class="section-lead">Si queréis competir en ligas federadas oficiales, además de los Juegos Deportivos Municipales, necesitaréis la inscripción federativa.</p>
+        <div class="info-box info-box-info mt-3">
+          <div class="info-box-title" style="color:var(--accent-blue)"><i class="bi bi-lightbulb-fill"></i> ¿Cuándo es necesario?</div>
+          <p class="mb-0 small">Solo si competís en campeonatos de ámbito autonómico o nacional. Para Juegos Deportivos Municipales y actividades recreativas <strong>no es necesario</strong>.</p>
+        </div>
+      </div>
+      <div class="col-lg-7 reveal">
+        <div class="contact-card mb-4">
+          <div class="contact-icon"><i class="bi bi-dribbble"></i></div>
+          <h5>Real Federación Andaluza de Fútbol (RFAF)</h5>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="contact-detail"><i class="bi bi-geo-alt-fill"></i> C/ Tomás Pérez, 57, 41006 Sevilla</div>
+              <div class="contact-detail"><i class="bi bi-telephone-fill"></i> 954 98 10 10</div>
+            </div>
+            <div class="col-md-6">
+              <div class="contact-detail"><i class="bi bi-globe"></i> www.rfaf.es</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-card">
+          <h4 class="mb-3">Requisitos habituales para la inscripción federativa</h4>
+          <ul class="list-unstyled">
+            <li class="mb-2 small"><i class="bi bi-check-circle-fill text-success me-2"></i>Número RAED del club vigente</li>
+            <li class="mb-2 small"><i class="bi bi-check-circle-fill text-success me-2"></i>CIF/NIF de la entidad</li>
+            <li class="mb-2 small"><i class="bi bi-check-circle-fill text-success me-2"></i>Estatutos aprobados y registrados</li>
+            <li class="mb-2 small"><i class="bi bi-check-circle-fill text-success me-2"></i>Seguro de Responsabilidad Civil (RC)</li>
+            <li class="mb-0 small"><i class="bi bi-check-circle-fill text-success me-2"></i>Pago de cuotas federativas (variable)</li>
+          </ul>
+          <div class="info-box info-box-info mt-3">
+            <p class="mb-0 small"><i class="bi bi-info-circle me-1"></i> Para fútbol sala, baloncesto, voleibol, atletismo u otras modalidades, contactad directamente con la federación andaluza correspondiente.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ====== VENTAJAS ====== -->
+<section class="section-wrapper" id="ventajas" style="background:var(--sevilla-dark)">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 text-center reveal mb-4">
+        <div class="section-eyebrow justify-content-center" style="color:var(--sevilla-gold)"><i class="bi bi-stars"></i> Por qué merece la pena</div>
+        <h2 class="section-title" style="color:#fff">Ventajas de tener RAED + CIF + IMD en Sevilla</h2>
+        <p class="section-lead mx-auto" style="color:rgba(255,255,255,0.65)">Estar correctamente registrado multiplica las oportunidades para tu club.</p>
+      </div>
+    </div>
+    <div class="row g-4 reveal">
+      <div class="col-md-6 col-lg-3">
+        <div class="step-card text-center" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1)">
+          <div class="fs-1 mb-3">💶</div>
+          <h5 style="color:#fff;font-family:'Playfair Display',serif">Subvenciones IMD</h5>
+          <p style="color:rgba(255,255,255,0.6);font-size:0.88rem">Líneas "Club de Élite", convocatoria general y deporte base. Plazos: enero–abril cada año.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="step-card text-center" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1)">
+          <div class="fs-1 mb-3">🏟️</div>
+          <h5 style="color:#fff;font-family:'Playfair Display',serif">Instalaciones</h5>
+          <p style="color:rgba(255,255,255,0.6);font-size:0.88rem">Tarifas hasta un 50% inferiores al público general. Reserva preferente en polideportivos y piscinas.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="step-card text-center" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1)">
+          <div class="fs-1 mb-3">🏅</div>
+          <h5 style="color:#fff;font-family:'Playfair Display',serif">Juegos Deportivos</h5>
+          <p style="color:rgba(255,255,255,0.6);font-size:0.88rem">Acceso sin restricciones a la mayor competición amateur de Sevilla. Decenas de deportes disponibles.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="step-card text-center" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1)">
+          <div class="fs-1 mb-3">🏃</div>
+          <h5 style="color:#fff;font-family:'Playfair Display',serif">Carreras y Eventos</h5>
+          <p style="color:rgba(255,255,255,0.6);font-size:0.88rem">Inscripción como entidad, descuentos y presencia en la comunicación oficial del IMD.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ====== RESUMEN EJECUTIVO ====== -->
+<section class="section-wrapper" id="resumen">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 reveal mb-4">
+        <div class="section-eyebrow"><i class="bi bi-table"></i> De un vistazo</div>
+        <h2 class="section-title">Resumen ejecutivo: los 5 pasos</h2>
+      </div>
+    </div>
+    <div class="summary-table reveal">
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr>
+            <th style="width:60px;text-align:center">Paso</th>
+            <th>Qué hacer</th>
+            <th>Dónde / Cómo</th>
+            <th>Coste</th>
+            <th>Tiempo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-center align-middle"><div class="summary-table paso-badge">1</div></td>
+            <td><strong>Acta Fundacional y Estatutos</strong><br><small class="text-muted">3 fundadores, domicilio en Sevilla</small></td>
+            <td><small>Por cuenta propia o gestor administrativo</small></td>
+            <td><span class="badge-free">Gratis / 50–150€</span></td>
+            <td><small>1–2 semanas</small></td>
+          </tr>
+          <tr>
+            <td class="text-center align-middle"><div class="summary-table paso-badge">2</div></td>
+            <td><strong>Inscripción en el RAED</strong><br><small class="text-muted">Registro Andaluz de Entidades Deportivas</small></td>
+            <td><small>Avda. de la Palmera, 28-30 o sede electrónica Junta</small></td>
+            <td><span class="badge-free">Gratis</span></td>
+            <td><small>1–3 meses</small></td>
+          </tr>
+          <tr>
+            <td class="text-center align-middle"><div class="summary-table paso-badge">3</div></td>
+            <td><strong>Obtención del CIF</strong><br><small class="text-muted">Agencia Tributaria, modelo 036</small></td>
+            <td><small>C/ José Luis de Casso, 64, Sevilla (cita previa)</small></td>
+            <td><span class="badge-free">Gratis</span></td>
+            <td><small>Mismo día</small></td>
+          </tr>
+          <tr>
+            <td class="text-center align-middle"><div class="summary-table paso-badge">4</div></td>
+            <td><strong>Alta en el IMD de Sevilla</strong><br><small class="text-muted">⭐ El paso más importante</small></td>
+            <td><small>Online: imd.sevilla.org → "Gestión de Entidades"</small></td>
+            <td><span class="badge-free">Gratis</span></td>
+            <td><small>1–2 semanas</small></td>
+          </tr>
+          <tr>
+            <td class="text-center align-middle"><div class="summary-table paso-badge" style="background:linear-gradient(135deg,#aaa,#888)">5</div></td>
+            <td><strong>Federación Andaluza</strong> <span class="badge-opcional ms-1">Opcional</span><br><small class="text-muted">Solo para competiciones federadas</small></td>
+            <td><small>Depende de la modalidad. Ej. RFAF: C/ Tomás Pérez, 57</small></td>
+            <td><small>Variable</small></td>
+            <td><small>Variable</small></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ====== FAQ ====== -->
+<section class="section-wrapper" id="faq">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 mx-auto">
+        <div class="text-center reveal mb-4">
+          <div class="section-eyebrow justify-content-center"><i class="bi bi-question-circle-fill"></i> Dudas frecuentes</div>
+          <h2 class="section-title">Preguntas frecuentes (FAQ) en Sevilla</h2>
+        </div>
+
+        <div id="faqContainer" class="reveal">
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>¿Puedo crear el club si no tengo sede física en Sevilla capital?</span>
+              <div class="faq-icon"><i class="bi bi-plus-lg"></i></div>
+            </div>
+            <div class="faq-answer">
+              Sí, pero con matices. El <strong>domicilio social debe figurar en el término municipal de Sevilla capital</strong>. Puede usarse el domicilio particular de uno de los fundadores si no disponéis de local propio. Lo importante es que la dirección conste en los Estatutos y sea un lugar dentro de los límites del municipio de Sevilla capital. <strong>No vale</strong> Alcalá de Guadaíra, Dos Hermanas, Camas u otros municipios del área metropolitana.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>¿Cuánto tarda todo el proceso?</span>
+              <div class="faq-icon"><i class="bi bi-plus-lg"></i></div>
+            </div>
+            <div class="faq-answer">
+              El proceso completo, desde la redacción del Acta hasta el alta definitiva en el IMD, suele tardar entre <strong>2 y 5 meses</strong>. El paso que más tiempo consume es la inscripción en el RAED (1–3 meses). La obtención del CIF es prácticamente inmediata (el mismo día). El alta en el IMD, una vez tenéis CIF y RAED, suele resolverse en una o dos semanas.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>¿Qué pasa si mi club ya está en el RAED pero en otro municipio, no Sevilla capital?</span>
+              <div class="faq-icon"><i class="bi bi-plus-lg"></i></div>
+            </div>
+            <div class="faq-answer">
+              Si vuestro club tiene el RAED dado de alta con domicilio en otro municipio (por ejemplo, Dos Hermanas o Utrera), para acceder a los beneficios del IMD y participar sin restricciones en los Juegos Deportivos Municipales, <strong>debéis cambiar el domicilio social a Sevilla capital</strong>. Este cambio requiere modificar los Estatutos, aprobarlo en Asamblea General y comunicarlo al RAED. Es un trámite adicional pero perfectamente factible.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>¿El IMD cobra por darse de alta?</span>
+              <div class="faq-icon"><i class="bi bi-plus-lg"></i></div>
+            </div>
+            <div class="faq-answer">
+              <strong>No. El alta es completamente gratuita.</strong> El Instituto Municipal de Deportes de Sevilla no cobra ninguna tasa por la inscripción de entidades deportivas, ni existe cuota anual de mantenimiento. Los únicos costes posibles son los de gestores administrativos (si optáis por contratarlos) y las tasas de federaciones deportivas (paso 5, opcional).
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>¿Los Juegos Deportivos Municipales son solo para fútbol y baloncesto?</span>
+              <div class="faq-icon"><i class="bi bi-plus-lg"></i></div>
+            </div>
+            <div class="faq-answer">
+              <strong>No, para nada.</strong> Los Juegos Deportivos Municipales de Sevilla son una competición multideportiva con decenas de modalidades: fútbol, fútbol sala, baloncesto, voleibol, balonmano, tenis, pádel, natación, atletismo, ciclismo, artes marciales, ajedrez, petanca y muchas más. El catálogo varía cada temporada, por lo que se recomienda consultar la web del IMD al inicio de cada curso deportivo.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ====== ENLACES ====== -->
+<section class="section-wrapper" id="enlaces">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 reveal mb-4">
+        <div class="section-eyebrow"><i class="bi bi-link-45deg"></i> Recursos</div>
+        <h2 class="section-title">Enlaces útiles</h2>
+        <p class="text-muted">Todos los organismos y plataformas que necesitas para el proceso</p>
+      </div>
+    </div>
+    <div class="row g-3 reveal">
+      <div class="col-md-6 col-lg-4">
+        <a href="http://www.imd.sevilla.org" target="_blank" class="link-card">
+          <div class="link-icon"><i class="bi bi-house-fill"></i></div>
+          <div>
+            <div class="link-label">IMD Sevilla · Web principal</div>
+            <div class="link-url">www.imd.sevilla.org</div>
+          </div>
+          <i class="bi bi-arrow-up-right ms-auto" style="opacity:0.4;font-size:0.9rem"></i>
+        </a>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <a href="http://imd.sevilla.org/app/jjddmm_inscrip_equipos/" target="_blank" class="link-card">
+          <div class="link-icon"><i class="bi bi-trophy-fill"></i></div>
+          <div>
+            <div class="link-label">Inscripción Juegos Deportivos</div>
+            <div class="link-url">imd.sevilla.org/app/jjddmm_inscrip_equipos/</div>
+          </div>
+          <i class="bi bi-arrow-up-right ms-auto" style="opacity:0.4;font-size:0.9rem"></i>
+        </a>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <a href="http://imd.sevilla.org/app/carreras_entidades/" target="_blank" class="link-card">
+          <div class="link-icon"><i class="bi bi-people-fill"></i></div>
+          <div>
+            <div class="link-label">Gestión de Entidades IMD</div>
+            <div class="link-url">imd.sevilla.org/app/carreras_entidades/</div>
+          </div>
+          <i class="bi bi-arrow-up-right ms-auto" style="opacity:0.4;font-size:0.9rem"></i>
+        </a>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <a href="http://www.juntadeandalucia.es/raed" target="_blank" class="link-card">
+          <div class="link-icon"><i class="bi bi-journal-check"></i></div>
+          <div>
+            <div class="link-label">RAED · Junta de Andalucía</div>
+            <div class="link-url">www.juntadeandalucia.es/raed</div>
+          </div>
+          <i class="bi bi-arrow-up-right ms-auto" style="opacity:0.4;font-size:0.9rem"></i>
+        </a>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <a href="http://www.agenciatributaria.es" target="_blank" class="link-card">
+          <div class="link-icon"><i class="bi bi-bank2"></i></div>
+          <div>
+            <div class="link-label">Agencia Tributaria (CIF)</div>
+            <div class="link-url">www.agenciatributaria.es</div>
+          </div>
+          <i class="bi bi-arrow-up-right ms-auto" style="opacity:0.4;font-size:0.9rem"></i>
+        </a>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <a href="http://www.rfaf.es" target="_blank" class="link-card">
+          <div class="link-icon"><i class="bi bi-dribbble"></i></div>
+          <div>
+            <div class="link-label">Real Fed. Andaluza de Fútbol</div>
+            <div class="link-url">www.rfaf.es</div>
+          </div>
+          <i class="bi bi-arrow-up-right ms-auto" style="opacity:0.4;font-size:0.9rem"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- NOTA FINAL -->
+    <div class="nota-final mt-5 reveal">
+      <h4><i class="bi bi-shield-check me-2"></i>Nota legal importante</h4>
+      <p class="mb-2">Esta guía es una herramienta práctica pero <strong style="color:#fff">no sustituye el asesoramiento legal profesional.</strong> La normativa deportiva, tributaria y administrativa puede cambiar.</p>
+      <p class="mb-0" style="font-size:0.88rem">Antes de iniciar cualquier trámite, verifica la información actualizada en los organismos oficiales mencionados o consulta con un gestor administrativo o abogado especializado en derecho deportivo.<br><em style="opacity:0.6">Guía elaborada con información vigente a 2026 · Sevilla, Andalucía, España.</em></p>
+    </div>
+  </div>
+</section>
+
+<!-- ====== FOOTER ====== -->
+<footer class="site-footer">
+  <div class="container">
+    <p class="mb-1">Guía Completa: Crear un Club Deportivo en Sevilla · Actualizada 2026</p>
+    <p class="mb-0">Información de referencia. Contacto oficial: <a href="http://www.imd.sevilla.org">IMD Sevilla</a> · C/ Química, 5, 41015 Sevilla · Tel. 955 47 21 00</p>
+  </div>
+</footer>
+
+<!-- SCROLL TO TOP -->
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="bi bi-chevron-up"></i></button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script>
+// Reading progress
+window.addEventListener('scroll', () => {
+  const el = document.documentElement;
+  const progress = (el.scrollTop / (el.scrollHeight - el.clientHeight)) * 100;
+  document.getElementById('readingProgress').style.width = progress + '%';
+
+  // Scroll to top button
+  const btn = document.getElementById('scrollTop');
+  if (el.scrollTop > 400) btn.classList.add('visible');
+  else btn.classList.remove('visible');
+
+  // Active nav
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-step');
+  sections.forEach(sec => {
+    const rect = sec.getBoundingClientRect();
+    if (rect.top <= 80 && rect.bottom > 80) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const match = document.querySelector(`.nav-step[href="#${sec.id}"]`);
+      if (match) match.classList.add('active');
+    }
+  });
+});
+
+// Reveal on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Checklist
+let checked = 0;
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+  const icon = el.querySelector('.check-box i');
+  if (el.classList.contains('checked')) {
+    icon.style.display = 'block'; checked++;
+  } else {
+    icon.style.display = 'none'; checked--;
+  }
+  document.getElementById('checkProgress').textContent = checked + '/5 completados';
+  document.getElementById('checkBar').style.width = (checked / 5 * 100) + '%';
+}
+
+// FAQ
+function toggleFaq(el) {
+  const item = el.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+</script>
+</body>
+</html>

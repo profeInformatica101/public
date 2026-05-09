@@ -1,0 +1,2786 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Normalización de Bases de Datos Relacionales — Tutorial Profesional</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Sora:wght@300;400;600;700;800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #4f8ef7;
+    --primary-dark: #2563eb;
+    --accent: #f59e42;
+    --accent2: #34d399;
+    --accent3: #f472b6;
+    --bg-dark: #0d1117;
+    --bg-card: #161b22;
+    --bg-card2: #1c2333;
+    --border: #30363d;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+    --code-bg: #0d1117;
+    --sidebar-w: 280px;
+    --fn1: #4f8ef7;
+    --fn2: #34d399;
+    --fn3: #f59e42;
+    --bcnf: #f472b6;
+    --fn4: #a78bfa;
+    --fn5: #fb923c;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg-dark);
+    color: var(--text);
+    font-size: 15.5px;
+    line-height: 1.75;
+  }
+
+  /* ── NAVBAR ── */
+  .top-navbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1050;
+    height: 60px;
+    background: rgba(13,17,23,0.97);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; padding: 0 1.5rem;
+    gap: 1rem;
+    backdrop-filter: blur(10px);
+  }
+  .top-navbar .brand {
+    font-size: 1rem; font-weight: 700;
+    color: var(--primary);
+    letter-spacing: -0.3px;
+    white-space: nowrap;
+  }
+  .top-navbar .brand span { color: var(--text-muted); font-weight: 300; }
+  .nav-badges { display: flex; gap: .4rem; flex-wrap: wrap; }
+  .nav-badge {
+    font-size: .65rem; padding: 2px 8px;
+    border-radius: 20px; font-weight: 600;
+    border: 1px solid;
+  }
+  .nb-590 { color: var(--accent); border-color: var(--accent); }
+  .nb-dam { color: var(--fn2); border-color: var(--fn2); }
+  .nb-uni { color: var(--fn1); border-color: var(--fn1); }
+  .sidebar-toggle {
+    background: none; border: 1px solid var(--border);
+    color: var(--text); padding: 4px 10px; border-radius: 6px;
+    cursor: pointer; font-size: 1rem;
+  }
+  .sidebar-toggle:hover { background: var(--bg-card2); }
+  .dark-mode-btn {
+    margin-left: auto;
+    background: none; border: 1px solid var(--border);
+    color: var(--text); padding: 4px 10px; border-radius: 6px;
+    cursor: pointer; font-size: .85rem; white-space: nowrap;
+  }
+  .dark-mode-btn:hover { background: var(--bg-card2); }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    position: fixed; top: 60px; left: 0; bottom: 0;
+    width: var(--sidebar-w);
+    background: var(--bg-card);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    z-index: 900;
+    transition: transform .3s ease;
+    padding: 1rem 0 2rem;
+  }
+  .sidebar.collapsed { transform: translateX(calc(-1 * var(--sidebar-w))); }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .sidebar-section {
+    padding: .4rem 1rem .2rem;
+    font-size: .65rem; font-weight: 700; letter-spacing: 1.5px;
+    color: var(--text-muted); text-transform: uppercase;
+    margin-top: .8rem;
+  }
+  .sidebar a {
+    display: block; padding: .38rem 1rem .38rem 1.4rem;
+    color: var(--text-muted); text-decoration: none;
+    font-size: .82rem; border-left: 2px solid transparent;
+    transition: all .15s;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .sidebar a:hover, .sidebar a.active {
+    color: var(--primary); border-left-color: var(--primary);
+    background: rgba(79,142,247,0.07);
+  }
+  .sidebar a i { margin-right: .4rem; width: 14px; text-align: center; }
+
+  /* ── FN COLOR DOTS ── */
+  .fn-dot {
+    display: inline-block; width: 8px; height: 8px;
+    border-radius: 50%; margin-right: 6px;
+    flex-shrink: 0;
+  }
+
+  /* ── MAIN CONTENT ── */
+  .main-content {
+    margin-left: var(--sidebar-w);
+    margin-top: 60px;
+    padding: 0;
+    transition: margin-left .3s ease;
+  }
+  .main-content.full { margin-left: 0; }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, #0d1117 0%, #0a1628 40%, #0d1117 100%);
+    padding: 5rem 2rem 4rem;
+    position: relative; overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 50%, rgba(79,142,247,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 80% 30%, rgba(244,114,182,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-grid-bg {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(79,142,247,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(79,142,247,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .hero-eyebrow {
+    font-size: .72rem; letter-spacing: 2px; font-weight: 700;
+    color: var(--primary); text-transform: uppercase;
+    margin-bottom: .8rem;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 800; line-height: 1.1;
+    margin-bottom: 1rem;
+    letter-spacing: -1px;
+  }
+  .hero h1 span { color: var(--primary); }
+  .hero-sub {
+    font-size: 1.05rem; color: var(--text-muted);
+    max-width: 680px; line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+  .hero-tags { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 2rem; }
+  .hero-tag {
+    background: var(--bg-card2); border: 1px solid var(--border);
+    padding: 4px 12px; border-radius: 20px;
+    font-size: .78rem; color: var(--text-muted);
+  }
+  .hero-stats {
+    display: flex; flex-wrap: wrap; gap: 2rem;
+    border-top: 1px solid var(--border); padding-top: 2rem;
+  }
+  .hero-stat .num {
+    font-size: 1.8rem; font-weight: 800; color: var(--primary);
+    line-height: 1;
+  }
+  .hero-stat .lbl { font-size: .75rem; color: var(--text-muted); margin-top: 2px; }
+
+  /* ── SECTIONS ── */
+  .section {
+    padding: 3rem 2rem;
+    border-bottom: 1px solid var(--border);
+    max-width: 1100px;
+  }
+  .section-title {
+    font-size: 1.6rem; font-weight: 800;
+    letter-spacing: -0.5px; margin-bottom: .4rem;
+    display: flex; align-items: center; gap: .6rem;
+  }
+  .section-title i { color: var(--primary); font-size: 1.3rem; }
+  .section-subtitle {
+    color: var(--text-muted); margin-bottom: 2rem;
+    font-size: .92rem;
+  }
+
+  /* ── CARDS ── */
+  .card-custom {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .card-custom:hover {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 1px var(--primary), 0 4px 24px rgba(79,142,247,0.1);
+  }
+  .card-custom h4 {
+    font-size: 1rem; font-weight: 700; margin-bottom: .5rem;
+    display: flex; align-items: center; gap: .5rem;
+  }
+
+  /* ── CODE BLOCKS ── */
+  .code-block {
+    background: #010409;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 1rem 0;
+  }
+  .code-header {
+    background: var(--bg-card2); border-bottom: 1px solid var(--border);
+    padding: .5rem 1rem;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: .72rem; color: var(--text-muted);
+  }
+  .code-header .lang {
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--accent2);
+  }
+  .code-dots { display: flex; gap: 5px; }
+  .code-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+  }
+  pre {
+    margin: 0; padding: 1.2rem 1.4rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .82rem; line-height: 1.6;
+    overflow-x: auto; color: #c9d1d9;
+  }
+  .kw { color: #ff7b72; } /* keywords */
+  .fn { color: #d2a8ff; } /* functions */
+  .str { color: #a5d6ff; } /* strings */
+  .cm { color: #6e7681; } /* comments */
+  .tb { color: #ffa657; } /* table names */
+  .cn { color: #79c0ff; } /* column names */
+  .nm { color: #ffa657; } /* numbers */
+  .op { color: #ff7b72; } /* operators */
+
+  /* ── CALLOUT BOXES ── */
+  .callout {
+    border-radius: 8px; padding: 1rem 1.2rem;
+    margin: 1rem 0; border-left: 3px solid;
+    display: flex; gap: .8rem; align-items: flex-start;
+  }
+  .callout i { font-size: 1.1rem; margin-top: 2px; flex-shrink: 0; }
+  .callout-info { background: rgba(79,142,247,.08); border-color: var(--primary); }
+  .callout-info i { color: var(--primary); }
+  .callout-warn { background: rgba(245,158,66,.08); border-color: var(--accent); }
+  .callout-warn i { color: var(--accent); }
+  .callout-success { background: rgba(52,211,153,.08); border-color: var(--accent2); }
+  .callout-success i { color: var(--accent2); }
+  .callout-danger { background: rgba(244,114,182,.08); border-color: var(--accent3); }
+  .callout-danger i { color: var(--accent3); }
+  .callout-exam { background: rgba(167,139,250,.08); border-color: #a78bfa; }
+  .callout-exam i { color: #a78bfa; }
+  .callout strong { display: block; margin-bottom: .2rem; font-size: .87rem; }
+  .callout p, .callout ul { font-size: .88rem; color: var(--text); margin: 0; }
+
+  /* ── TABLES ── */
+  .table-custom {
+    width: 100%; border-collapse: collapse;
+    font-size: .85rem; margin: 1rem 0;
+  }
+  .table-custom th {
+    background: var(--bg-card2);
+    color: var(--primary); font-weight: 700;
+    padding: .6rem .9rem; text-align: left;
+    border-bottom: 2px solid var(--primary);
+    font-size: .78rem; text-transform: uppercase; letter-spacing: .5px;
+  }
+  .table-custom td {
+    padding: .55rem .9rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .table-custom tr:hover td { background: rgba(79,142,247,.04); }
+  .table-custom .pk { color: var(--accent); font-weight: 700; }
+  .table-custom .fk { color: var(--fn2); font-weight: 600; }
+  .table-custom .bad { background: rgba(244,114,182,.07); }
+  .table-custom .good { background: rgba(52,211,153,.05); }
+  .table-wrapper { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border); }
+
+  /* ── FN BADGES ── */
+  .fn-badge {
+    display: inline-flex; align-items: center;
+    padding: 3px 10px; border-radius: 20px;
+    font-size: .72rem; font-weight: 700;
+    border: 1px solid; margin: 2px;
+  }
+  .fn1 { color: var(--fn1); border-color: var(--fn1); background: rgba(79,142,247,.1); }
+  .fn2 { color: var(--fn2); border-color: var(--fn2); background: rgba(52,211,153,.1); }
+  .fn3 { color: var(--fn3); border-color: var(--fn3); background: rgba(245,158,66,.1); }
+  .fnb { color: var(--bcnf); border-color: var(--bcnf); background: rgba(244,114,182,.1); }
+  .fn4 { color: var(--fn4); border-color: var(--fn4); background: rgba(167,139,250,.1); }
+  .fn5 { color: var(--fn5); border-color: var(--fn5); background: rgba(251,146,60,.1); }
+
+  /* ── STEP TIMELINE ── */
+  .timeline { position: relative; padding-left: 2rem; }
+  .timeline::before {
+    content: ''; position: absolute; left: 11px; top: 0; bottom: 0;
+    width: 2px; background: linear-gradient(to bottom, var(--primary), var(--fn2), var(--accent));
+    border-radius: 2px;
+  }
+  .tl-item { position: relative; margin-bottom: 2rem; }
+  .tl-dot {
+    position: absolute; left: -2rem; top: 4px;
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--bg-dark); border: 2px solid var(--primary);
+    display: flex; align-items: center; justify-content: center;
+    font-size: .65rem; font-weight: 800; color: var(--primary);
+  }
+  .tl-title {
+    font-weight: 700; font-size: 1rem; margin-bottom: .3rem;
+  }
+
+  /* ── SCHEMA DIAGRAM ── */
+  .schema-diagram {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.5rem;
+    margin: 1rem 0; overflow-x: auto;
+  }
+  .rel-table {
+    display: inline-flex; flex-direction: column;
+    border: 1px solid var(--border); border-radius: 8px;
+    overflow: hidden; min-width: 180px; vertical-align: top;
+    margin: .5rem;
+  }
+  .rel-table-head {
+    background: var(--primary); color: #fff;
+    padding: .4rem .8rem; font-weight: 700; font-size: .85rem;
+    text-align: center;
+  }
+  .rel-table-row {
+    padding: .3rem .8rem; border-bottom: 1px solid var(--border);
+    font-size: .8rem; font-family: 'IBM Plex Mono', monospace;
+    display: flex; align-items: center; gap: .4rem;
+  }
+  .rel-table-row:last-child { border-bottom: none; }
+  .rel-table-row .icon-pk { color: var(--accent); font-size: .7rem; }
+  .rel-table-row .icon-fk { color: var(--fn2); font-size: .7rem; }
+
+  /* ── COMPARISON BOX ── */
+  .compare-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+    margin: 1rem 0;
+  }
+  .compare-bad {
+    background: rgba(244,114,182,.05); border: 1px solid rgba(244,114,182,.3);
+    border-radius: 8px; padding: 1rem;
+  }
+  .compare-good {
+    background: rgba(52,211,153,.05); border: 1px solid rgba(52,211,153,.3);
+    border-radius: 8px; padding: 1rem;
+  }
+  .compare-bad h5 { color: #f472b6; margin-bottom: .5rem; font-size: .9rem; }
+  .compare-good h5 { color: #34d399; margin-bottom: .5rem; font-size: .9rem; }
+  @media (max-width: 640px) { .compare-grid { grid-template-columns: 1fr; } }
+
+  /* ── FN PROGRESS BAR ── */
+  .fn-progress {
+    display: flex; border-radius: 8px; overflow: hidden;
+    height: 32px; margin: 1rem 0;
+    border: 1px solid var(--border);
+  }
+  .fn-seg {
+    display: flex; align-items: center; justify-content: center;
+    font-size: .68rem; font-weight: 700; color: #000;
+    flex: 1;
+  }
+
+  /* ── ACCORDION CUSTOM ── */
+  .accordion-custom .accordion-item {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 8px !important; margin-bottom: .5rem;
+    overflow: hidden;
+  }
+  .accordion-custom .accordion-button {
+    background: var(--bg-card2); color: var(--text);
+    font-weight: 600; font-size: .92rem;
+  }
+  .accordion-custom .accordion-button:not(.collapsed) {
+    background: rgba(79,142,247,.1); color: var(--primary);
+    box-shadow: none;
+  }
+  .accordion-custom .accordion-button::after {
+    filter: invert(1);
+  }
+  .accordion-custom .accordion-body {
+    background: var(--bg-card); border-top: 1px solid var(--border);
+  }
+
+  /* ── DEPS ── */
+  .dep-box {
+    background: var(--bg-card2); border: 1px solid var(--border);
+    border-radius: 8px; padding: .8rem 1.2rem;
+    font-family: 'IBM Plex Mono', monospace; font-size: .9rem;
+    margin: .4rem 0;
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  }
+  .dep-lhs { color: var(--fn2); font-weight: 700; }
+  .dep-arrow { color: var(--accent); font-size: 1.2rem; }
+  .dep-rhs { color: var(--fn1); }
+  .dep-label { font-size: .7rem; color: var(--text-muted); font-family: 'Sora', sans-serif; }
+
+  /* ── ANOMALY BOX ── */
+  .anomaly-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+    gap: 1rem; margin: 1rem 0;
+  }
+  .anomaly-card {
+    background: var(--bg-card2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1rem;
+    border-top: 3px solid;
+  }
+  .an-insert { border-top-color: #f472b6; }
+  .an-update { border-top-color: #f59e42; }
+  .an-delete { border-top-color: #fb923c; }
+  .anomaly-card h5 { font-size: .88rem; font-weight: 700; margin-bottom: .4rem; }
+  .anomaly-card p { font-size: .82rem; color: var(--text-muted); margin: 0; }
+
+  /* ── TAB PILLS ── */
+  .nav-pills-custom .nav-link {
+    color: var(--text-muted); border-radius: 6px;
+    font-size: .85rem; padding: .4rem .9rem;
+  }
+  .nav-pills-custom .nav-link.active {
+    background: rgba(79,142,247,.15); color: var(--primary);
+    border: 1px solid rgba(79,142,247,.3);
+  }
+
+  /* ── HIGHLIGHT TERM ── */
+  .hl { color: var(--accent); font-weight: 700; }
+  .hl2 { color: var(--fn2); font-weight: 700; }
+  .hl3 { color: var(--fn1); font-weight: 700; }
+
+  /* ── BACK TO TOP ── */
+  #back-top {
+    position: fixed; bottom: 2rem; right: 2rem;
+    width: 42px; height: 42px; border-radius: 50%;
+    background: var(--primary); color: #fff; border: none;
+    font-size: 1rem; cursor: pointer;
+    display: none; align-items: center; justify-content: center;
+    z-index: 999; box-shadow: 0 4px 12px rgba(79,142,247,.4);
+    transition: opacity .2s;
+  }
+  #back-top.show { display: flex; }
+  #back-top:hover { background: var(--primary-dark); }
+
+  /* ── DEFINITION TERM ── */
+  .def-term {
+    font-family: 'Libre Baskerville', serif;
+    font-style: italic; font-size: 1.05rem;
+    color: var(--accent2); margin-bottom: .3rem;
+  }
+  .def-body { font-size: .9rem; }
+
+  /* ── EXERCISE ── */
+  .exercise {
+    background: var(--bg-card2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1.2rem;
+    margin: 1rem 0;
+  }
+  .exercise-num {
+    display: inline-block; background: var(--primary);
+    color: #fff; width: 24px; height: 24px;
+    border-radius: 50%; text-align: center; line-height: 24px;
+    font-size: .75rem; font-weight: 700; margin-right: .5rem;
+  }
+  .exercise h5 { display: inline; font-size: .95rem; }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .sidebar { transform: translateX(calc(-1 * var(--sidebar-w))); }
+    .sidebar.mobile-open { transform: translateX(0); }
+    .main-content { margin-left: 0 !important; }
+  }
+
+  /* Light mode */
+  [data-bs-theme="light"] {
+    --bg-dark: #f6f8fa;
+    --bg-card: #ffffff;
+    --bg-card2: #f0f2f5;
+    --border: #d0d7de;
+    --text: #1f2328;
+    --text-muted: #57606a;
+    --code-bg: #f6f8fa;
+  }
+  [data-bs-theme="light"] .top-navbar { background: rgba(246,248,250,0.97); }
+  [data-bs-theme="light"] .hero { background: linear-gradient(135deg, #eef2ff 0%, #f0f9ff 50%, #fdf4ff 100%); }
+  [data-bs-theme="light"] pre { background: #f6f8fa; color: #1f2328; }
+  [data-bs-theme="light"] .code-block { background: #f6f8fa; }
+  [data-bs-theme="light"] .dep-box { background: #f0f2f5; }
+  [data-bs-theme="light"] .fn-progress { border-color: #d0d7de; }
+
+  /* Section anchors offset for navbar */
+  section[id], div[id] { scroll-margin-top: 70px; }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="top-navbar">
+  <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle sidebar"><i class="bi bi-layout-sidebar"></i></button>
+  <div class="brand"><i class="bi bi-database-fill-gear" style="color:var(--primary)"></i> Normalización <span>· Bases de Datos Relacionales</span></div>
+  <div class="nav-badges d-none d-md-flex">
+    <span class="nav-badge nb-590"><i class="bi bi-mortarboard-fill"></i> 590</span>
+    <span class="nav-badge nb-dam">DAM/DAW/ASIR</span>
+    <span class="nav-badge nb-uni">Universidad</span>
+  </div>
+  <button class="dark-mode-btn ms-auto" onclick="toggleDarkMode()"><i class="bi bi-circle-half"></i> Tema</button>
+</nav>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-section">Inicio</div>
+  <a href="#hero"><i class="bi bi-house-fill"></i> Portada</a>
+  <a href="#intro"><i class="bi bi-info-circle-fill"></i> Introducción</a>
+  <a href="#problemas"><i class="bi bi-exclamation-triangle-fill"></i> Problemas</a>
+
+  <div class="sidebar-section">Fundamentos</div>
+  <a href="#fundamentos"><i class="bi bi-book-fill"></i> Fundamentos teóricos</a>
+  <a href="#deps"><i class="bi bi-arrow-right-circle-fill"></i> Dependencias funcionales</a>
+  <a href="#claves"><i class="bi bi-key-fill"></i> Claves y superclaves</a>
+  <a href="#armstrong"><i class="bi bi-layers-fill"></i> Axiomas de Armstrong</a>
+
+  <div class="sidebar-section">Formas Normales</div>
+  <a href="#fn1"><span class="fn-dot" style="background:var(--fn1)"></span>1FN — Primera</a>
+  <a href="#fn2"><span class="fn-dot" style="background:var(--fn2)"></span>2FN — Segunda</a>
+  <a href="#fn3"><span class="fn-dot" style="background:var(--fn3)"></span>3FN — Tercera</a>
+  <a href="#bcnf"><span class="fn-dot" style="background:var(--bcnf)"></span>BCNF — Boyce-Codd</a>
+  <a href="#fn4"><span class="fn-dot" style="background:var(--fn4)"></span>4FN — Cuarta</a>
+  <a href="#fn5"><span class="fn-dot" style="background:var(--fn5)"></span>5FN — Quinta</a>
+
+  <div class="sidebar-section">Práctica</div>
+  <a href="#caso"><i class="bi bi-terminal-fill"></i> Caso práctico completo</a>
+  <a href="#sql"><i class="bi bi-database-fill"></i> SQL: PostgreSQL/MySQL</a>
+  <a href="#desnorm"><i class="bi bi-arrow-repeat"></i> Desnormalización</a>
+  <a href="#comparacion"><i class="bi bi-columns-gap"></i> Comparación antes/después</a>
+
+  <div class="sidebar-section">Complementos</div>
+  <a href="#acid"><i class="bi bi-shield-fill-check"></i> ACID e Integridad</a>
+  <a href="#iso"><i class="bi bi-patch-check-fill"></i> ISO/IEC y estándares</a>
+  <a href="#ejercicios"><i class="bi bi-pencil-fill"></i> Ejercicios resueltos</a>
+  <a href="#propuestos"><i class="bi bi-lightbulb-fill"></i> Ejercicios propuestos</a>
+  <a href="#resumen"><i class="bi bi-grid-fill"></i> Resumen visual</a>
+  <a href="#biblio"><i class="bi bi-journal-text"></i> Bibliografía</a>
+</nav>
+
+<!-- MAIN -->
+<div class="main-content" id="mainContent">
+
+<!-- HERO -->
+<div class="hero" id="hero">
+  <div class="hero-grid-bg"></div>
+  <div style="position:relative; max-width:900px;">
+    <div class="hero-eyebrow"><i class="bi bi-database-gear"></i> Tutorial Profesional · Versión 2025</div>
+    <h1>Normalización de<br><span>Bases de Datos</span><br>Relacionales</h1>
+    <p class="hero-sub">Tutorial completo y didáctico orientado a <strong>Oposiciones de Informática (cuerpo 590)</strong>, universidad y ciclos formativos DAM · DAW · ASIR. Desde los fundamentos teóricos hasta la implementación real en PostgreSQL y MySQL.</p>
+    <div class="hero-tags">
+      <span class="hero-tag"><i class="bi bi-file-earmark-code"></i> HTML5/CSS3/JS</span>
+      <span class="hero-tag"><i class="bi bi-database"></i> PostgreSQL 16 · MySQL 8</span>
+      <span class="hero-tag"><i class="bi bi-patch-check"></i> ISO/IEC 9075 · SQL Standard</span>
+      <span class="hero-tag"><i class="bi bi-book"></i> Codd · Armstrong · ANSI/SPARC</span>
+      <span class="hero-tag"><i class="bi bi-mortarboard"></i> Ejercicios resueltos y propuestos</span>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">6+</div><div class="lbl">Formas normales</div></div>
+      <div class="hero-stat"><div class="num">18</div><div class="lbl">Secciones temáticas</div></div>
+      <div class="hero-stat"><div class="num">40+</div><div class="lbl">Ejemplos SQL reales</div></div>
+      <div class="hero-stat"><div class="num">15+</div><div class="lbl">Ejercicios</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     1. INTRODUCCIÓN
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="intro">
+  <h2 class="section-title"><i class="bi bi-info-circle-fill"></i> 1. Introducción: ¿Por qué normalizar?</h2>
+  <p class="section-subtitle">Motivación, historia y objetivos del proceso de normalización</p>
+
+  <p>Imagina que guardas toda la información de una empresa en una única hoja de cálculo enorme. Clientes, pedidos, productos, precios, empleados… todo mezclado en filas y columnas. Al principio parece cómodo, pero pronto aparecen los problemas: <span class="hl">datos duplicados</span>, <span class="hl">inconsistencias</span>, errores al actualizar, pérdida de información al borrar un registro. Este es exactamente el problema que resuelve la <strong>normalización de bases de datos</strong>.</p>
+
+  <div class="callout callout-info">
+    <i class="bi bi-info-circle-fill"></i>
+    <div>
+      <strong>Definición formal</strong>
+      <p>La normalización es el proceso de organizar los atributos y relaciones de una base de datos relacional para <strong>reducir la redundancia</strong> y <strong>mejorar la integridad de los datos</strong>, siguiendo un conjunto de reglas denominadas <em>formas normales</em>, establecidas en el marco del <strong>modelo relacional de E.F. Codd</strong>.</p>
+    </div>
+  </div>
+
+  <h4 class="mt-4"><i class="bi bi-clock-history" style="color:var(--accent)"></i> Breve historia</h4>
+  <div class="timeline mt-3">
+    <div class="tl-item">
+      <div class="tl-dot">1</div>
+      <div class="tl-title">1970 — E.F. Codd publica "A Relational Model of Data"</div>
+      <p style="font-size:.88rem;color:var(--text-muted)">Edgar Frank Codd, investigador de IBM, introduce el modelo relacional y la primera forma normal (1FN) en su artículo seminal publicado en Communications of the ACM. Revoluciona el diseño de bases de datos.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot">2</div>
+      <div class="tl-title">1971–1972 — Codd define 2FN y 3FN</div>
+      <p style="font-size:.88rem;color:var(--text-muted)">En sucesivos artículos, Codd extiende el modelo con la segunda y tercera forma normal, basadas en el concepto de <em>dependencias funcionales</em>. Introduce también el álgebra relacional como base matemática.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot">3</div>
+      <div class="tl-title">1974 — Boyce y Codd definen la BCNF</div>
+      <p style="font-size:.88rem;color:var(--text-muted)">Raymond F. Boyce y E.F. Codd formulan la Forma Normal de Boyce-Codd, una versión más estricta de la 3FN que corrige ciertos casos problemáticos no contemplados por la tercera forma normal.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot">4</div>
+      <div class="tl-title">1977 — Ronald Fagin introduce la 4FN</div>
+      <p style="font-size:.88rem;color:var(--text-muted)">Fagin extiende la normalización con las <em>dependencias multivaluadas</em>, definiendo la cuarta forma normal para eliminar redundancias que no capturan las dependencias funcionales.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot">5</div>
+      <div class="tl-title">1979 — Fagin define la 5FN (Forma Normal de Proyección-Unión)</div>
+      <p style="font-size:.88rem;color:var(--text-muted)">La quinta forma normal aborda las <em>dependencias de unión</em>, completando el conjunto clásico de formas normales que se estudian hoy en día.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot">6</div>
+      <div class="tl-title">1987–hoy — ISO/IEC 9075 (SQL Standard)</div>
+      <p style="font-size:.88rem;color:var(--text-muted)">El estándar SQL de ISO formaliza los mecanismos para implementar bases de datos normalizadas: PRIMARY KEY, FOREIGN KEY, UNIQUE, CHECK... La normalización sigue siendo el fundamento del diseño de bases de datos relacionales.</p>
+    </div>
+  </div>
+
+  <h4 class="mt-4"><i class="bi bi-bullseye" style="color:var(--fn2)"></i> Objetivos de la normalización</h4>
+  <div class="row g-3 mt-1">
+    <div class="col-md-6 col-lg-4">
+      <div class="card-custom h-100">
+        <h4><i class="bi bi-archive-fill" style="color:var(--fn2)"></i> Eliminar redundancias</h4>
+        <p style="font-size:.87rem;color:var(--text-muted)">Cada dato se almacena en un único lugar. Si el nombre de un cliente cambia, basta modificarlo en un solo registro.</p>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-4">
+      <div class="card-custom h-100">
+        <h4><i class="bi bi-shield-check" style="color:var(--primary)"></i> Garantizar integridad</h4>
+        <p style="font-size:.87rem;color:var(--text-muted)">Las restricciones de integridad (PKs, FKs, CHECKs) aseguran que los datos sean coherentes y consistentes en todo momento.</p>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-4">
+      <div class="card-custom h-100">
+        <h4><i class="bi bi-graph-up" style="color:var(--accent)"></i> Evitar anomalías</h4>
+        <p style="font-size:.87rem;color:var(--text-muted)">Prevenir las anomalías de inserción, actualización y borrado que aparecen en bases de datos mal diseñadas.</p>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-4">
+      <div class="card-custom h-100">
+        <h4><i class="bi bi-diagram-3-fill" style="color:var(--bcnf)"></i> Estructura lógica clara</h4>
+        <p style="font-size:.87rem;color:var(--text-muted)">Un modelo bien normalizado es más fácil de entender, mantener y evolucionar con el tiempo.</p>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-4">
+      <div class="card-custom h-100">
+        <h4><i class="bi bi-hdd-stack-fill" style="color:var(--fn4)"></i> Minimizar espacio</h4>
+        <p style="font-size:.87rem;color:var(--text-muted)">Al eliminar duplicados, se reduce el espacio de almacenamiento necesario, aunque este no es el objetivo principal.</p>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-4">
+      <div class="card-custom h-100">
+        <h4><i class="bi bi-code-square" style="color:var(--fn5)"></i> Facilitar consultas</h4>
+        <p style="font-size:.87rem;color:var(--text-muted)">Un modelo normalizado permite construir consultas SQL más predecibles, eficientes y menos propensas a errores.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     2. PROBLEMAS
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="problemas">
+  <h2 class="section-title"><i class="bi bi-exclamation-triangle-fill"></i> 2. Problemas de una BD mal diseñada</h2>
+  <p class="section-subtitle">Redundancia, anomalías y sus consecuencias en la práctica</p>
+
+  <p>Antes de estudiar la solución, conviene entender el problema. Partamos de un ejemplo real: una tabla <strong>PEDIDOS_GLOBAL</strong> que almacena toda la información de un sistema de ventas en una sola tabla sin normalizar.</p>
+
+  <div class="wrapper mt-3">
+    <div class="table-wrapper">
+      <table class="table-custom">
+        <thead>
+          <tr>
+            <th>id_pedido</th><th>cliente_id</th><th>cliente_nombre</th><th>cliente_ciudad</th>
+            <th>producto_id</th><th>producto_nombre</th><th>precio_unitario</th><th>cantidad</th><th>proveedor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="bad">
+            <td>1001</td><td>C01</td><td>María García</td><td>Madrid</td><td>P10</td><td>Laptop Pro</td><td>1200.00</td><td>2</td><td>TechCorp</td>
+          </tr>
+          <tr class="bad">
+            <td>1002</td><td>C01</td><td>María García</td><td>Madrid</td><td>P20</td><td>Ratón USB</td><td>25.00</td><td>5</td><td>PerifTech</td>
+          </tr>
+          <tr class="bad">
+            <td>1003</td><td>C02</td><td>Juan López</td><td>Barcelona</td><td>P10</td><td>Laptop Pro</td><td>1200.00</td><td>1</td><td>TechCorp</td>
+          </tr>
+          <tr class="bad">
+            <td>1004</td><td>C03</td><td>Ana Martínez</td><td>Sevilla</td><td>P30</td><td>Teclado MX</td><td>89.00</td><td>3</td><td>PerifTech</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="callout callout-danger mt-3">
+    <i class="bi bi-exclamation-octagon-fill"></i>
+    <div>
+      <strong>¡Problema detectado!</strong>
+      <p>¿Ves cómo "María García" y "Madrid" aparecen repetidos? ¿Y que "Laptop Pro" con precio "1200.00" y proveedor "TechCorp" aparece dos veces? Esto es <strong>redundancia de datos</strong> y es la raíz de todos los problemas que veremos a continuación.</p>
+    </div>
+  </div>
+
+  <h4 class="mt-4"><i class="bi bi-bug-fill" style="color:var(--accent3)"></i> Las tres anomalías clásicas</h4>
+
+  <div class="anomaly-grid mt-3">
+    <div class="anomaly-card an-insert">
+      <h5><i class="bi bi-plus-circle-fill" style="color:#f472b6"></i> Anomalía de Inserción</h5>
+      <p>No podemos registrar un nuevo producto en el sistema si aún no tiene ningún pedido asociado. Para insertar "Monitor 4K" de proveedor "DisplayTech", necesitaríamos crear un pedido ficticio, lo cual es absurdo.</p>
+      <div class="mt-2" style="font-size:.78rem;color:#f472b6;font-family:'IBM Plex Mono',monospace">
+        INSERT INTO PEDIDOS_GLOBAL (producto_id, producto_nombre, ...)<br>
+        -- ¿Y el id_pedido? ¿Y el cliente? ¡Obliga a inventarlos!
+      </div>
+    </div>
+    <div class="anomaly-card an-update">
+      <h5><i class="bi bi-pencil-fill" style="color:#f59e42"></i> Anomalía de Actualización</h5>
+      <p>Si el precio de "Laptop Pro" cambia de 1200€ a 1350€, hay que actualizar <strong>todos</strong> los registros donde aparece ese producto. Si olvidamos uno, la base de datos queda en estado inconsistente: el mismo producto con dos precios diferentes.</p>
+      <div class="mt-2" style="font-size:.78rem;color:#f59e42;font-family:'IBM Plex Mono',monospace">
+        UPDATE PEDIDOS_GLOBAL SET precio = 1350<br>
+        WHERE producto_id = 'P10'; -- ¿Actualizamos todos?
+      </div>
+    </div>
+    <div class="anomaly-card an-delete">
+      <h5><i class="bi bi-trash-fill" style="color:#fb923c"></i> Anomalía de Borrado</h5>
+      <p>Si "Ana Martínez" cancela su pedido 1004 y lo eliminamos, perdemos también toda la información sobre el producto "Teclado MX" y su proveedor "PerifTech" si ese era el único pedido que lo contenía.</p>
+      <div class="mt-2" style="font-size:.78rem;color:#fb923c;font-family:'IBM Plex Mono',monospace">
+        DELETE FROM PEDIDOS_GLOBAL WHERE id_pedido = 1004;<br>
+        -- ¡Adiós Teclado MX y PerifTech!
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-warn mt-3">
+    <i class="bi bi-lightbulb-fill"></i>
+    <div>
+      <strong>Consejo de oposición (cuerpo 590)</strong>
+      <p>Las anomalías de inserción, actualización y borrado son conceptos que aparecen frecuentemente en exámenes. Debes ser capaz de <strong>identificarlas en una tabla dada</strong> e indicar qué forma normal las resuelve. Aprende los tres tipos de memoria: son la justificación del proceso de normalización.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     3. FUNDAMENTOS TEÓRICOS
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="fundamentos">
+  <h2 class="section-title"><i class="bi bi-book-fill"></i> 3. Fundamentos Teóricos</h2>
+  <p class="section-subtitle">Modelo relacional, álgebra relacional y bases matemáticas</p>
+
+  <h4><i class="bi bi-grid-3x3-gap-fill" style="color:var(--primary)"></i> El modelo relacional de Codd</h4>
+  <p>El modelo relacional se basa en la <strong>teoría matemática de conjuntos</strong> y la <strong>lógica de predicados de primer orden</strong>. Sus elementos fundamentales son:</p>
+
+  <div class="row g-3 mt-1">
+    <div class="col-md-6">
+      <div class="card-custom">
+        <h4><i class="bi bi-table" style="color:var(--primary)"></i> Relación (tabla)</h4>
+        <p style="font-size:.87rem">Una relación <strong>R</strong> es un subconjunto del producto cartesiano de dominios: <code>R ⊆ D₁ × D₂ × ... × Dₙ</code>. Cada fila es una <em>tupla</em> y cada columna es un <em>atributo</em>.</p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-custom">
+        <h4><i class="bi bi-key-fill" style="color:var(--accent)"></i> Clave primaria</h4>
+        <p style="font-size:.87rem">Conjunto mínimo de atributos que identifica de forma única cada tupla de la relación. Garantiza la identidad de cada fila.</p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-custom">
+        <h4><i class="bi bi-link-45deg" style="color:var(--fn2)"></i> Clave foránea</h4>
+        <p style="font-size:.87rem">Atributo(s) de una relación que referencia(n) la clave primaria de otra relación. Implementa la <em>integridad referencial</em> entre tablas.</p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-custom">
+        <h4><i class="bi bi-diagram-2" style="color:var(--fn3)"></i> Álgebra relacional</h4>
+        <p style="font-size:.87rem">Conjunto de operaciones sobre relaciones: <strong>σ</strong> (selección), <strong>π</strong> (proyección), <strong>⋈</strong> (join), <strong>∪</strong> (unión), <strong>−</strong> (diferencia), <strong>×</strong> (producto cartesiano).</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-info mt-3">
+    <i class="bi bi-journal-code"></i>
+    <div>
+      <strong>Recuerda: Propiedades de una relación (tabla) según Codd</strong>
+      <p>1. No hay filas duplicadas. 2. El orden de las filas no importa. 3. El orden de las columnas no importa. 4. Cada celda contiene un valor atómico (indivisible). 5. Cada columna tiene un nombre único. Estas propiedades son la base de la <strong>1FN</strong>.</p>
+    </div>
+  </div>
+
+  <h4 class="mt-4"><i class="bi bi-building" style="color:var(--accent2)"></i> Arquitectura ANSI/SPARC (tres niveles)</h4>
+  <p>El estándar ANSI/SPARC (1975) establece tres niveles de abstracción en un sistema de bases de datos, contexto fundamental para entender la normalización:</p>
+  <div class="row g-3 mt-1">
+    <div class="col-md-4">
+      <div class="card-custom" style="border-top:3px solid var(--fn1)">
+        <h4 style="color:var(--fn1)"><i class="bi bi-person-fill"></i> Nivel externo (vistas)</h4>
+        <p style="font-size:.85rem;color:var(--text-muted)">Perspectiva de cada usuario o aplicación. Vistas personalizadas de la BD. Independencia lógica de los datos.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card-custom" style="border-top:3px solid var(--fn2)">
+        <h4 style="color:var(--fn2)"><i class="bi bi-diagram-3"></i> Nivel conceptual (lógico)</h4>
+        <p style="font-size:.85rem;color:var(--text-muted)">Descripción completa de la BD: esquemas, relaciones, restricciones, dependencias. Donde se aplica la normalización.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card-custom" style="border-top:3px solid var(--fn3)">
+        <h4 style="color:var(--fn3)"><i class="bi bi-hdd-fill"></i> Nivel interno (físico)</h4>
+        <p style="font-size:.85rem;color:var(--text-muted)">Cómo se almacenan físicamente los datos: ficheros, índices, páginas de disco. Independencia física de los datos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     4. DEPENDENCIAS FUNCIONALES
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="deps">
+  <h2 class="section-title"><i class="bi bi-arrow-right-circle-fill"></i> 4. Dependencias Funcionales</h2>
+  <p class="section-subtitle">El concepto central de toda la teoría de normalización</p>
+
+  <div class="def-term">Dependencia Funcional</div>
+  <p>Dado un esquema de relación <strong>R(A₁, A₂, ..., Aₙ)</strong>, decimos que existe una <span class="hl">dependencia funcional</span> <strong>X → Y</strong> (se lee "X determina funcionalmente a Y") si y solo si para cualquier par de tuplas <em>t₁</em> y <em>t₂</em> de R, si <code>t₁[X] = t₂[X]</code> entonces <code>t₁[Y] = t₂[Y]</code>.</p>
+
+  <div class="callout callout-info mt-3">
+    <i class="bi bi-info-circle-fill"></i>
+    <div>
+      <strong>Analogía sencilla</strong>
+      <p>Si conoces el DNI de una persona, puedes determinar su nombre. Siempre que el DNI sea el mismo, el nombre debe ser el mismo. Esto se escribe: <strong>DNI → Nombre</strong>. En cambio, conocer el nombre NO determina el DNI (puede haber varias personas con el mismo nombre).</p>
+    </div>
+  </div>
+
+  <h4 class="mt-4">Tipos de dependencias funcionales</h4>
+
+  <div class="accordion accordion-custom mt-3" id="accDeps">
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#dep1">
+          <span class="fn-badge fn1 me-2">DF Trivial</span> Dependencia Funcional Trivial
+        </button>
+      </h2>
+      <div id="dep1" class="accordion-collapse collapse show" data-bs-parent="#accDeps">
+        <div class="accordion-body">
+          <p>Una DF <strong>X → Y</strong> es <span class="hl">trivial</span> si <strong>Y ⊆ X</strong> (Y es subconjunto de X). Siempre se cumple por definición.</p>
+          <div class="dep-box">
+            <span class="dep-lhs">{DNI, Nombre}</span>
+            <span class="dep-arrow">→</span>
+            <span class="dep-rhs">DNI</span>
+            <span class="dep-label">Trivial: DNI ya está en el lado izquierdo</span>
+          </div>
+          <div class="dep-box">
+            <span class="dep-lhs">{id_pedido, id_producto}</span>
+            <span class="dep-arrow">→</span>
+            <span class="dep-rhs">id_pedido</span>
+            <span class="dep-label">Trivial: id_pedido es subconjunto de la clave</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#dep2">
+          <span class="fn-badge fn2 me-2">DF Parcial</span> Dependencia Funcional Parcial
+        </button>
+      </h2>
+      <div id="dep2" class="accordion-collapse collapse" data-bs-parent="#accDeps">
+        <div class="accordion-body">
+          <p>Una DF <strong>X → Y</strong> es <span class="hl">parcial</span> si existe un subconjunto propio <strong>Z ⊂ X</strong> tal que <strong>Z → Y</strong>. Es decir, Y depende solo de parte de la clave.</p>
+          <p>Este tipo de dependencia viola la <strong>2FN</strong>.</p>
+          <div class="dep-box">
+            <span class="dep-lhs">{id_pedido, id_producto}</span>
+            <span class="dep-arrow">→</span>
+            <span class="dep-rhs">nombre_producto</span>
+            <span class="dep-label">⚠ Parcial: nombre_producto solo depende de id_producto, no del pedido</span>
+          </div>
+          <div class="callout callout-warn mt-2">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <div><strong>Error típico en exámenes</strong><p>Confundir "dependencia parcial" con "dependencia trivial". La parcial es la que causa problemas en la 2FN y SIEMPRE aparece cuando la clave primaria es compuesta.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#dep3">
+          <span class="fn-badge fn3 me-2">DF Transitiva</span> Dependencia Funcional Transitiva
+        </button>
+      </h2>
+      <div id="dep3" class="accordion-collapse collapse" data-bs-parent="#accDeps">
+        <div class="accordion-body">
+          <p>Una DF <strong>X → Z</strong> es <span class="hl">transitiva</span> si existe Y tal que <strong>X → Y</strong> y <strong>Y → Z</strong>, y además Y no determina a X (Y no es superclave).</p>
+          <p>Este tipo de dependencia viola la <strong>3FN</strong>.</p>
+          <div class="dep-box">
+            <span class="dep-lhs">id_empleado</span>
+            <span class="dep-arrow">→</span>
+            <span class="dep-rhs">cod_departamento</span>
+            <span class="dep-label">Dependencia directa</span>
+          </div>
+          <div class="dep-box">
+            <span class="dep-lhs">cod_departamento</span>
+            <span class="dep-arrow">→</span>
+            <span class="dep-rhs">nombre_departamento</span>
+            <span class="dep-label">Dependencia directa</span>
+          </div>
+          <div class="dep-box" style="border-color:var(--accent)">
+            <span class="dep-lhs">id_empleado</span>
+            <span class="dep-arrow" style="color:#f472b6">→→</span>
+            <span class="dep-rhs">nombre_departamento</span>
+            <span class="dep-label" style="color:var(--accent)">⚠ Transitiva: id_empleado determina nombre_departamento via cod_departamento</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#dep4">
+          <span class="fn-badge fnb me-2">DF Completa</span> Dependencia Funcional Completa (plena)
+        </button>
+      </h2>
+      <div id="dep4" class="accordion-collapse collapse" data-bs-parent="#accDeps">
+        <div class="accordion-body">
+          <p>Una DF <strong>X → Y</strong> es <span class="hl">completa</span> si no existe ningún subconjunto propio <strong>Z ⊂ X</strong> tal que <strong>Z → Y</strong>. Y depende de toda la clave X, no de una parte.</p>
+          <div class="dep-box" style="border-color:var(--fn2)">
+            <span class="dep-lhs">{id_pedido, id_producto}</span>
+            <span class="dep-arrow" style="color:var(--fn2)">→</span>
+            <span class="dep-rhs">cantidad</span>
+            <span class="dep-label" style="color:var(--fn2)">✓ Completa: la cantidad de un producto en un pedido depende de ambos</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#dep5">
+          <span class="fn-badge fn4 me-2">DF Multivaluada</span> Dependencia Multivaluada
+        </button>
+      </h2>
+      <div id="dep5" class="accordion-collapse collapse" data-bs-parent="#accDeps">
+        <div class="accordion-body">
+          <p>Una <span class="hl">dependencia multivaluada</span> <strong>X →→ Y</strong> (se lee "X multidetrmina a Y") existe cuando para cada valor de X, hay un conjunto de valores de Y independiente del resto de atributos.</p>
+          <p>Viola la <strong>4FN</strong>. Ejemplo: un curso puede tener varios profesores Y varios libros de texto, de forma independiente.</p>
+          <div class="dep-box" style="border-color:var(--fn4)">
+            <span class="dep-lhs">curso</span>
+            <span class="dep-arrow" style="color:var(--fn4)">→→</span>
+            <span class="dep-rhs">profesor</span>
+          </div>
+          <div class="dep-box" style="border-color:var(--fn4)">
+            <span class="dep-lhs">curso</span>
+            <span class="dep-arrow" style="color:var(--fn4)">→→</span>
+            <span class="dep-rhs">libro</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     5. CLAVES
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="claves">
+  <h2 class="section-title"><i class="bi bi-key-fill"></i> 5. Claves Candidatas y Superclaves</h2>
+  <p class="section-subtitle">Taxonomía completa de los tipos de claves en el modelo relacional</p>
+
+  <div class="row g-3">
+    <div class="col-md-6">
+      <div class="card-custom" style="border-left:3px solid #ffd700">
+        <h4><i class="bi bi-key-fill" style="color:#ffd700"></i> Superclave</h4>
+        <p style="font-size:.87rem">Conjunto de uno o más atributos que <strong>identifica de forma única</strong> cada tupla. Puede contener atributos "extra" innecesarios.</p>
+        <div class="dep-box mt-2" style="font-size:.78rem">
+          <span class="dep-lhs">{DNI}</span><span class="dep-label">→ es superclave</span>
+        </div>
+        <div class="dep-box" style="font-size:.78rem">
+          <span class="dep-lhs">{DNI, Nombre}</span><span class="dep-label">→ también es superclave (redundante)</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-custom" style="border-left:3px solid var(--accent)">
+        <h4><i class="bi bi-diamond-fill" style="color:var(--accent)"></i> Clave Candidata</h4>
+        <p style="font-size:.87rem">Superclave <strong>mínima</strong>: si eliminamos cualquier atributo, deja de ser superclave. Una tabla puede tener varias claves candidatas.</p>
+        <div class="dep-box mt-2" style="font-size:.78rem; border-color:var(--accent)">
+          <span class="dep-lhs">{DNI}</span><span class="dep-label" style="color:var(--fn2)">✓ Clave candidata (mínima)</span>
+        </div>
+        <div class="dep-box" style="font-size:.78rem; border-color:var(--accent)">
+          <span class="dep-lhs">{num_pasaporte}</span><span class="dep-label" style="color:var(--fn2)">✓ Otra clave candidata</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-custom" style="border-left:3px solid var(--primary)">
+        <h4><i class="bi bi-shield-lock-fill" style="color:var(--primary)"></i> Clave Primaria (PK)</h4>
+        <p style="font-size:.87rem">Clave candidata <strong>elegida por el diseñador</strong> como identificador principal. Solo puede haber una por tabla. En SQL: <code>PRIMARY KEY</code>. No puede ser NULL.</p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-custom" style="border-left:3px solid var(--fn2)">
+        <h4><i class="bi bi-link-45deg" style="color:var(--fn2)"></i> Clave Foránea (FK)</h4>
+        <p style="font-size:.87rem">Atributo(s) de una tabla que referencia la PK de otra tabla. Implementa la <strong>integridad referencial</strong>. En SQL: <code>FOREIGN KEY ... REFERENCES</code>.</p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-custom" style="border-left:3px solid var(--fn3)">
+        <h4><i class="bi bi-fingerprint" style="color:var(--fn3)"></i> Clave Alternativa</h4>
+        <p style="font-size:.87rem">Clave candidata que NO fue elegida como primaria. Se implementa como restricción <code>UNIQUE NOT NULL</code> en SQL.</p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-custom" style="border-left:3px solid var(--fn4)">
+        <h4><i class="bi bi-grid-1x2-fill" style="color:var(--fn4)"></i> Clave Compuesta</h4>
+        <p style="font-size:.87rem">Clave formada por <strong>más de un atributo</strong>. Es especialmente importante en la 2FN, ya que las dependencias parciales solo pueden aparecer cuando la clave es compuesta.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="code-block mt-4">
+    <div class="code-header">
+      <span><span class="code-dot" style="background:#ff5f57"></span><span class="code-dot" style="background:#febc2e"></span><span class="code-dot" style="background:#28c840"></span></span>
+      <span class="lang">SQL — Definición de claves (PostgreSQL/MySQL)</span>
+      <span>claves.sql</span>
+    </div>
+    <pre><span class="cm">-- Tabla con clave primaria simple</span>
+<span class="kw">CREATE TABLE</span> <span class="tb">clientes</span> (
+    <span class="cn">cliente_id</span>   <span class="fn">SERIAL</span>       <span class="kw">PRIMARY KEY</span>,       <span class="cm">-- PK simple</span>
+    <span class="cn">dni</span>          <span class="fn">VARCHAR</span>(<span class="nm">9</span>)   <span class="kw">UNIQUE NOT NULL</span>,   <span class="cm">-- clave alternativa</span>
+    <span class="cn">pasaporte</span>    <span class="fn">VARCHAR</span>(<span class="nm">20</span>)  <span class="kw">UNIQUE</span>,            <span class="cm">-- otra clave candidata</span>
+    <span class="cn">nombre</span>       <span class="fn">VARCHAR</span>(<span class="nm">100</span>) <span class="kw">NOT NULL</span>,
+    <span class="cn">ciudad</span>       <span class="fn">VARCHAR</span>(<span class="nm">50</span>)
+);
+
+<span class="cm">-- Tabla con clave primaria compuesta (tabla de intersección)</span>
+<span class="kw">CREATE TABLE</span> <span class="tb">pedido_detalle</span> (
+    <span class="cn">pedido_id</span>    <span class="fn">INT</span>            <span class="kw">NOT NULL</span>,
+    <span class="cn">producto_id</span>  <span class="fn">INT</span>            <span class="kw">NOT NULL</span>,
+    <span class="cn">cantidad</span>     <span class="fn">INT</span>            <span class="kw">NOT NULL CHECK</span> (<span class="cn">cantidad</span> <span class="op">></span> <span class="nm">0</span>),
+    <span class="cn">precio_unit</span>  <span class="fn">DECIMAL</span>(<span class="nm">10</span>,<span class="nm">2</span>) <span class="kw">NOT NULL</span>,
+    <span class="kw">PRIMARY KEY</span> (<span class="cn">pedido_id</span>, <span class="cn">producto_id</span>),   <span class="cm">-- PK compuesta</span>
+    <span class="kw">FOREIGN KEY</span> (<span class="cn">pedido_id</span>)   <span class="kw">REFERENCES</span> <span class="tb">pedidos</span>(<span class="cn">pedido_id</span>)
+        <span class="kw">ON DELETE CASCADE ON UPDATE CASCADE</span>,
+    <span class="kw">FOREIGN KEY</span> (<span class="cn">producto_id</span>) <span class="kw">REFERENCES</span> <span class="tb">productos</span>(<span class="cn">producto_id</span>)
+        <span class="kw">ON DELETE RESTRICT ON UPDATE CASCADE</span>
+);</pre>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     6. AXIOMAS DE ARMSTRONG
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="armstrong">
+  <h2 class="section-title"><i class="bi bi-layers-fill"></i> 6. Axiomas de Armstrong</h2>
+  <p class="section-subtitle">Reglas de inferencia para derivar todas las dependencias funcionales de un conjunto</p>
+
+  <p>Los <span class="hl">Axiomas de Armstrong</span> (1974) son un conjunto de reglas de inferencia <strong>correctas y completas</strong> para derivar el cierre de un conjunto de dependencias funcionales. Son fundamentales para calcular claves candidatas y cierre de atributos.</p>
+
+  <div class="row g-3 mt-2">
+    <div class="col-md-4">
+      <div class="card-custom" style="border-top:3px solid var(--fn1)">
+        <h4 style="color:var(--fn1)"><i class="bi bi-1-circle-fill"></i> Reflexividad</h4>
+        <div class="dep-box">
+          <span class="dep-lhs">Y ⊆ X</span>
+          <span class="dep-arrow">⟹</span>
+          <span class="dep-rhs">X → Y</span>
+        </div>
+        <p style="font-size:.82rem;color:var(--text-muted)">Si Y es subconjunto de X, entonces X determina Y. Genera las dependencias triviales.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card-custom" style="border-top:3px solid var(--fn2)">
+        <h4 style="color:var(--fn2)"><i class="bi bi-2-circle-fill"></i> Aumentatividad</h4>
+        <div class="dep-box">
+          <span class="dep-lhs">X → Y</span>
+          <span class="dep-arrow">⟹</span>
+          <span class="dep-rhs">XZ → YZ</span>
+        </div>
+        <p style="font-size:.82rem;color:var(--text-muted)">Si X determina Y, entonces añadir Z a ambos lados mantiene la dependencia.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card-custom" style="border-top:3px solid var(--fn3)">
+        <h4 style="color:var(--fn3)"><i class="bi bi-3-circle-fill"></i> Transitividad</h4>
+        <div class="dep-box">
+          <span class="dep-lhs">X→Y, Y→Z</span>
+          <span class="dep-arrow">⟹</span>
+          <span class="dep-rhs">X → Z</span>
+        </div>
+        <p style="font-size:.82rem;color:var(--text-muted)">Si X determina Y e Y determina Z, entonces X determina Z. Base de la 3FN.</p>
+      </div>
+    </div>
+  </div>
+
+  <h5 class="mt-4" style="color:var(--text-muted)">Reglas derivadas (de los axiomas anteriores)</h5>
+  <div class="row g-3 mt-1">
+    <div class="col-md-4">
+      <div class="card-custom">
+        <h4 style="font-size:.88rem"><i class="bi bi-union" style="color:var(--bcnf)"></i> Unión</h4>
+        <div class="dep-box" style="font-size:.78rem">
+          <span>X→Y, X→Z ⟹ X→YZ</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card-custom">
+        <h4 style="font-size:.88rem"><i class="bi bi-scissors" style="color:var(--fn4)"></i> Descomposición</h4>
+        <div class="dep-box" style="font-size:.78rem">
+          <span>X→YZ ⟹ X→Y y X→Z</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card-custom">
+        <h4 style="font-size:.88rem"><i class="bi bi-arrows-angle-contract" style="color:var(--fn5)"></i> Pseudotransitividad</h4>
+        <div class="dep-box" style="font-size:.78rem">
+          <span>X→Y, WY→Z ⟹ WX→Z</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-exam mt-3">
+    <i class="bi bi-mortarboard-fill"></i>
+    <div>
+      <strong>Consejo de oposición: Cierre de un conjunto de atributos</strong>
+      <p>El <strong>cierre de X</strong> respecto a un conjunto F de DFs, denotado X⁺, es el conjunto de todos los atributos determinados por X. Para calcular X⁺: empieza con X, aplica las DFs hasta no poder añadir más. Si X⁺ = todos los atributos de R, entonces X es superclave. Si además es mínimo, es clave candidata. Este cálculo aparece frecuentemente en exámenes de bases de datos.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     7. PRIMERA FORMA NORMAL
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="fn1">
+  <h2 class="section-title">
+    <span style="background:var(--fn1);color:#fff;padding:4px 12px;border-radius:6px;font-size:1rem">1FN</span>
+    Primera Forma Normal
+  </h2>
+  <p class="section-subtitle">La base de toda la normalización: valores atómicos</p>
+
+  <div class="fn-progress">
+    <div class="fn-seg" style="background:var(--fn1)">1FN</div>
+    <div class="fn-seg" style="background:var(--bg-card2);color:var(--text-muted)">2FN</div>
+    <div class="fn-seg" style="background:var(--bg-card2);color:var(--text-muted)">3FN</div>
+    <div class="fn-seg" style="background:var(--bg-card2);color:var(--text-muted)">BCNF</div>
+    <div class="fn-seg" style="background:var(--bg-card2);color:var(--text-muted)">4FN</div>
+    <div class="fn-seg" style="background:var(--bg-card2);color:var(--text-muted)">5FN</div>
+  </div>
+
+  <div class="def-term mt-3">Primera Forma Normal (1FN)</div>
+  <p>Una relación está en <span class="hl">Primera Forma Normal</span> si y solo si:</p>
+  <ul style="font-size:.9rem; line-height:2">
+    <li>Todos los atributos contienen <strong>valores atómicos</strong> (indivisibles): no hay conjuntos, listas ni grupos repetitivos.</li>
+    <li>Todos los valores de una columna son del <strong>mismo dominio</strong>.</li>
+    <li>Cada columna tiene un <strong>nombre único</strong>.</li>
+    <li>El orden de filas y columnas <strong>no importa</strong>.</li>
+    <li>No hay <strong>filas duplicadas</strong> (existe una clave primaria).</li>
+  </ul>
+
+  <h4 class="mt-3"><i class="bi bi-x-octagon-fill" style="color:var(--accent3)"></i> Tabla que viola la 1FN</h4>
+  <div class="table-wrapper">
+    <table class="table-custom">
+      <thead>
+        <tr><th>id_cliente</th><th>nombre</th><th>teléfonos (¡MÚLTIPLES!)</th><th>pedidos (¡LISTA!)</th></tr>
+      </thead>
+      <tbody>
+        <tr class="bad">
+          <td class="pk">C01</td><td>María García</td>
+          <td style="color:var(--accent3)">666111222, 912345678</td>
+          <td style="color:var(--accent3)">P001, P002, P005</td>
+        </tr>
+        <tr class="bad">
+          <td class="pk">C02</td><td>Juan López</td>
+          <td style="color:var(--accent3)">699887766</td>
+          <td style="color:var(--accent3)">P003</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout callout-danger mt-2">
+    <i class="bi bi-x-circle-fill"></i>
+    <div><strong>Violaciones detectadas</strong>
+    <p>• La columna "teléfonos" contiene múltiples valores (grupos repetitivos).<br>• La columna "pedidos" contiene una lista de valores.<br>• No podemos consultar directamente "¿qué clientes tienen el teléfono 666111222?" con una query simple.</p></div>
+  </div>
+
+  <h4 class="mt-4"><i class="bi bi-check-circle-fill" style="color:var(--fn2)"></i> Conversión a 1FN</h4>
+  <div class="compare-grid">
+    <div class="compare-bad">
+      <h5><i class="bi bi-x-circle-fill"></i> Antes (viola 1FN)</h5>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--text-muted)">
+        CLIENTES(<u>id_cliente</u>, nombre, {teléfonos}, {pedidos})
+      </div>
+    </div>
+    <div class="compare-good">
+      <h5><i class="bi bi-check-circle-fill"></i> Después (cumple 1FN)</h5>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--text-muted)">
+        CLIENTES(<u>id_cliente</u>, nombre)<br>
+        TELEFONOS(<u>id_cliente</u>, <u>telefono</u>)<br>
+        PEDIDOS(<u>id_pedido</u>, id_cliente, fecha)
+      </div>
+    </div>
+  </div>
+
+  <div class="code-block mt-3">
+    <div class="code-header">
+      <span><span class="code-dot" style="background:#ff5f57"></span><span class="code-dot" style="background:#febc2e"></span><span class="code-dot" style="background:#28c840"></span></span>
+      <span class="lang">SQL — Conversión a 1FN</span>
+    </div>
+    <pre><span class="cm">-- Estructura en 1FN: tablas separadas, valores atómicos</span>
+<span class="kw">CREATE TABLE</span> <span class="tb">clientes</span> (
+    <span class="cn">cliente_id</span>  <span class="fn">SERIAL</span>       <span class="kw">PRIMARY KEY</span>,
+    <span class="cn">nombre</span>      <span class="fn">VARCHAR</span>(<span class="nm">100</span>) <span class="kw">NOT NULL</span>
+);
+
+<span class="kw">CREATE TABLE</span> <span class="tb">cliente_telefonos</span> (
+    <span class="cn">cliente_id</span>  <span class="fn">INT</span>          <span class="kw">NOT NULL</span>,
+    <span class="cn">telefono</span>    <span class="fn">VARCHAR</span>(<span class="nm">20</span>)  <span class="kw">NOT NULL</span>,
+    <span class="cn">tipo</span>        <span class="fn">VARCHAR</span>(<span class="nm">20</span>)  <span class="kw">DEFAULT</span> <span class="str">'móvil'</span>,
+    <span class="kw">PRIMARY KEY</span> (<span class="cn">cliente_id</span>, <span class="cn">telefono</span>),
+    <span class="kw">FOREIGN KEY</span> (<span class="cn">cliente_id</span>) <span class="kw">REFERENCES</span> <span class="tb">clientes</span>(<span class="cn">cliente_id</span>)
+);
+
+<span class="cm">-- INSERT correcto en 1FN</span>
+<span class="kw">INSERT INTO</span> <span class="tb">clientes</span> <span class="kw">VALUES</span> (<span class="nm">1</span>, <span class="str">'María García'</span>);
+<span class="kw">INSERT INTO</span> <span class="tb">cliente_telefonos</span> <span class="kw">VALUES</span>
+    (<span class="nm">1</span>, <span class="str">'666111222'</span>, <span class="str">'móvil'</span>),
+    (<span class="nm">1</span>, <span class="str">'912345678'</span>, <span class="str">'fijo'</span>);
+
+<span class="cm">-- Consulta: ¿Qué cliente tiene el teléfono 666111222?</span>
+<span class="kw">SELECT</span> c.<span class="cn">nombre</span>
+<span class="kw">FROM</span> <span class="tb">clientes</span> c
+<span class="kw">JOIN</span> <span class="tb">cliente_telefonos</span> t <span class="kw">ON</span> c.<span class="cn">cliente_id</span> = t.<span class="cn">cliente_id</span>
+<span class="kw">WHERE</span> t.<span class="cn">telefono</span> = <span class="str">'666111222'</span>;</pre>
+  </div>
+
+  <div class="callout callout-success mt-3">
+    <i class="bi bi-check-circle-fill"></i>
+    <div><strong>Recuerda sobre 1FN</strong>
+    <p>Los grupos repetitivos (arrays, listas en una celda) y los grupos repetidos de columnas (telefono1, telefono2, telefono3...) violan la 1FN. En sistemas modernos como PostgreSQL, el tipo ARRAY puede usarse en ciertos casos, pero en el modelo relacional puro siempre se normalizan en tablas separadas.</p></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     8. SEGUNDA FORMA NORMAL
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="fn2">
+  <h2 class="section-title">
+    <span style="background:var(--fn2);color:#000;padding:4px 12px;border-radius:6px;font-size:1rem">2FN</span>
+    Segunda Forma Normal
+  </h2>
+  <p class="section-subtitle">Eliminar dependencias parciales respecto a la clave primaria</p>
+
+  <div class="fn-progress">
+    <div class="fn-seg" style="background:var(--fn1)">1FN ✓</div>
+    <div class="fn-seg" style="background:var(--fn2);color:#000">2FN</div>
+    <div class="fn-seg" style="background:var(--bg-card2);color:var(--text-muted)">3FN</div>
+    <div class="fn-seg" style="background:var(--bg-card2);color:var(--text-muted)">BCNF</div>
+    <div class="fn-seg" style="background:var(--bg-card2);color:var(--text-muted)">4FN</div>
+    <div class="fn-seg" style="background:var(--bg-card2);color:var(--text-muted)">5FN</div>
+  </div>
+
+  <div class="def-term mt-3">Segunda Forma Normal (2FN)</div>
+  <p>Una relación está en <span class="hl">Segunda Forma Normal</span> si y solo si:</p>
+  <ul style="font-size:.9rem;line-height:2">
+    <li>Está en <strong>1FN</strong>.</li>
+    <li>Todo atributo no-primo (que no forma parte de ninguna clave candidata) tiene una <strong>dependencia funcional completa</strong> respecto a cada clave candidata. Es decir, <strong>no existen dependencias parciales</strong>.</li>
+  </ul>
+  <div class="callout callout-warn mt-2">
+    <i class="bi bi-lightbulb-fill"></i>
+    <div><strong>Clave para entender la 2FN</strong><p>Las dependencias parciales SOLO pueden existir cuando la clave primaria es <strong>compuesta</strong> (de más de un atributo). Si la PK es simple (un solo atributo), la tabla ya cumple automáticamente la 2FN respecto a esa clave.</p></div>
+  </div>
+
+  <h4 class="mt-4"><i class="bi bi-x-octagon-fill" style="color:var(--accent3)"></i> Ejemplo que viola la 2FN</h4>
+  <p>Tabla <strong>PEDIDO_DETALLE</strong> con clave primaria compuesta <code>{id_pedido, id_producto}</code>:</p>
+
+  <div class="table-wrapper">
+    <table class="table-custom">
+      <thead>
+        <tr>
+          <th>id_pedido (PK)</th><th>id_producto (PK)</th><th>cantidad</th>
+          <th style="color:var(--accent3)">nombre_producto ⚠</th>
+          <th style="color:var(--accent3)">precio_producto ⚠</th>
+          <th style="color:var(--accent3)">proveedor ⚠</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="bad"><td class="pk">P001</td><td class="pk">PROD-10</td><td>2</td><td>Laptop Pro</td><td>1200.00</td><td>TechCorp</td></tr>
+        <tr class="bad"><td class="pk">P001</td><td class="pk">PROD-20</td><td>5</td><td>Ratón USB</td><td>25.00</td><td>PerifTech</td></tr>
+        <tr class="bad"><td class="pk">P002</td><td class="pk">PROD-10</td><td>1</td><td>Laptop Pro</td><td>1200.00</td><td>TechCorp</td></tr>
+        <tr class="bad"><td class="pk">P003</td><td class="pk">PROD-20</td><td>3</td><td>Ratón USB</td><td>25.00</td><td>PerifTech</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-3">
+    <h5>Dependencias funcionales detectadas:</h5>
+    <div class="dep-box" style="border-color:var(--fn2)">
+      <span class="dep-lhs">{id_pedido, id_producto}</span>
+      <span class="dep-arrow" style="color:var(--fn2)">→</span>
+      <span class="dep-rhs">cantidad</span>
+      <span class="dep-label" style="color:var(--fn2)">✓ DF Completa (correcto)</span>
+    </div>
+    <div class="dep-box" style="border-color:var(--accent3)">
+      <span class="dep-lhs">id_producto</span>
+      <span class="dep-arrow" style="color:var(--accent3)">→</span>
+      <span class="dep-rhs">nombre_producto, precio_producto, proveedor</span>
+      <span class="dep-label" style="color:var(--accent3)">⚠ DF Parcial — viola 2FN</span>
+    </div>
+  </div>
+
+  <h4 class="mt-4"><i class="bi bi-check-circle-fill" style="color:var(--fn2)"></i> Solución: descomponer la tabla</h4>
+  <div class="compare-grid">
+    <div class="compare-bad">
+      <h5><i class="bi bi-x-circle-fill"></i> Antes (viola 2FN)</h5>
+      <p style="font-size:.8rem">PEDIDO_DETALLE(<u>id_pedido, id_producto</u>, cantidad, nombre_producto, precio_producto, proveedor)</p>
+    </div>
+    <div class="compare-good">
+      <h5><i class="bi bi-check-circle-fill"></i> Después (en 2FN)</h5>
+      <p style="font-size:.8rem">PEDIDO_DETALLE(<u>id_pedido, id_producto</u>, cantidad)<br>PRODUCTOS(<u>id_producto</u>, nombre_producto, precio_producto, proveedor)</p>
+    </div>
+  </div>
+
+  <div class="code-block mt-3">
+    <div class="code-header">
+      <span><span class="code-dot" style="background:#ff5f57"></span><span class="code-dot" style="background:#febc2e"></span><span class="code-dot" style="background:#28c840"></span></span>
+      <span class="lang">SQL — Estructura en 2FN</span>
+    </div>
+    <pre><span class="cm">-- Tabla PRODUCTOS: contiene atributos que dependen solo del producto</span>
+<span class="kw">CREATE TABLE</span> <span class="tb">productos</span> (
+    <span class="cn">producto_id</span>      <span class="fn">SERIAL</span>         <span class="kw">PRIMARY KEY</span>,
+    <span class="cn">nombre</span>           <span class="fn">VARCHAR</span>(<span class="nm">150</span>)   <span class="kw">NOT NULL</span>,
+    <span class="cn">precio_unitario</span>  <span class="fn">DECIMAL</span>(<span class="nm">10</span>,<span class="nm">2</span>)  <span class="kw">NOT NULL CHECK</span> (<span class="cn">precio_unitario</span> <span class="op">>=</span> <span class="nm">0</span>),
+    <span class="cn">proveedor_id</span>     <span class="fn">INT</span>            <span class="kw">REFERENCES</span> <span class="tb">proveedores</span>(<span class="cn">proveedor_id</span>)
+);
+
+<span class="cm">-- Tabla PEDIDO_DETALLE: solo contiene lo que depende de la PK compuesta</span>
+<span class="kw">CREATE TABLE</span> <span class="tb">pedido_detalle</span> (
+    <span class="cn">pedido_id</span>    <span class="fn">INT</span>  <span class="kw">NOT NULL REFERENCES</span> <span class="tb">pedidos</span>(<span class="cn">pedido_id</span>),
+    <span class="cn">producto_id</span>  <span class="fn">INT</span>  <span class="kw">NOT NULL REFERENCES</span> <span class="tb">productos</span>(<span class="cn">producto_id</span>),
+    <span class="cn">cantidad</span>     <span class="fn">INT</span>  <span class="kw">NOT NULL CHECK</span> (<span class="cn">cantidad</span> <span class="op">></span> <span class="nm">0</span>),
+    <span class="kw">PRIMARY KEY</span> (<span class="cn">pedido_id</span>, <span class="cn">producto_id</span>)
+);
+
+<span class="cm">-- Ahora un JOIN recupera la información completa sin redundancia</span>
+<span class="kw">SELECT</span>
+    pd.<span class="cn">pedido_id</span>,
+    p.<span class="cn">nombre</span>          <span class="kw">AS</span> producto,
+    pd.<span class="cn">cantidad</span>,
+    p.<span class="cn">precio_unitario</span>,
+    (pd.<span class="cn">cantidad</span> <span class="op">*</span> p.<span class="cn">precio_unitario</span>) <span class="kw">AS</span> subtotal
+<span class="kw">FROM</span> <span class="tb">pedido_detalle</span> pd
+<span class="kw">JOIN</span> <span class="tb">productos</span>       p  <span class="kw">ON</span> pd.<span class="cn">producto_id</span> = p.<span class="cn">producto_id</span>
+<span class="kw">ORDER BY</span> pd.<span class="cn">pedido_id</span>;</pre>
+  </div>
+
+  <div class="callout callout-exam mt-3">
+    <i class="bi bi-mortarboard-fill"></i>
+    <div><strong>Consejo de oposición: 2FN en exámenes</strong>
+    <p>En los exámenes del cuerpo 590 y DAM/DAW se suele dar una tabla con PK compuesta y pedir que se identifiquen las dependencias parciales y se normalice a 2FN. El proceso siempre es: 1) Identificar la PK compuesta. 2) Buscar atributos que dependen solo de PARTE de la PK. 3) Extraerlos a una nueva tabla con la parte de la PK que los determina como nueva PK.</p></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     9. TERCERA FORMA NORMAL
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="fn3">
+  <h2 class="section-title">
+    <span style="background:var(--fn3);color:#000;padding:4px 12px;border-radius:6px;font-size:1rem">3FN</span>
+    Tercera Forma Normal
+  </h2>
+  <p class="section-subtitle">Eliminar dependencias transitivas: los atributos deben depender SOLO de la clave</p>
+
+  <div class="fn-progress">
+    <div class="fn-seg" style="background:var(--fn1)">1FN ✓</div>
+    <div class="fn-seg" style="background:var(--fn2);color:#000">2FN ✓</div>
+    <div class="fn-seg" style="background:var(--fn3);color:#000">3FN</div>
+    <div class="fn-seg" style="background:var(--bg-card2);color:var(--text-muted)">BCNF</div>
+    <div class="fn-seg" style="background:var(--bg-card2);color:var(--text-muted)">4FN</div>
+    <div class="fn-seg" style="background:var(--bg-card2);color:var(--text-muted)">5FN</div>
+  </div>
+
+  <div class="def-term mt-3">Tercera Forma Normal (3FN)</div>
+  <p>Una relación está en <span class="hl">Tercera Forma Normal</span> si y solo si:</p>
+  <ul style="font-size:.9rem;line-height:2">
+    <li>Está en <strong>2FN</strong>.</li>
+    <li>No existen <strong>dependencias funcionales transitivas</strong>: ningún atributo no-primo depende de otro atributo no-primo.</li>
+    <li>Dicho de otro modo: todo atributo no-primo depende directamente de la clave candidata, no de otro atributo no-primo.</li>
+  </ul>
+
+  <p>La definición formal de Codd establece que para toda DF no trivial <strong>X → A</strong>, se debe cumplir al menos una de estas condiciones:</p>
+  <ul style="font-size:.9rem;line-height:2">
+    <li><strong>X es superclave</strong> de R, O</li>
+    <li><strong>A es atributo primo</strong> (pertenece a alguna clave candidata).</li>
+  </ul>
+
+  <h4 class="mt-4"><i class="bi bi-x-octagon-fill" style="color:var(--accent3)"></i> Ejemplo que viola la 3FN</h4>
+  <p>Tabla <strong>EMPLEADOS</strong> en 2FN pero con dependencia transitiva:</p>
+
+  <div class="table-wrapper">
+    <table class="table-custom">
+      <thead>
+        <tr>
+          <th>emp_id (PK)</th><th>nombre</th><th>cod_dept</th>
+          <th style="color:var(--accent3)">nombre_dept ⚠</th>
+          <th style="color:var(--accent3)">edificio ⚠</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="bad"><td class="pk">E001</td><td>Ana González</td><td>D10</td><td>Contabilidad</td><td>Edificio A</td></tr>
+        <tr class="bad"><td class="pk">E002</td><td>Luis Martín</td><td>D10</td><td>Contabilidad</td><td>Edificio A</td></tr>
+        <tr class="bad"><td class="pk">E003</td><td>Sara Pérez</td><td>D20</td><td>Informática</td><td>Edificio B</td></tr>
+        <tr class="bad"><td class="pk">E004</td><td>Pedro Ruiz</td><td>D20</td><td>Informática</td><td>Edificio B</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-3">
+    <div class="dep-box">
+      <span class="dep-lhs">emp_id</span>
+      <span class="dep-arrow" style="color:var(--fn2)">→</span>
+      <span class="dep-rhs">cod_dept</span>
+      <span class="dep-label" style="color:var(--fn2)">✓ Directa</span>
+    </div>
+    <div class="dep-box" style="border-color:var(--accent3)">
+      <span class="dep-lhs">cod_dept</span>
+      <span class="dep-arrow" style="color:var(--accent3)">→</span>
+      <span class="dep-rhs">nombre_dept, edificio</span>
+      <span class="dep-label" style="color:var(--accent3)">⚠ cod_dept no es clave → dependencia transitiva via cod_dept</span>
+    </div>
+    <div class="dep-box" style="border-color:var(--accent3);border-style:dashed">
+      <span class="dep-lhs">emp_id</span>
+      <span class="dep-arrow" style="color:var(--accent3)">→→</span>
+      <span class="dep-rhs">nombre_dept, edificio</span>
+      <span class="dep-label" style="color:var(--accent3)">⚠ TRANSITIVA — viola 3FN</span>
+    </div>
+  </div>
+
+  <div class="callout callout-danger mt-2">
+    <i class="bi bi-bug-fill"></i>
+    <div><strong>Anomalías detectadas</strong>
+    <p>Si el departamento D10 cambia a "Edificio C", hay que actualizar 2 filas (las de Ana y Luis). Si no actualizamos todas, hay inconsistencia. Si despedimos a todos los empleados de D20, perdemos el dato de que Informática está en el Edificio B.</p></div>
+  </div>
+
+  <h4 class="mt-4"><i class="bi bi-check-circle-fill" style="color:var(--fn2)"></i> Conversión a 3FN</h4>
+  <div class="compare-grid">
+    <div class="compare-bad">
+      <h5><i class="bi bi-x-circle-fill"></i> Antes (viola 3FN)</h5>
+      <p style="font-size:.8rem">EMPLEADOS(<u>emp_id</u>, nombre, cod_dept, nombre_dept, edificio)</p>
+    </div>
+    <div class="compare-good">
+      <h5><i class="bi bi-check-circle-fill"></i> Después (en 3FN)</h5>
+      <p style="font-size:.8rem">EMPLEADOS(<u>emp_id</u>, nombre, cod_dept)<br>DEPARTAMENTOS(<u>cod_dept</u>, nombre_dept, edificio)</p>
+    </div>
+  </div>
+
+  <div class="code-block mt-3">
+    <div class="code-header">
+      <span><span class="code-dot" style="background:#ff5f57"></span><span class="code-dot" style="background:#febc2e"></span><span class="code-dot" style="background:#28c840"></span></span>
+      <span class="lang">SQL — Estructura en 3FN</span>
+    </div>
+    <pre><span class="cm">-- DEPARTAMENTOS: la dependencia transitiva se convierte en tabla propia</span>
+<span class="kw">CREATE TABLE</span> <span class="tb">departamentos</span> (
+    <span class="cn">cod_dept</span>     <span class="fn">CHAR</span>(<span class="nm">3</span>)       <span class="kw">PRIMARY KEY</span>,
+    <span class="cn">nombre_dept</span>  <span class="fn">VARCHAR</span>(<span class="nm">100</span>) <span class="kw">NOT NULL UNIQUE</span>,
+    <span class="cn">edificio</span>     <span class="fn">VARCHAR</span>(<span class="nm">50</span>)
+);
+
+<span class="cm">-- EMPLEADOS: solo referencia al departamento via FK</span>
+<span class="kw">CREATE TABLE</span> <span class="tb">empleados</span> (
+    <span class="cn">emp_id</span>    <span class="fn">SERIAL</span>       <span class="kw">PRIMARY KEY</span>,
+    <span class="cn">nombre</span>    <span class="fn">VARCHAR</span>(<span class="nm">100</span>) <span class="kw">NOT NULL</span>,
+    <span class="cn">cod_dept</span>  <span class="fn">CHAR</span>(<span class="nm">3</span>)       <span class="kw">REFERENCES</span> <span class="tb">departamentos</span>(<span class="cn">cod_dept</span>)
+        <span class="kw">ON UPDATE CASCADE ON DELETE SET NULL</span>
+);
+
+<span class="cm">-- Ahora: cambiar el edificio del depto solo requiere 1 UPDATE</span>
+<span class="kw">UPDATE</span> <span class="tb">departamentos</span>
+<span class="kw">SET</span> <span class="cn">edificio</span> = <span class="str">'Edificio C'</span>
+<span class="kw">WHERE</span> <span class="cn">cod_dept</span> = <span class="str">'D10'</span>;
+<span class="cm">-- Todos los empleados de D10 verán el cambio automáticamente via JOIN</span>
+
+<span class="cm">-- Consulta: empleados con su departamento y edificio</span>
+<span class="kw">SELECT</span>
+    e.<span class="cn">nombre</span>       <span class="kw">AS</span> empleado,
+    d.<span class="cn">nombre_dept</span>  <span class="kw">AS</span> departamento,
+    d.<span class="cn">edificio</span>
+<span class="kw">FROM</span> <span class="tb">empleados</span>     e
+<span class="kw">JOIN</span> <span class="tb">departamentos</span> d <span class="kw">ON</span> e.<span class="cn">cod_dept</span> = d.<span class="cn">cod_dept</span>;</pre>
+  </div>
+
+  <div class="callout callout-info mt-3">
+    <i class="bi bi-quote"></i>
+    <div><strong>Definición memorable de la 3FN (Codd, 1971)</strong>
+    <p>"Every non-key attribute must provide a fact about the key, the whole key, and nothing but the key." — Todo atributo no-clave debe depender de la clave, de toda la clave, y sólo de la clave. (Parafraseando el juramento judicial para hacerlo memorable.)</p></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     10. BCNF
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="bcnf">
+  <h2 class="section-title">
+    <span style="background:var(--bcnf);color:#fff;padding:4px 12px;border-radius:6px;font-size:1rem">BCNF</span>
+    Forma Normal de Boyce-Codd
+  </h2>
+  <p class="section-subtitle">La 3FN más estricta: el determinante de toda DF no trivial debe ser superclave</p>
+
+  <div class="fn-progress">
+    <div class="fn-seg" style="background:var(--fn1)">1FN ✓</div>
+    <div class="fn-seg" style="background:var(--fn2);color:#000">2FN ✓</div>
+    <div class="fn-seg" style="background:var(--fn3);color:#000">3FN ✓</div>
+    <div class="fn-seg" style="background:var(--bcnf)">BCNF</div>
+    <div class="fn-seg" style="background:var(--bg-card2);color:var(--text-muted)">4FN</div>
+    <div class="fn-seg" style="background:var(--bg-card2);color:var(--text-muted)">5FN</div>
+  </div>
+
+  <div class="def-term mt-3">Forma Normal de Boyce-Codd (BCNF)</div>
+  <p>Una relación está en <span class="hl">BCNF</span> si y solo si:</p>
+  <ul style="font-size:.9rem;line-height:2">
+    <li>Está en <strong>3FN</strong>.</li>
+    <li>Para toda dependencia funcional no trivial <strong>X → Y</strong>, <strong>X debe ser superclave</strong>.</li>
+  </ul>
+
+  <div class="callout callout-warn mt-2">
+    <i class="bi bi-exclamation-triangle-fill"></i>
+    <div><strong>Diferencia entre 3FN y BCNF</strong>
+    <p>La 3FN permite que el lado derecho (Y) sea un atributo primo aunque X no sea superclave. La BCNF elimina incluso esa excepción: <strong>siempre</strong> el determinante debe ser superclave. Toda relación en BCNF está en 3FN, pero no al revés.</p></div>
+  </div>
+
+  <h4 class="mt-4"><i class="bi bi-x-octagon-fill" style="color:var(--accent3)"></i> Ejemplo clásico: Asignación de tutores</h4>
+  <p>Supongamos que: cada alumno elige un tutor para cada asignatura; cada tutor solo imparte una asignatura; un alumno puede tener varios tutores para la misma asignatura.</p>
+
+  <div class="table-wrapper">
+    <table class="table-custom">
+      <thead><tr><th>alumno (PK)</th><th>tutor (PK)</th><th>asignatura</th></tr></thead>
+      <tbody>
+        <tr><td class="pk">Ana</td><td class="pk">Prof. García</td><td>Matemáticas</td></tr>
+        <tr><td class="pk">Ana</td><td class="pk">Prof. López</td><td>Física</td></tr>
+        <tr><td class="pk">Luis</td><td class="pk">Prof. García</td><td>Matemáticas</td></tr>
+        <tr><td class="pk">Luis</td><td class="pk">Prof. Ruiz</td><td>Física</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-3">
+    <p>Claves candidatas: <code>{alumno, tutor}</code> y <code>{alumno, asignatura}</code>.</p>
+    <div class="dep-box" style="border-color:var(--accent3)">
+      <span class="dep-lhs">tutor</span>
+      <span class="dep-arrow" style="color:var(--accent3)">→</span>
+      <span class="dep-rhs">asignatura</span>
+      <span class="dep-label" style="color:var(--accent3)">⚠ "tutor" no es superclave → viola BCNF (aunque cumple 3FN porque asignatura es primo)</span>
+    </div>
+  </div>
+
+  <h4 class="mt-3"><i class="bi bi-check-circle-fill" style="color:var(--fn2)"></i> Solución BCNF: descomposición</h4>
+  <div class="compare-grid">
+    <div class="compare-bad">
+      <h5>Antes (viola BCNF)</h5>
+      <p style="font-size:.8rem">TUTORIA(<u>alumno, tutor</u>, asignatura)</p>
+    </div>
+    <div class="compare-good">
+      <h5>Después (en BCNF)</h5>
+      <p style="font-size:.8rem">TUTOR_ASIG(<u>tutor</u>, asignatura)<br>ALUMNO_TUTOR(<u>alumno, tutor</u>)</p>
+    </div>
+  </div>
+
+  <div class="callout callout-danger mt-3">
+    <i class="bi bi-exclamation-diamond-fill"></i>
+    <div><strong>Limitación importante de la BCNF</strong>
+    <p>La descomposición a BCNF no siempre preserva todas las dependencias funcionales del esquema original. En esos casos, puede ser preferible mantener la 3FN (que sí preserva dependencias) antes que alcanzar la BCNF perdiendo información semántica del modelo.</p></div>
+  </div>
+
+  <div class="code-block mt-3">
+    <div class="code-header">
+      <span><span class="code-dot" style="background:#ff5f57"></span><span class="code-dot" style="background:#febc2e"></span><span class="code-dot" style="background:#28c840"></span></span>
+      <span class="lang">SQL — Estructura en BCNF</span>
+    </div>
+    <pre><span class="cm">-- TUTOR_ASIG: cada tutor determina una única asignatura</span>
+<span class="kw">CREATE TABLE</span> <span class="tb">tutor_asignatura</span> (
+    <span class="cn">tutor_id</span>    <span class="fn">SERIAL</span>       <span class="kw">PRIMARY KEY</span>,
+    <span class="cn">nombre</span>      <span class="fn">VARCHAR</span>(<span class="nm">100</span>) <span class="kw">NOT NULL</span>,
+    <span class="cn">asignatura</span>  <span class="fn">VARCHAR</span>(<span class="nm">100</span>) <span class="kw">NOT NULL</span>
+);
+
+<span class="cm">-- ALUMNO_TUTOR: qué tutores tiene cada alumno</span>
+<span class="kw">CREATE TABLE</span> <span class="tb">alumno_tutor</span> (
+    <span class="cn">alumno_id</span>  <span class="fn">INT</span> <span class="kw">REFERENCES</span> <span class="tb">alumnos</span>(<span class="cn">alumno_id</span>),
+    <span class="cn">tutor_id</span>   <span class="fn">INT</span> <span class="kw">REFERENCES</span> <span class="tb">tutor_asignatura</span>(<span class="cn">tutor_id</span>),
+    <span class="kw">PRIMARY KEY</span> (<span class="cn">alumno_id</span>, <span class="cn">tutor_id</span>)
+);
+
+<span class="cm">-- La consulta "¿qué asignaturas tiene cada alumno con qué tutor?"</span>
+<span class="kw">SELECT</span> a.<span class="cn">nombre</span> <span class="kw">AS</span> alumno, t.<span class="cn">nombre</span> <span class="kw">AS</span> tutor, t.<span class="cn">asignatura</span>
+<span class="kw">FROM</span> <span class="tb">alumno_tutor</span> at2
+<span class="kw">JOIN</span> <span class="tb">alumnos</span>           a <span class="kw">ON</span> at2.<span class="cn">alumno_id</span> = a.<span class="cn">alumno_id</span>
+<span class="kw">JOIN</span> <span class="tb">tutor_asignatura</span>   t <span class="kw">ON</span> at2.<span class="cn">tutor_id</span>  = t.<span class="cn">tutor_id</span>;</pre>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     11. CUARTA FORMA NORMAL
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="fn4">
+  <h2 class="section-title">
+    <span style="background:var(--fn4);color:#fff;padding:4px 12px;border-radius:6px;font-size:1rem">4FN</span>
+    Cuarta Forma Normal
+  </h2>
+  <p class="section-subtitle">Eliminar dependencias multivaluadas: la redundancia que las DFs no capturan</p>
+
+  <div class="fn-progress">
+    <div class="fn-seg" style="background:var(--fn1)">1FN ✓</div>
+    <div class="fn-seg" style="background:var(--fn2);color:#000">2FN ✓</div>
+    <div class="fn-seg" style="background:var(--fn3);color:#000">3FN ✓</div>
+    <div class="fn-seg" style="background:var(--bcnf)">BCNF ✓</div>
+    <div class="fn-seg" style="background:var(--fn4)">4FN</div>
+    <div class="fn-seg" style="background:var(--bg-card2);color:var(--text-muted)">5FN</div>
+  </div>
+
+  <div class="def-term mt-3">Cuarta Forma Normal (4FN)</div>
+  <p>Una relación está en <span class="hl">4FN</span> si y solo si:</p>
+  <ul style="font-size:.9rem;line-height:2">
+    <li>Está en <strong>BCNF</strong>.</li>
+    <li>Para toda <strong>dependencia multivaluada no trivial</strong> <strong>X →→ Y</strong>, X es superclave.</li>
+  </ul>
+
+  <h4 class="mt-3"><i class="bi bi-x-octagon-fill" style="color:var(--accent3)"></i> Ejemplo clásico: Cursos, Profesores y Libros</h4>
+  <p>Un curso puede ser impartido por varios profesores y utiliza varios libros. Los profesores y libros son independientes entre sí (un libro no está asociado a un profesor concreto, sino al curso).</p>
+
+  <div class="table-wrapper">
+    <table class="table-custom">
+      <thead><tr><th>curso (PK)</th><th>profesor (PK)</th><th>libro (PK)</th></tr></thead>
+      <tbody>
+        <tr class="bad"><td class="pk">BD</td><td class="pk">García</td><td>Codd, 1970</td></tr>
+        <tr class="bad"><td class="pk">BD</td><td class="pk">García</td><td>Date, 2004</td></tr>
+        <tr class="bad"><td class="pk">BD</td><td class="pk">López</td><td>Codd, 1970</td></tr>
+        <tr class="bad"><td class="pk">BD</td><td class="pk">López</td><td>Date, 2004</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-danger mt-2">
+    <i class="bi bi-bug-fill"></i>
+    <div><strong>Problema: redundancia multivaluada</strong>
+    <p>Si añadimos un nuevo libro "Elmasri, 2016" al curso BD, hay que añadir 2 filas (una por cada profesor). Si añadimos un nuevo profesor, hay que añadir 2 filas (una por cada libro). El número de filas crece como el producto cartesiano de profesores × libros. Esto es la <strong>anomalía de la dependencia multivaluada</strong>.</p></div>
+  </div>
+
+  <div class="compare-grid mt-3">
+    <div class="compare-bad">
+      <h5>Antes (viola 4FN)</h5>
+      <p style="font-size:.8rem">CURSO_PROF_LIBRO(<u>curso, profesor, libro</u>)</p>
+    </div>
+    <div class="compare-good">
+      <h5>Después (en 4FN)</h5>
+      <p style="font-size:.8rem">CURSO_PROFESOR(<u>curso, profesor</u>)<br>CURSO_LIBRO(<u>curso, libro</u>)</p>
+    </div>
+  </div>
+
+  <div class="code-block mt-3">
+    <div class="code-header">
+      <span><span class="code-dot" style="background:#ff5f57"></span><span class="code-dot" style="background:#febc2e"></span><span class="code-dot" style="background:#28c840"></span></span>
+      <span class="lang">SQL — Estructura en 4FN</span>
+    </div>
+    <pre><span class="cm">-- Separamos las dos dependencias multivaluadas independientes</span>
+<span class="kw">CREATE TABLE</span> <span class="tb">curso_profesor</span> (
+    <span class="cn">curso_id</span>     <span class="fn">INT</span> <span class="kw">REFERENCES</span> <span class="tb">cursos</span>(<span class="cn">curso_id</span>),
+    <span class="cn">profesor_id</span>  <span class="fn">INT</span> <span class="kw">REFERENCES</span> <span class="tb">profesores</span>(<span class="cn">profesor_id</span>),
+    <span class="kw">PRIMARY KEY</span> (<span class="cn">curso_id</span>, <span class="cn">profesor_id</span>)
+);
+
+<span class="kw">CREATE TABLE</span> <span class="tb">curso_libro</span> (
+    <span class="cn">curso_id</span>  <span class="fn">INT</span> <span class="kw">REFERENCES</span> <span class="tb">cursos</span>(<span class="cn">curso_id</span>),
+    <span class="cn">libro_id</span>  <span class="fn">INT</span> <span class="kw">REFERENCES</span> <span class="tb">libros</span>(<span class="cn">libro_id</span>),
+    <span class="kw">PRIMARY KEY</span> (<span class="cn">curso_id</span>, <span class="cn">libro_id</span>)
+);
+
+<span class="cm">-- Ahora añadir un libro solo requiere UN INSERT en curso_libro</span>
+<span class="kw">INSERT INTO</span> <span class="tb">curso_libro</span> <span class="kw">VALUES</span> (<span class="nm">1</span>, <span class="nm">3</span>); <span class="cm">-- curso BD, libro Elmasri</span>
+
+<span class="cm">-- Para obtener la vista completa (equivalente a la tabla original)</span>
+<span class="kw">SELECT</span> cp.<span class="cn">curso_id</span>, cp.<span class="cn">profesor_id</span>, cl.<span class="cn">libro_id</span>
+<span class="kw">FROM</span> <span class="tb">curso_profesor</span> cp
+<span class="kw">JOIN</span> <span class="tb">curso_libro</span>    cl <span class="kw">ON</span> cp.<span class="cn">curso_id</span> = cl.<span class="cn">curso_id</span>;</pre>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     12. QUINTA FORMA NORMAL
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="fn5">
+  <h2 class="section-title">
+    <span style="background:var(--fn5);color:#000;padding:4px 12px;border-radius:6px;font-size:1rem">5FN</span>
+    Quinta Forma Normal (FN de Proyección-Unión)
+  </h2>
+  <p class="section-subtitle">La forma normal más avanzada: eliminar dependencias de unión</p>
+
+  <div class="fn-progress">
+    <div class="fn-seg" style="background:var(--fn1)">1FN ✓</div>
+    <div class="fn-seg" style="background:var(--fn2);color:#000">2FN ✓</div>
+    <div class="fn-seg" style="background:var(--fn3);color:#000">3FN ✓</div>
+    <div class="fn-seg" style="background:var(--bcnf)">BCNF ✓</div>
+    <div class="fn-seg" style="background:var(--fn4)">4FN ✓</div>
+    <div class="fn-seg" style="background:var(--fn5);color:#000">5FN</div>
+  </div>
+
+  <div class="def-term mt-3">Quinta Forma Normal (5FN / FNPU)</div>
+  <p>Una relación está en <span class="hl">5FN</span> (también llamada <em>Forma Normal de Proyección-Unión</em>) si y solo si:</p>
+  <ul style="font-size:.9rem;line-height:2">
+    <li>Está en <strong>4FN</strong>.</li>
+    <li>Toda <strong>dependencia de unión</strong> (join dependency) implica que las relaciones en que se descompone permiten reconstruir la original mediante un <em>natural join sin pérdida de información</em> (lossless join).</li>
+    <li>No se puede descomponer la relación en relaciones más pequeñas sin perder información o generar tuplas espurias.</li>
+  </ul>
+
+  <h4 class="mt-3"><i class="bi bi-info-circle" style="color:var(--fn5)"></i> Ejemplo de dependencia de unión</h4>
+  <p>Supongamos la relación AGENTE_EMPRESA_PRODUCTO donde: cada agente trabaja con ciertas empresas, cada empresa ofrece ciertos productos, y cada agente vende ciertos productos, <strong>pero con restricción tripartita</strong>: un agente vende un producto de una empresa si y solo si trabaja con esa empresa Y vende ese producto Y esa empresa tiene ese producto.</p>
+
+  <div class="callout callout-info mt-2">
+    <i class="bi bi-info-circle-fill"></i>
+    <div><strong>Nota sobre la 5FN en la práctica</strong>
+    <p>La 5FN es de aplicación muy rara en casos reales. La mayoría de bases de datos bien diseñadas llegan hasta BCNF o 3FN. La 5FN es importante conocerla teóricamente para oposiciones y exámenes universitarios, pero en la práctica industrial rara vez se llega hasta ella.</p></div>
+  </div>
+
+  <div class="callout callout-exam mt-2">
+    <i class="bi bi-mortarboard-fill"></i>
+    <div><strong>Para oposiciones: qué saber de 4FN y 5FN</strong>
+    <p>Para el cuerpo 590 y exámenes universitarios: 1) Saber definir qué es una dependencia multivaluada. 2) Saber detectar una violación de 4FN. 3) Saber descomponer para alcanzar 4FN. 4) Conocer el concepto de dependencia de unión y 5FN a nivel teórico. 5) Saber que las formas normales superiores son raramente aplicadas en la industria.</p></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     13. CASO PRÁCTICO COMPLETO
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="caso">
+  <h2 class="section-title"><i class="bi bi-terminal-fill"></i> 13. Caso Práctico Completo</h2>
+  <p class="section-subtitle">Normalización paso a paso de un sistema de gestión académica</p>
+
+  <p>Partimos de una tabla completamente desnormalizada de una universidad y la llevamos hasta la 3FN paso a paso.</p>
+
+  <h4 class="mt-3"><i class="bi bi-table" style="color:var(--accent3)"></i> Tabla inicial: ACADEMIA_GLOBAL</h4>
+  <div class="table-wrapper">
+    <table class="table-custom">
+      <thead>
+        <tr>
+          <th>mat_id</th><th>alumno_dni</th><th>alumno_nombre</th><th>alumno_email</th>
+          <th>asig_cod</th><th>asig_nombre</th><th>asig_creditos</th>
+          <th>prof_id</th><th>prof_nombre</th><th>dept_cod</th><th>dept_nombre</th>
+          <th>nota</th><th>convocatoria</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="bad"><td>1</td><td>12345678A</td><td>Ana García</td><td>ana@uni.es</td><td>BD01</td><td>Bases de Datos</td><td>6</td><td>P01</td><td>García Ruiz</td><td>INF</td><td>Informática</td><td>8.5</td><td>1ª</td></tr>
+        <tr class="bad"><td>2</td><td>12345678A</td><td>Ana García</td><td>ana@uni.es</td><td>SO01</td><td>Sistemas Op.</td><td>6</td><td>P02</td><td>López Díaz</td><td>INF</td><td>Informática</td><td>7.0</td><td>1ª</td></tr>
+        <tr class="bad"><td>3</td><td>87654321B</td><td>Luis Martín</td><td>luis@uni.es</td><td>BD01</td><td>Bases de Datos</td><td>6</td><td>P01</td><td>García Ruiz</td><td>INF</td><td>Informática</td><td>6.5</td><td>1ª</td></tr>
+        <tr class="bad"><td>4</td><td>87654321B</td><td>Luis Martín</td><td>luis@uni.es</td><td>BD01</td><td>Bases de Datos</td><td>6</td><td>P01</td><td>García Ruiz</td><td>INF</td><td>Informática</td><td>5.0</td><td>2ª</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4 class="mt-4"><i class="bi bi-arrow-right-circle-fill" style="color:var(--fn2)"></i> Análisis de dependencias funcionales</h4>
+  <div class="dep-box"><span class="dep-lhs">mat_id</span><span class="dep-arrow">→</span><span class="dep-rhs">alumno_dni, asig_cod, nota, convocatoria</span><span class="dep-label">PK de la tabla</span></div>
+  <div class="dep-box" style="border-color:var(--accent3)"><span class="dep-lhs">alumno_dni</span><span class="dep-arrow" style="color:var(--accent3)">→</span><span class="dep-rhs">alumno_nombre, alumno_email</span><span class="dep-label" style="color:var(--accent3)">⚠ Parcial/transitiva — datos del alumno</span></div>
+  <div class="dep-box" style="border-color:var(--accent3)"><span class="dep-lhs">asig_cod</span><span class="dep-arrow" style="color:var(--accent3)">→</span><span class="dep-rhs">asig_nombre, asig_creditos, prof_id</span><span class="dep-label" style="color:var(--accent3)">⚠ Datos de la asignatura</span></div>
+  <div class="dep-box" style="border-color:var(--accent3)"><span class="dep-lhs">prof_id</span><span class="dep-arrow" style="color:var(--accent3)">→</span><span class="dep-rhs">prof_nombre, dept_cod</span><span class="dep-label" style="color:var(--accent3)">⚠ Transitiva a través de prof_id</span></div>
+  <div class="dep-box" style="border-color:var(--accent3)"><span class="dep-lhs">dept_cod</span><span class="dep-arrow" style="color:var(--accent3)">→</span><span class="dep-rhs">dept_nombre</span><span class="dep-label" style="color:var(--accent3)">⚠ Transitiva anidada</span></div>
+
+  <h4 class="mt-4"><i class="bi bi-diagram-3-fill" style="color:var(--fn2)"></i> Resultado: Esquema normalizado hasta 3FN</h4>
+
+  <div style="display:flex;flex-wrap:wrap;gap:1rem;margin:1rem 0;">
+    <div class="rel-table">
+      <div class="rel-table-head" style="background:var(--fn1)">DEPARTAMENTOS</div>
+      <div class="rel-table-row"><i class="bi bi-key-fill icon-pk"></i>dept_cod CHAR(5)</div>
+      <div class="rel-table-row">dept_nombre VARCHAR(100)</div>
+      <div class="rel-table-row">edificio VARCHAR(50)</div>
+    </div>
+    <div class="rel-table">
+      <div class="rel-table-head" style="background:var(--fn2);color:#000">PROFESORES</div>
+      <div class="rel-table-row"><i class="bi bi-key-fill icon-pk"></i>prof_id SERIAL</div>
+      <div class="rel-table-row">nombre VARCHAR(100)</div>
+      <div class="rel-table-row"><i class="bi bi-link-45deg icon-fk"></i>dept_cod → DEPARTAMENTOS</div>
+    </div>
+    <div class="rel-table">
+      <div class="rel-table-head" style="background:var(--fn3);color:#000">ASIGNATURAS</div>
+      <div class="rel-table-row"><i class="bi bi-key-fill icon-pk"></i>asig_cod CHAR(5)</div>
+      <div class="rel-table-row">nombre VARCHAR(150)</div>
+      <div class="rel-table-row">creditos INT</div>
+      <div class="rel-table-row"><i class="bi bi-link-45deg icon-fk"></i>prof_id → PROFESORES</div>
+    </div>
+    <div class="rel-table">
+      <div class="rel-table-head" style="background:var(--bcnf)">ALUMNOS</div>
+      <div class="rel-table-row"><i class="bi bi-key-fill icon-pk"></i>alumno_id SERIAL</div>
+      <div class="rel-table-row">dni CHAR(9) UNIQUE</div>
+      <div class="rel-table-row">nombre VARCHAR(100)</div>
+      <div class="rel-table-row">email VARCHAR(200)</div>
+    </div>
+    <div class="rel-table">
+      <div class="rel-table-head" style="background:var(--fn4)">MATRÍCULAS</div>
+      <div class="rel-table-row"><i class="bi bi-key-fill icon-pk"></i>mat_id SERIAL</div>
+      <div class="rel-table-row"><i class="bi bi-link-45deg icon-fk"></i>alumno_id → ALUMNOS</div>
+      <div class="rel-table-row"><i class="bi bi-link-45deg icon-fk"></i>asig_cod → ASIGNATURAS</div>
+      <div class="rel-table-row">nota DECIMAL(4,2)</div>
+      <div class="rel-table-row">convocatoria SMALLINT</div>
+      <div class="rel-table-row">UNIQUE(alumno_id, asig_cod, convocatoria)</div>
+    </div>
+  </div>
+
+  <div class="code-block mt-3">
+    <div class="code-header">
+      <span><span class="code-dot" style="background:#ff5f57"></span><span class="code-dot" style="background:#febc2e"></span><span class="code-dot" style="background:#28c840"></span></span>
+      <span class="lang">SQL — Esquema normalizado completo (PostgreSQL / MySQL compatible)</span>
+    </div>
+    <pre><span class="cm">-- ======================================================
+-- SISTEMA ACADÉMICO NORMALIZADO EN 3FN
+-- Compatible: PostgreSQL 16 / MySQL 8.0
+-- ======================================================</span>
+
+<span class="kw">CREATE TABLE</span> <span class="tb">departamentos</span> (
+    <span class="cn">dept_cod</span>    <span class="fn">CHAR</span>(<span class="nm">5</span>)        <span class="kw">PRIMARY KEY</span>,
+    <span class="cn">dept_nombre</span> <span class="fn">VARCHAR</span>(<span class="nm">100</span>)  <span class="kw">NOT NULL UNIQUE</span>,
+    <span class="cn">edificio</span>    <span class="fn">VARCHAR</span>(<span class="nm">50</span>)
+);
+
+<span class="kw">CREATE TABLE</span> <span class="tb">profesores</span> (
+    <span class="cn">prof_id</span>     <span class="fn">SERIAL</span>        <span class="kw">PRIMARY KEY</span>,   <span class="cm">-- AUTO_INCREMENT en MySQL</span>
+    <span class="cn">nombre</span>      <span class="fn">VARCHAR</span>(<span class="nm">100</span>)  <span class="kw">NOT NULL</span>,
+    <span class="cn">email</span>       <span class="fn">VARCHAR</span>(<span class="nm">200</span>)  <span class="kw">UNIQUE</span>,
+    <span class="cn">dept_cod</span>    <span class="fn">CHAR</span>(<span class="nm">5</span>)        <span class="kw">NOT NULL</span>
+        <span class="kw">REFERENCES</span> <span class="tb">departamentos</span>(<span class="cn">dept_cod</span>)
+        <span class="kw">ON UPDATE CASCADE ON DELETE RESTRICT</span>
+);
+
+<span class="kw">CREATE TABLE</span> <span class="tb">asignaturas</span> (
+    <span class="cn">asig_cod</span>    <span class="fn">CHAR</span>(<span class="nm">5</span>)        <span class="kw">PRIMARY KEY</span>,
+    <span class="cn">nombre</span>      <span class="fn">VARCHAR</span>(<span class="nm">150</span>)  <span class="kw">NOT NULL</span>,
+    <span class="cn">creditos</span>    <span class="fn">SMALLINT</span>      <span class="kw">NOT NULL CHECK</span> (<span class="cn">creditos</span> <span class="op">BETWEEN</span> <span class="nm">1</span> <span class="kw">AND</span> <span class="nm">12</span>),
+    <span class="cn">prof_id</span>     <span class="fn">INT</span>
+        <span class="kw">REFERENCES</span> <span class="tb">profesores</span>(<span class="cn">prof_id</span>)
+        <span class="kw">ON UPDATE CASCADE ON DELETE SET NULL</span>
+);
+
+<span class="kw">CREATE TABLE</span> <span class="tb">alumnos</span> (
+    <span class="cn">alumno_id</span>   <span class="fn">SERIAL</span>        <span class="kw">PRIMARY KEY</span>,
+    <span class="cn">dni</span>         <span class="fn">CHAR</span>(<span class="nm">9</span>)        <span class="kw">NOT NULL UNIQUE</span>,
+    <span class="cn">nombre</span>      <span class="fn">VARCHAR</span>(<span class="nm">100</span>)  <span class="kw">NOT NULL</span>,
+    <span class="cn">email</span>       <span class="fn">VARCHAR</span>(<span class="nm">200</span>)  <span class="kw">UNIQUE</span>,
+    <span class="cn">fecha_nac</span>   <span class="fn">DATE</span>
+);
+
+<span class="kw">CREATE TABLE</span> <span class="tb">matriculas</span> (
+    <span class="cn">mat_id</span>       <span class="fn">SERIAL</span>           <span class="kw">PRIMARY KEY</span>,
+    <span class="cn">alumno_id</span>    <span class="fn">INT</span>              <span class="kw">NOT NULL</span>
+        <span class="kw">REFERENCES</span> <span class="tb">alumnos</span>(<span class="cn">alumno_id</span>)
+        <span class="kw">ON DELETE CASCADE</span>,
+    <span class="cn">asig_cod</span>     <span class="fn">CHAR</span>(<span class="nm">5</span>)          <span class="kw">NOT NULL</span>
+        <span class="kw">REFERENCES</span> <span class="tb">asignaturas</span>(<span class="cn">asig_cod</span>),
+    <span class="cn">nota</span>         <span class="fn">DECIMAL</span>(<span class="nm">4</span>,<span class="nm">2</span>)    <span class="kw">CHECK</span> (<span class="cn">nota</span> <span class="op">BETWEEN</span> <span class="nm">0</span> <span class="kw">AND</span> <span class="nm">10</span>),
+    <span class="cn">convocatoria</span> <span class="fn">SMALLINT</span>        <span class="kw">NOT NULL DEFAULT</span> <span class="nm">1</span>
+        <span class="kw">CHECK</span> (<span class="cn">convocatoria</span> <span class="op">IN</span> (<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>)),
+    <span class="cn">fecha</span>        <span class="fn">DATE</span>             <span class="kw">DEFAULT CURRENT_DATE</span>,
+    <span class="kw">UNIQUE</span> (<span class="cn">alumno_id</span>, <span class="cn">asig_cod</span>, <span class="cn">convocatoria</span>)
+);
+
+<span class="cm">-- Índices para optimizar JOINs frecuentes</span>
+<span class="kw">CREATE INDEX</span> idx_mat_alumno  <span class="kw">ON</span> <span class="tb">matriculas</span>(<span class="cn">alumno_id</span>);
+<span class="kw">CREATE INDEX</span> idx_mat_asig    <span class="kw">ON</span> <span class="tb">matriculas</span>(<span class="cn">asig_cod</span>);
+<span class="kw">CREATE INDEX</span> idx_prof_dept   <span class="kw">ON</span> <span class="tb">profesores</span>(<span class="cn">dept_cod</span>);
+
+<span class="cm">-- Consulta completa: expediente académico de un alumno</span>
+<span class="kw">SELECT</span>
+    a.<span class="cn">nombre</span>       <span class="kw">AS</span> alumno,
+    s.<span class="cn">nombre</span>       <span class="kw">AS</span> asignatura,
+    s.<span class="cn">creditos</span>,
+    p.<span class="cn">nombre</span>       <span class="kw">AS</span> profesor,
+    d.<span class="cn">dept_nombre</span>  <span class="kw">AS</span> departamento,
+    m.<span class="cn">nota</span>,
+    m.<span class="cn">convocatoria</span>
+<span class="kw">FROM</span> <span class="tb">matriculas</span>     m
+<span class="kw">JOIN</span> <span class="tb">alumnos</span>        a <span class="kw">ON</span> m.<span class="cn">alumno_id</span> = a.<span class="cn">alumno_id</span>
+<span class="kw">JOIN</span> <span class="tb">asignaturas</span>    s <span class="kw">ON</span> m.<span class="cn">asig_cod</span>  = s.<span class="cn">asig_cod</span>
+<span class="kw">JOIN</span> <span class="tb">profesores</span>     p <span class="kw">ON</span> s.<span class="cn">prof_id</span>   = p.<span class="cn">prof_id</span>
+<span class="kw">JOIN</span> <span class="tb">departamentos</span>  d <span class="kw">ON</span> p.<span class="cn">dept_cod</span>  = d.<span class="cn">dept_cod</span>
+<span class="kw">WHERE</span> a.<span class="cn">dni</span> = <span class="str">'12345678A'</span>
+<span class="kw">ORDER BY</span> s.<span class="cn">nombre</span>, m.<span class="cn">convocatoria</span>;</pre>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     14. SQL: PostgreSQL y MySQL
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="sql">
+  <h2 class="section-title"><i class="bi bi-database-fill"></i> 14. Normalización en PostgreSQL y MySQL</h2>
+  <p class="section-subtitle">Diferencias, peculiaridades y buenas prácticas en los dos SGBD más populares</p>
+
+  <ul class="nav nav-pills nav-pills-custom mb-4" id="sqlTabs" role="tablist">
+    <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-pg">PostgreSQL</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-my">MySQL 8</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-diff">Diferencias</button></li>
+  </ul>
+
+  <div class="tab-content">
+    <div class="tab-pane fade show active" id="tab-pg">
+      <h5 class="mb-3"><i class="bi bi-elephant" style="color:#336791"></i> PostgreSQL: características para normalización</h5>
+      <div class="code-block">
+        <div class="code-header">
+          <span><span class="code-dot" style="background:#ff5f57"></span><span class="code-dot" style="background:#febc2e"></span><span class="code-dot" style="background:#28c840"></span></span>
+          <span class="lang">PostgreSQL 16</span>
+        </div>
+        <pre><span class="cm">-- PostgreSQL: tipos nativos que ayudan a la normalización</span>
+
+<span class="cm">-- 1. SERIAL / IDENTITY para PKs autoincrementales</span>
+<span class="kw">CREATE TABLE</span> <span class="tb">productos</span> (
+    <span class="cn">id</span>         <span class="fn">BIGINT</span> <span class="kw">GENERATED ALWAYS AS IDENTITY PRIMARY KEY</span>,
+    <span class="cm">-- O clásico: SERIAL PRIMARY KEY</span>
+    <span class="cn">nombre</span>     <span class="fn">TEXT</span> <span class="kw">NOT NULL</span>,
+    <span class="cn">precio</span>     <span class="fn">NUMERIC</span>(<span class="nm">10</span>,<span class="nm">2</span>) <span class="kw">CHECK</span> (<span class="cn">precio</span> <span class="op">>=</span> <span class="nm">0</span>)
+);
+
+<span class="cm">-- 2. Restricciones de integridad avanzadas</span>
+<span class="kw">ALTER TABLE</span> <span class="tb">matriculas</span>
+    <span class="kw">ADD CONSTRAINT</span> chk_nota
+    <span class="kw">CHECK</span> (<span class="cn">nota</span> <span class="op">IS NULL OR</span> (<span class="cn">nota</span> <span class="op">>=</span> <span class="nm">0</span> <span class="kw">AND</span> <span class="cn">nota</span> <span class="op"><=</span> <span class="nm">10</span>));
+
+<span class="cm">-- 3. DEFERRABLE constraints: verificación al final de transacción</span>
+<span class="kw">ALTER TABLE</span> <span class="tb">pedido_detalle</span>
+    <span class="kw">ADD CONSTRAINT</span> fk_producto
+    <span class="kw">FOREIGN KEY</span> (<span class="cn">producto_id</span>) <span class="kw">REFERENCES</span> <span class="tb">productos</span>(<span class="cn">id</span>)
+    <span class="kw">DEFERRABLE INITIALLY DEFERRED</span>;
+
+<span class="cm">-- 4. Vistas para simplificar consultas normalizadas</span>
+<span class="kw">CREATE OR REPLACE VIEW</span> <span class="tb">v_expediente_academico</span> <span class="kw">AS</span>
+<span class="kw">SELECT</span>
+    a.<span class="cn">dni</span>, a.<span class="cn">nombre</span> <span class="kw">AS</span> alumno,
+    s.<span class="cn">nombre</span>       <span class="kw">AS</span> asignatura, s.<span class="cn">creditos</span>,
+    m.<span class="cn">nota</span>, m.<span class="cn">convocatoria</span>
+<span class="kw">FROM</span> <span class="tb">matriculas</span> m
+<span class="kw">JOIN</span> <span class="tb">alumnos</span>    a <span class="kw">ON</span> m.<span class="cn">alumno_id</span> = a.<span class="cn">alumno_id</span>
+<span class="kw">JOIN</span> <span class="tb">asignaturas</span> s <span class="kw">ON</span> m.<span class="cn">asig_cod</span>  = s.<span class="cn">asig_cod</span>;
+
+<span class="cm">-- 5. Información del esquema con information_schema (ISO/IEC 9075)</span>
+<span class="kw">SELECT</span> <span class="cn">table_name</span>, <span class="cn">column_name</span>, <span class="cn">data_type</span>, <span class="cn">is_nullable</span>
+<span class="kw">FROM</span> <span class="fn">information_schema</span>.<span class="cn">columns</span>
+<span class="kw">WHERE</span> <span class="cn">table_schema</span> = <span class="str">'public'</span>
+<span class="kw">ORDER BY</span> <span class="cn">table_name</span>, <span class="cn">ordinal_position</span>;</pre>
+      </div>
+    </div>
+
+    <div class="tab-pane fade" id="tab-my">
+      <h5 class="mb-3"><i class="bi bi-database" style="color:#f59e42"></i> MySQL 8: características para normalización</h5>
+      <div class="code-block">
+        <div class="code-header">
+          <span><span class="code-dot" style="background:#ff5f57"></span><span class="code-dot" style="background:#febc2e"></span><span class="code-dot" style="background:#28c840"></span></span>
+          <span class="lang">MySQL 8.0</span>
+        </div>
+        <pre><span class="cm">-- MySQL: diferencias importantes para normalización</span>
+
+<span class="cm">-- 1. AUTO_INCREMENT (equivalente a SERIAL de PostgreSQL)</span>
+<span class="kw">CREATE TABLE</span> <span class="tb">productos</span> (
+    <span class="cn">id</span>      <span class="fn">BIGINT UNSIGNED</span> <span class="kw">AUTO_INCREMENT PRIMARY KEY</span>,
+    <span class="cn">nombre</span>  <span class="fn">VARCHAR</span>(<span class="nm">150</span>)   <span class="kw">NOT NULL</span>,
+    <span class="cn">precio</span>  <span class="fn">DECIMAL</span>(<span class="nm">10</span>,<span class="nm">2</span>) <span class="kw">NOT NULL CHECK</span> (<span class="cn">precio</span> <span class="op">>=</span> <span class="nm">0</span>)
+) <span class="fn">ENGINE</span>=InnoDB <span class="kw">DEFAULT</span> <span class="fn">CHARSET</span>=utf8mb4;
+<span class="cm">-- ¡IMPORTANTE! Usar InnoDB para soporte de FK y ACID</span>
+<span class="cm">-- MyISAM NO soporta FOREIGN KEY</span>
+
+<span class="cm">-- 2. Claves foráneas con acciones referenciales</span>
+<span class="kw">CREATE TABLE</span> <span class="tb">pedido_detalle</span> (
+    <span class="cn">pedido_id</span>    <span class="fn">INT UNSIGNED</span> <span class="kw">NOT NULL</span>,
+    <span class="cn">producto_id</span>  <span class="fn">BIGINT UNSIGNED</span> <span class="kw">NOT NULL</span>,
+    <span class="cn">cantidad</span>     <span class="fn">INT</span> <span class="kw">NOT NULL CHECK</span> (<span class="cn">cantidad</span> <span class="op">></span> <span class="nm">0</span>),
+    <span class="kw">PRIMARY KEY</span> (<span class="cn">pedido_id</span>, <span class="cn">producto_id</span>),
+    <span class="kw">CONSTRAINT</span> fk_ped  <span class="kw">FOREIGN KEY</span> (<span class="cn">pedido_id</span>)
+        <span class="kw">REFERENCES</span> <span class="tb">pedidos</span>(<span class="cn">id</span>) <span class="kw">ON DELETE CASCADE</span>,
+    <span class="kw">CONSTRAINT</span> fk_prod <span class="kw">FOREIGN KEY</span> (<span class="cn">producto_id</span>)
+        <span class="kw">REFERENCES</span> <span class="tb">productos</span>(<span class="cn">id</span>) <span class="kw">ON DELETE RESTRICT</span>
+) <span class="fn">ENGINE</span>=InnoDB;
+
+<span class="cm">-- 3. MySQL 8: CHECK constraints activos (antes eran ignorados)</span>
+<span class="kw">ALTER TABLE</span> <span class="tb">matriculas</span>
+    <span class="kw">ADD CONSTRAINT</span> chk_nota
+    <span class="kw">CHECK</span> (<span class="cn">nota</span> <span class="op">BETWEEN</span> <span class="nm">0.0</span> <span class="kw">AND</span> <span class="nm">10.0</span>);
+
+<span class="cm">-- 4. Verificar integridad referencial</span>
+<span class="kw">SELECT</span>
+    <span class="cn">TABLE_NAME</span>, <span class="cn">COLUMN_NAME</span>,
+    <span class="cn">REFERENCED_TABLE_NAME</span>, <span class="cn">REFERENCED_COLUMN_NAME</span>
+<span class="kw">FROM</span> <span class="fn">information_schema</span>.<span class="cn">KEY_COLUMN_USAGE</span>
+<span class="kw">WHERE</span> <span class="cn">REFERENCED_TABLE_NAME</span> <span class="op">IS NOT NULL</span>
+  <span class="kw">AND</span> <span class="cn">TABLE_SCHEMA</span> = <span class="str">'mi_base_datos'</span>;</pre>
+      </div>
+    </div>
+
+    <div class="tab-pane fade" id="tab-diff">
+      <h5 class="mb-3"><i class="bi bi-arrows-angle-expand" style="color:var(--accent)"></i> Diferencias clave: PostgreSQL vs MySQL</h5>
+      <div class="table-wrapper">
+        <table class="table-custom">
+          <thead><tr><th>Característica</th><th>PostgreSQL 16</th><th>MySQL 8.0</th></tr></thead>
+          <tbody>
+            <tr><td>PK autoincremental</td><td class="fk">SERIAL / IDENTITY</td><td class="fk">AUTO_INCREMENT</td></tr>
+            <tr><td>Motor de almacenamiento</td><td>Único (MVCC nativo)</td><td class="pk">InnoDB (para FK/ACID)</td></tr>
+            <tr><td>FOREIGN KEY en todas las tablas</td><td class="fk">✓ Siempre</td><td style="color:var(--accent)">Solo en InnoDB</td></tr>
+            <tr><td>CHECK constraints</td><td class="fk">✓ Siempre activos</td><td class="fk">✓ Desde MySQL 8.0</td></tr>
+            <tr><td>DEFERRABLE constraints</td><td class="fk">✓ Soportado</td><td style="color:var(--accent)">✗ No soportado</td></tr>
+            <tr><td>information_schema</td><td class="fk">✓ Completo (ISO)</td><td class="fk">✓ Completo (ISO)</td></tr>
+            <tr><td>Transacciones (ACID)</td><td class="fk">✓ Nativo</td><td class="fk">✓ Con InnoDB</td></tr>
+            <tr><td>Tipos de datos JSON</td><td class="fk">✓ jsonb (indexable)</td><td class="fk">✓ JSON</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout callout-warn mt-3">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <div><strong>Error frecuente con MySQL</strong>
+        <p>En versiones antiguas de MySQL (&lt; 8.0), los CHECK constraints se analizaban pero se ignoraban silenciosamente. Si usas MySQL, asegúrate de estar en versión 8.0+ para que las restricciones de integridad funcionen. Siempre usa el motor InnoDB para tablas con FOREIGN KEY.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     15. DESNORMALIZACIÓN
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="desnorm">
+  <h2 class="section-title"><i class="bi bi-arrow-repeat"></i> 15. Desnormalización</h2>
+  <p class="section-subtitle">Cuándo y por qué alejarse deliberadamente de la forma normal</p>
+
+  <p>La <span class="hl">desnormalización</span> es el proceso deliberado de introducir redundancias controladas en un esquema previamente normalizado, con el objetivo de mejorar el rendimiento de consultas a costa de mayor complejidad en las operaciones de actualización.</p>
+
+  <div class="callout callout-warn mt-3">
+    <i class="bi bi-exclamation-triangle-fill"></i>
+    <div><strong>Importante: desnormalizar no es diseñar mal</strong>
+    <p>La desnormalización es una <strong>decisión arquitectónica consciente</strong> tomada después de medir y detectar cuellos de botella. Nunca se desnormaliza "por defecto". Primero se normaliza, luego se mide, y solo entonces se desnormaliza si los benchmarks lo justifican.</p></div>
+  </div>
+
+  <h4 class="mt-4">Técnicas de desnormalización</h4>
+  <div class="row g-3">
+    <div class="col-md-6">
+      <div class="card-custom">
+        <h4><i class="bi bi-copy" style="color:var(--accent)"></i> Columnas derivadas/calculadas</h4>
+        <p style="font-size:.87rem;color:var(--text-muted)">Almacenar un valor calculado (suma, promedio) que se podría obtener con una consulta, para evitar cálculos costosos en tiempo de consulta.</p>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--fn2)">
+          -- En pedidos: guardar total_pedido<br>
+          -- calculado como SUM(cantidad * precio)
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-custom">
+        <h4><i class="bi bi-table" style="color:var(--fn1)"></i> Tablas resumen / Materialized Views</h4>
+        <p style="font-size:.87rem;color:var(--text-muted)">Crear tablas o vistas materializadas con datos agregados para dashboards o reportes que se consultan frecuentemente.</p>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--fn2)">
+          CREATE MATERIALIZED VIEW ventas_mes ...<br>
+          REFRESH MATERIALIZED VIEW ventas_mes;
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-custom">
+        <h4><i class="bi bi-arrows-angle-expand" style="color:var(--fn3)"></i> Combinación de tablas (pre-join)</h4>
+        <p style="font-size:.87rem;color:var(--text-muted)">Fusionar tablas que se consultan siempre juntas para evitar JOINs costosos. Útil cuando la lectura es predominante sobre la escritura.</p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-custom">
+        <h4><i class="bi bi-boxes" style="color:var(--fn4)"></i> Particionamiento horizontal</h4>
+        <p style="font-size:.87rem;color:var(--text-muted)">Dividir una tabla grande en subtablas por criterio (año, región) para mejorar el rendimiento de queries que solo acceden a un subconjunto.</p>
+      </div>
+    </div>
+  </div>
+
+  <h4 class="mt-4">Casos donde NO conviene normalizar completamente</h4>
+  <div class="table-wrapper mt-3">
+    <table class="table-custom">
+      <thead><tr><th>Escenario</th><th>Problema de la normalización</th><th>Solución habitual</th></tr></thead>
+      <tbody>
+        <tr><td>Data Warehouses / OLAP</td><td>JOINs múltiples ralentizan agregaciones sobre millones de filas</td><td>Esquema en estrella / copo de nieve (Star Schema)</td></tr>
+        <tr><td>Dashboards en tiempo real</td><td>Consultas complejas de resumen demasiado lentas</td><td>Vistas materializadas / tablas de agregación</td></tr>
+        <tr><td>Logs y auditoría</td><td>Se necesita capturar el estado histórico, no el actual</td><td>Desnormalizar intencionadamente (snapshot)</td></tr>
+        <tr><td>Búsqueda de texto completo</td><td>Los modelos relacionales no son eficientes para FTS</td><td>Elasticsearch, PostgreSQL FTS, índices invertidos</td></tr>
+        <tr><td>Microservicios</td><td>Cada servicio necesita su propia vista de los datos</td><td>Bases de datos separadas por dominio (DDD)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="code-block mt-3">
+    <div class="code-header">
+      <span><span class="code-dot" style="background:#ff5f57"></span><span class="code-dot" style="background:#febc2e"></span><span class="code-dot" style="background:#28c840"></span></span>
+      <span class="lang">SQL — Desnormalización: columna calculada y vista materializada (PostgreSQL)</span>
+    </div>
+    <pre><span class="cm">-- TÉCNICA 1: Columna desnormalizada con trigger de actualización</span>
+<span class="kw">ALTER TABLE</span> <span class="tb">pedidos</span> <span class="kw">ADD COLUMN</span> <span class="cn">total_pedido</span> <span class="fn">DECIMAL</span>(<span class="nm">12</span>,<span class="nm">2</span>) <span class="kw">DEFAULT</span> <span class="nm">0</span>;
+
+<span class="kw">CREATE OR REPLACE FUNCTION</span> <span class="fn">actualizar_total_pedido</span>() <span class="kw">RETURNS TRIGGER AS</span> $$
+<span class="kw">BEGIN</span>
+    <span class="kw">UPDATE</span> <span class="tb">pedidos</span>
+    <span class="kw">SET</span> <span class="cn">total_pedido</span> = (
+        <span class="kw">SELECT</span> <span class="fn">COALESCE</span>(<span class="fn">SUM</span>(<span class="cn">cantidad</span> <span class="op">*</span> <span class="cn">precio_unitario</span>), <span class="nm">0</span>)
+        <span class="kw">FROM</span>   <span class="tb">pedido_detalle</span>
+        <span class="kw">WHERE</span>  <span class="cn">pedido_id</span> = <span class="kw">NEW</span>.<span class="cn">pedido_id</span>
+    )
+    <span class="kw">WHERE</span> <span class="cn">pedido_id</span> = <span class="kw">NEW</span>.<span class="cn">pedido_id</span>;
+    <span class="kw">RETURN NEW</span>;
+<span class="kw">END</span>;
+$$ <span class="kw">LANGUAGE</span> plpgsql;
+
+<span class="kw">CREATE TRIGGER</span> <span class="fn">trg_total_pedido</span>
+    <span class="kw">AFTER INSERT OR UPDATE OR DELETE ON</span> <span class="tb">pedido_detalle</span>
+    <span class="kw">FOR EACH ROW EXECUTE FUNCTION</span> <span class="fn">actualizar_total_pedido</span>();
+
+<span class="cm">-- TÉCNICA 2: Vista materializada para reportes</span>
+<span class="kw">CREATE MATERIALIZED VIEW</span> <span class="tb">mv_ventas_mensuales</span> <span class="kw">AS</span>
+<span class="kw">SELECT</span>
+    <span class="fn">DATE_TRUNC</span>(<span class="str">'month'</span>, p.<span class="cn">fecha</span>) <span class="kw">AS</span> mes,
+    d.<span class="cn">dept_nombre</span>,
+    <span class="fn">COUNT</span>(<span class="op">*</span>)                    <span class="kw">AS</span> num_pedidos,
+    <span class="fn">SUM</span>(p.<span class="cn">total_pedido</span>)         <span class="kw">AS</span> ventas_total
+<span class="kw">FROM</span> <span class="tb">pedidos</span>       p
+<span class="kw">JOIN</span> <span class="tb">clientes</span>      c <span class="kw">ON</span> p.<span class="cn">cliente_id</span>  = c.<span class="cn">cliente_id</span>
+<span class="kw">JOIN</span> <span class="tb">departamentos</span>  d <span class="kw">ON</span> c.<span class="cn">dept_cod</span>   = d.<span class="cn">dept_cod</span>
+<span class="kw">GROUP BY</span> <span class="nm">1</span>, <span class="nm">2</span>
+<span class="kw">WITH DATA</span>;
+
+<span class="cm">-- Refrescar periódicamente (ej. cada noche via pg_cron)</span>
+<span class="kw">REFRESH MATERIALIZED VIEW CONCURRENTLY</span> <span class="tb">mv_ventas_mensuales</span>;</pre>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     16. COMPARACIÓN ANTES/DESPUÉS
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="comparacion">
+  <h2 class="section-title"><i class="bi bi-columns-gap"></i> 16. Comparación Antes / Después</h2>
+  <p class="section-subtitle">Ventajas e inconvenientes de la normalización</p>
+
+  <div class="row g-4">
+    <div class="col-md-6">
+      <div class="compare-bad" style="padding:1.5rem">
+        <h4 style="color:#f472b6"><i class="bi bi-x-circle-fill"></i> Sin normalizar</h4>
+        <ul style="font-size:.88rem;line-height:2;color:var(--text-muted)">
+          <li>Datos duplicados en múltiples filas</li>
+          <li>Anomalías de inserción, borrado y actualización</li>
+          <li>Actualizar un dato requiere modificar N filas</li>
+          <li>Riesgo de inconsistencia de datos</li>
+          <li>Difícil de mantener y evolucionar</li>
+          <li>Consultas simples pero con resultados potencialmente incorrectos</li>
+          <li>Integridad no garantizada a nivel de BD</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="compare-good" style="padding:1.5rem">
+        <h4 style="color:#34d399"><i class="bi bi-check-circle-fill"></i> Normalizado (3FN/BCNF)</h4>
+        <ul style="font-size:.88rem;line-height:2;color:var(--text-muted)">
+          <li>Cada dato en un único lugar</li>
+          <li>Anomalías eliminadas</li>
+          <li>Actualizar un dato: 1 UPDATE en 1 tabla</li>
+          <li>Integridad garantizada por restricciones</li>
+          <li>Modelo mantenible, extensible y documentado</li>
+          <li>JOINs necesarios pero semánticamente correctos</li>
+          <li>Base sólida para consultas y reportes</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <h4 class="mt-4">Tabla comparativa completa</h4>
+  <div class="table-wrapper mt-2">
+    <table class="table-custom">
+      <thead><tr><th>Criterio</th><th>Sin normalizar</th><th>1FN</th><th>2FN</th><th>3FN / BCNF</th></tr></thead>
+      <tbody>
+        <tr><td>Redundancia</td><td style="color:#f472b6">Muy alta</td><td style="color:#f59e42">Alta</td><td style="color:#ffd700">Media</td><td style="color:#34d399">Baja</td></tr>
+        <tr><td>Integridad de datos</td><td style="color:#f472b6">No garantizada</td><td style="color:#f59e42">Parcial</td><td style="color:#ffd700">Mejor</td><td style="color:#34d399">Alta</td></tr>
+        <tr><td>Anomalías</td><td style="color:#f472b6">Todas presentes</td><td style="color:#f59e42">Reducidas</td><td style="color:#ffd700">Menos</td><td style="color:#34d399">Eliminadas</td></tr>
+        <tr><td>Facilidad de INSERT/UPDATE</td><td style="color:#34d399">Sencillo (una tabla)</td><td style="color:#ffd700">Mejor separada</td><td style="color:#f59e42">Más tablas</td><td style="color:#f472b6">Más tablas/JOINs</td></tr>
+        <tr><td>Rendimiento lecturas</td><td style="color:#34d399">Alto (sin JOIN)</td><td style="color:#ffd700">Medio-alto</td><td style="color:#f59e42">Medio</td><td style="color:#f472b6">Depende de índices</td></tr>
+        <tr><td>Complejidad modelo</td><td style="color:#34d399">Baja</td><td style="color:#ffd700">Media</td><td style="color:#f59e42">Media-alta</td><td style="color:#f472b6">Alta (más tablas)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     17. ACID E INTEGRIDAD
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="acid">
+  <h2 class="section-title"><i class="bi bi-shield-fill-check"></i> 17. ACID, Integridad y Normalización</h2>
+  <p class="section-subtitle">La normalización como pilar de las propiedades ACID</p>
+
+  <p>Las propiedades <span class="hl">ACID</span> (Atomicidad, Consistencia, Aislamiento, Durabilidad) definen el comportamiento correcto de las transacciones en una base de datos. La normalización es fundamental para garantizar la <strong>Consistencia</strong>.</p>
+
+  <div class="row g-3 mt-2">
+    <div class="col-md-6 col-lg-3">
+      <div class="card-custom" style="border-top:3px solid var(--fn1)">
+        <h4 style="color:var(--fn1)"><i class="bi bi-atom"></i> Atomicidad</h4>
+        <p style="font-size:.82rem">Una transacción es "todo o nada". Si falla alguna operación, se hace ROLLBACK completo. Las FKs y constraints participan en este mecanismo.</p>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <div class="card-custom" style="border-top:3px solid var(--fn2)">
+        <h4 style="color:var(--fn2)"><i class="bi bi-check-all"></i> Consistencia</h4>
+        <p style="font-size:.82rem">La BD pasa de un estado válido a otro válido. Las restricciones (PK, FK, CHECK, UNIQUE) garantizan la consistencia. La normalización evita estados inconsistentes.</p>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <div class="card-custom" style="border-top:3px solid var(--fn3)">
+        <h4 style="color:var(--fn3)"><i class="bi bi-shield-lock"></i> Aislamiento</h4>
+        <p style="font-size:.82rem">Las transacciones concurrentes no se interfieren. El aislamiento previene lecturas sucias, no repetibles y fantasmas. Relacionado con los niveles de aislamiento SQL.</p>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <div class="card-custom" style="border-top:3px solid var(--bcnf)">
+        <h4 style="color:var(--bcnf)"><i class="bi bi-hdd-rack-fill"></i> Durabilidad</h4>
+        <p style="font-size:.82rem">Una vez confirmada (COMMIT) una transacción, los cambios persisten incluso ante fallos del sistema. Implementado mediante WAL (Write-Ahead Logging).</p>
+      </div>
+    </div>
+  </div>
+
+  <h4 class="mt-4">Tipos de integridad en bases de datos relacionales</h4>
+  <div class="table-wrapper mt-2">
+    <table class="table-custom">
+      <thead><tr><th>Tipo de integridad</th><th>Descripción</th><th>Implementación SQL</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Integridad de entidad</strong></td><td>La clave primaria no puede ser NULL ni duplicada</td><td><code>PRIMARY KEY</code></td></tr>
+        <tr><td><strong>Integridad referencial</strong></td><td>Los valores de FK deben existir en la tabla referenciada o ser NULL</td><td><code>FOREIGN KEY REFERENCES</code></td></tr>
+        <tr><td><strong>Integridad de dominio</strong></td><td>Los valores deben estar dentro del dominio definido para el atributo</td><td><code>CHECK, NOT NULL, data types</code></td></tr>
+        <tr><td><strong>Integridad de usuario</strong></td><td>Reglas de negocio específicas que los datos deben cumplir</td><td><code>CHECK, TRIGGER, RULE</code></td></tr>
+        <tr><td><strong>Integridad de clave</strong></td><td>Cada tabla debe tener al menos una clave candidata</td><td><code>UNIQUE NOT NULL</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="code-block mt-3">
+    <div class="code-header">
+      <span><span class="code-dot" style="background:#ff5f57"></span><span class="code-dot" style="background:#febc2e"></span><span class="code-dot" style="background:#28c840"></span></span>
+      <span class="lang">SQL — Transacción ACID con restricciones de integridad</span>
+    </div>
+    <pre><span class="cm">-- Transacción ACID: insertar un pedido completo de forma atómica</span>
+<span class="kw">BEGIN</span>;
+
+<span class="kw">INSERT INTO</span> <span class="tb">pedidos</span> (<span class="cn">cliente_id</span>, <span class="cn">fecha</span>)
+<span class="kw">VALUES</span> (<span class="nm">1</span>, <span class="fn">CURRENT_DATE</span>)
+<span class="kw">RETURNING</span> <span class="cn">pedido_id</span> <span class="kw">INTO</span> nuevo_pedido_id;
+
+<span class="kw">INSERT INTO</span> <span class="tb">pedido_detalle</span> (<span class="cn">pedido_id</span>, <span class="cn">producto_id</span>, <span class="cn">cantidad</span>, <span class="cn">precio_unitario</span>)
+<span class="kw">VALUES</span>
+    (nuevo_pedido_id, <span class="nm">10</span>, <span class="nm">2</span>, <span class="nm">1200.00</span>),
+    (nuevo_pedido_id, <span class="nm">20</span>, <span class="nm">5</span>, <span class="nm">25.00</span>);
+<span class="cm">-- Si producto_id=20 no existe, FK lo rechaza → ROLLBACK automático</span>
+
+<span class="kw">COMMIT</span>; <span class="cm">-- Todo o nada</span>
+
+<span class="cm">-- Acciones referenciales: ON DELETE y ON UPDATE</span>
+<span class="cm">-- CASCADE:     propaga el cambio a las filas hijas</span>
+<span class="cm">-- RESTRICT:    impide borrar/actualizar si hay hijos</span>
+<span class="cm">-- SET NULL:    pone FK a NULL en los hijos</span>
+<span class="cm">-- SET DEFAULT: pone FK al valor por defecto</span>
+<span class="cm">-- NO ACTION:   igual que RESTRICT (verificado al final de la transacción)</span></pre>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     18. ISO/IEC Y ESTÁNDARES
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="iso">
+  <h2 class="section-title"><i class="bi bi-patch-check-fill"></i> 18. ISO/IEC 9075 y Estándares</h2>
+  <p class="section-subtitle">El estándar SQL internacional y su relación con la normalización</p>
+
+  <div class="row g-3">
+    <div class="col-md-6">
+      <div class="card-custom">
+        <h4><i class="bi bi-journal-bookmark-fill" style="color:var(--primary)"></i> ISO/IEC 9075 (SQL Standard)</h4>
+        <p style="font-size:.87rem;color:var(--text-muted)">El estándar internacional para el lenguaje SQL, publicado por ISO/IEC. Define la sintaxis, semántica y comportamiento del SQL. Las principales ediciones son SQL-86, SQL-89, SQL-92 (ANSI SQL), SQL:1999, SQL:2003, SQL:2008, SQL:2011, SQL:2016, SQL:2019, SQL:2023.</p>
+        <p style="font-size:.87rem;color:var(--text-muted)">Relevante para normalización: las partes que definen <code>PRIMARY KEY</code>, <code>FOREIGN KEY</code>, <code>UNIQUE</code>, <code>CHECK</code>, <code>NOT NULL</code> y el <code>information_schema</code>.</p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-custom">
+        <h4><i class="bi bi-building" style="color:var(--fn2)"></i> ANSI/SPARC (1975)</h4>
+        <p style="font-size:.87rem;color:var(--text-muted)">La arquitectura de tres niveles (externo/conceptual/interno) definida por el grupo de estudio de bases de datos ANSI/X3/SPARC es el marco conceptual en el que se sitúa la normalización (nivel conceptual).</p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-custom">
+        <h4><i class="bi bi-diagram-3" style="color:var(--fn3)"></i> Modelo Entidad-Relación (Chen, 1976)</h4>
+        <p style="font-size:.87rem;color:var(--text-muted)">El modelo E/R de Peter Chen es el estándar de facto para el diseño conceptual de bases de datos. El resultado del diseño E/R se traduce al modelo relacional y luego se normaliza.</p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-custom">
+        <h4><i class="bi bi-shield-check" style="color:var(--bcnf)"></i> ISO/IEC 25012 — Calidad de datos</h4>
+        <p style="font-size:.87rem;color:var(--text-muted)">Estándar de calidad de datos. La normalización contribuye directamente a las características de <em>consistencia</em>, <em>integridad</em> y <em>exactitud</em> definidas en este estándar.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-exam mt-4">
+    <i class="bi bi-mortarboard-fill"></i>
+    <div><strong>Consejo de oposición: estándares que debes mencionar</strong>
+    <p>En preguntas de oposición sobre normalización, mencionar los estándares relevantes demuestra conocimiento amplio: <strong>ISO/IEC 9075</strong> para SQL, <strong>E.F. Codd (1970)</strong> para el modelo relacional, <strong>ANSI/SPARC</strong> para la arquitectura de tres niveles, y los <strong>Axiomas de Armstrong (1974)</strong> para las reglas de inferencia de dependencias funcionales. La integridad referencial está regulada en SQL:1992 en adelante.</p></div>
+  </div>
+
+  <h4 class="mt-4">Relación con el diseño lógico relacional</h4>
+  <div class="timeline mt-3">
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:var(--fn1);color:var(--fn1)">1</div>
+      <div class="tl-title" style="color:var(--fn1)">Modelo Conceptual (E/R o UML)</div>
+      <p style="font-size:.85rem;color:var(--text-muted)">Diseño independiente del SGBD. Entidades, atributos, relaciones, cardinalidades. Herramienta: diagrama E/R de Chen o diagrama de clases UML.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:var(--fn2);color:var(--fn2)">2</div>
+      <div class="tl-title" style="color:var(--fn2)">Transformación a Modelo Relacional</div>
+      <p style="font-size:.85rem;color:var(--text-muted)">Aplicación de las reglas de transformación E/R → relacional. Cada entidad → tabla. Relaciones N:M → tabla de intersección. Atributos multivaluados → tabla separada.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:var(--fn3);color:var(--fn3)">3</div>
+      <div class="tl-title" style="color:var(--fn3)">Normalización del Modelo Relacional</div>
+      <p style="font-size:.85rem;color:var(--text-muted)">Verificación y mejora del modelo aplicando las formas normales. Identificación de dependencias funcionales. Descomposición de tablas. El resultado es el Modelo Lógico Relacional definitivo.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:var(--bcnf);color:var(--bcnf)">4</div>
+      <div class="tl-title" style="color:var(--bcnf)">Modelo Físico (implementación)</div>
+      <p style="font-size:.85rem;color:var(--text-muted)">Traducción del modelo lógico a sentencias DDL SQL específicas del SGBD (PostgreSQL, MySQL, Oracle...). Elección de tipos de datos, índices, particionamiento, opciones de almacenamiento.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     19. EJERCICIOS RESUELTOS
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="ejercicios">
+  <h2 class="section-title"><i class="bi bi-pencil-fill"></i> 19. Ejercicios Resueltos</h2>
+  <p class="section-subtitle">Ejercicios tipo oposición y examen universitario con solución detallada</p>
+
+  <!-- EJERCICIO 1 -->
+  <div class="exercise">
+    <span class="exercise-num">1</span>
+    <h5>Identificar la forma normal e indicar las violaciones</h5>
+    <p style="font-size:.88rem;color:var(--text-muted);margin-top:.5rem">Dada la siguiente tabla, indica en qué forma normal está y qué violaciones presenta:</p>
+    <div class="table-wrapper mt-2">
+      <table class="table-custom">
+        <thead><tr><th>id_emp (PK)</th><th>id_proy (PK)</th><th>horas</th><th>nombre_emp</th><th>nombre_proy</th><th>localiz_proy</th></tr></thead>
+        <tbody>
+          <tr><td class="pk">E1</td><td class="pk">P1</td><td>40</td><td>Ana</td><td>Alpha</td><td>Madrid</td></tr>
+          <tr><td class="pk">E1</td><td class="pk">P2</td><td>20</td><td>Ana</td><td>Beta</td><td>Barcelona</td></tr>
+          <tr><td class="pk">E2</td><td class="pk">P1</td><td>30</td><td>Luis</td><td>Alpha</td><td>Madrid</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout callout-success mt-3">
+      <i class="bi bi-check-circle-fill"></i>
+      <div><strong>Solución</strong>
+      <p><strong>Forma normal actual: 1FN</strong> (los valores son atómicos, hay PK compuesta).</p>
+      <p><strong>Viola 2FN</strong> porque hay dependencias parciales:<br>
+      • <code>id_emp → nombre_emp</code> (nombre_emp depende solo de id_emp, no del proyecto)<br>
+      • <code>id_proy → nombre_proy, localiz_proy</code> (dependen solo de id_proy)</p>
+      <p><strong>Solución 2FN — descomponer en tres tablas:</strong><br>
+      EMPLEADOS(<u>id_emp</u>, nombre_emp)<br>
+      PROYECTOS(<u>id_proy</u>, nombre_proy, localiz_proy)<br>
+      ASIGNACION(<u>id_emp, id_proy</u>, horas)</p></div>
+    </div>
+  </div>
+
+  <!-- EJERCICIO 2 -->
+  <div class="exercise">
+    <span class="exercise-num">2</span>
+    <h5>Calcular el cierre de un conjunto de atributos</h5>
+    <p style="font-size:.88rem;color:var(--text-muted);margin-top:.5rem">Dado el esquema R(A, B, C, D, E) con las DFs: <code>A → B</code>, <code>BC → D</code>, <code>D → E</code>, calcular A⁺ y determinar si A es clave candidata.</p>
+    <div class="callout callout-success mt-3">
+      <i class="bi bi-check-circle-fill"></i>
+      <div><strong>Solución paso a paso</strong>
+      <p><strong>Inicio:</strong> A⁺ = {A}</p>
+      <p><strong>Aplicar A → B:</strong> A⁺ = {A, B}</p>
+      <p><strong>Aplicar BC → D:</strong> ¿Tenemos B y C en A⁺? Tenemos B, pero NO C. No se puede aplicar aún.</p>
+      <p><strong>No hay más DFs aplicables.</strong> A⁺ = {A, B}</p>
+      <p><strong>Conclusión:</strong> A NO es superclave (A⁺ ≠ {A,B,C,D,E}). Para determinar las claves candidatas, necesitaríamos analizar combinaciones. AC⁺ = {A,B,C} → aplicar BC→D → {A,B,C,D} → aplicar D→E → {A,B,C,D,E}. Por tanto, AC es superclave. ¿Es mínima? Sí, porque A sola y C sola no son superclaves. <strong>AC es clave candidata.</strong></p></div>
+    </div>
+  </div>
+
+  <!-- EJERCICIO 3 -->
+  <div class="exercise">
+    <span class="exercise-num">3</span>
+    <h5>Normalizar hasta 3FN una tabla de facturación</h5>
+    <p style="font-size:.88rem;color:var(--text-muted);margin-top:.5rem">La tabla FACTURA(<u>num_factura</u>, fecha, nif_cliente, nombre_cliente, dir_cliente, <u>cod_art</u>, desc_art, precio, cantidad, tipo_iva, desc_familia) viola la 3FN. Normaliza hasta 3FN.</p>
+    <div class="callout callout-success mt-3">
+      <i class="bi bi-check-circle-fill"></i>
+      <div><strong>Análisis de DFs:</strong>
+      <ul style="font-size:.87rem;line-height:2">
+        <li>num_factura → fecha, nif_cliente (datos de la factura)</li>
+        <li>nif_cliente → nombre_cliente, dir_cliente (DF transitiva)</li>
+        <li>cod_art → desc_art, precio, tipo_iva, desc_familia (DF parcial)</li>
+        <li>tipo_iva → (a veces se asocia a familia) — posible transitiva adicional</li>
+        <li>{num_factura, cod_art} → cantidad (DF completa, correcta)</li>
+      </ul>
+      <strong>Resultado normalizado en 3FN:</strong>
+      <ul style="font-size:.87rem;line-height:2">
+        <li>CLIENTES(<u>nif_cliente</u>, nombre_cliente, dir_cliente)</li>
+        <li>FAMILIAS(<u>cod_familia</u>, desc_familia)</li>
+        <li>ARTICULOS(<u>cod_art</u>, desc_art, precio, tipo_iva, cod_familia→FAMILIAS)</li>
+        <li>FACTURAS(<u>num_factura</u>, fecha, nif_cliente→CLIENTES)</li>
+        <li>LINEAS_FACTURA(<u>num_factura, cod_art</u>, cantidad)</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <!-- EJERCICIO 4 -->
+  <div class="exercise">
+    <span class="exercise-num">4</span>
+    <h5>¿Está en BCNF? Detectar y corregir</h5>
+    <p style="font-size:.88rem;color:var(--text-muted);margin-top:.5rem">Relación R(<u>A,B</u>, C) con DFs: {A,B} → C y C → A. Claves candidatas: {A,B} y {B,C}. ¿Está en 3FN? ¿Está en BCNF?</p>
+    <div class="callout callout-success mt-3">
+      <i class="bi bi-check-circle-fill"></i>
+      <div><strong>Análisis:</strong>
+      <p><strong>¿3FN?</strong> Para C → A: el determinante es C (no es superclave), pero A SÍ es atributo primo (pertenece a la clave candidata {A,B}). Según la definición de 3FN (Codd), está en 3FN.</p>
+      <p><strong>¿BCNF?</strong> Para C → A: el determinante C NO es superclave (C⁺ = {C,A}, no incluye B). Por tanto, <strong>viola BCNF</strong>.</p>
+      <p><strong>Descomposición BCNF:</strong><br>
+      R1(<u>C</u>, A) — de la DF C → A<br>
+      R2(<u>B,C</u>) — la parte restante<br>
+      Nota: esta descomposición NO preserva la DF {A,B} → C, lo cual ilustra la pérdida de dependencias al alcanzar BCNF.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     20. EJERCICIOS PROPUESTOS
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="propuestos">
+  <h2 class="section-title"><i class="bi bi-lightbulb-fill"></i> 20. Ejercicios Propuestos</h2>
+  <p class="section-subtitle">Para practicar antes del examen o la oposición</p>
+
+  <div class="exercise">
+    <span class="exercise-num">1</span>
+    <h5>Identificar DFs y forma normal</h5>
+    <p style="font-size:.87rem;margin-top:.5rem">Dada la tabla RESERVA(<u>cod_vuelo, fecha, num_asiento</u>, nombre_pasajero, dni_pasajero, destino, hora_salida, num_puerta, tipo_asiento), identifica todas las DFs y determina la forma normal en que se encuentra. Normaliza hasta 3FN.</p>
+  </div>
+
+  <div class="exercise">
+    <span class="exercise-num">2</span>
+    <h5>Diseño completo de un sistema de biblioteca</h5>
+    <p style="font-size:.87rem;margin-top:.5rem">Diseña y normaliza hasta BCNF el esquema de una biblioteca: libros con múltiples autores y categorías, préstamos a socios, reservas, ejemplares físicos. Define todas las PKs, FKs, restricciones y escribe el DDL SQL compatible con PostgreSQL y MySQL.</p>
+  </div>
+
+  <div class="exercise">
+    <span class="exercise-num">3</span>
+    <h5>Cierre de atributos y claves candidatas</h5>
+    <p style="font-size:.87rem;margin-top:.5rem">Dado R(A,B,C,D,G,H) con DFs: AB→C, A→D, D→G, GH→A. Calcula: (a) el cierre de {A,B}; (b) el cierre de {G,H}; (c) todas las claves candidatas; (d) si R está en 3FN y/o BCNF.</p>
+  </div>
+
+  <div class="exercise">
+    <span class="exercise-num">4</span>
+    <h5>Detectar y corregir anomalías</h5>
+    <p style="font-size:.87rem;margin-top:.5rem">Una empresa almacena los datos de empleados, proyectos, habilidades y certificaciones en una única tabla. Para cada combinación empleado-proyecto-habilidad se almacena si el empleado tiene la certificación correspondiente. ¿Qué dependencias multivaluadas existen? ¿Qué forma normal viola? ¿Cómo se normaliza?</p>
+  </div>
+
+  <div class="exercise">
+    <span class="exercise-num">5</span>
+    <h5>Cuándo desnormalizar: análisis de rendimiento</h5>
+    <p style="font-size:.87rem;margin-top:.5rem">Una web de comercio electrónico tiene millones de pedidos. La consulta "top 100 productos más vendidos esta semana" tarda 8 segundos con el esquema normalizado. Diseña una estrategia de desnormalización (sin perder integridad) para reducir ese tiempo. Incluye el DDL y la lógica de sincronización.</p>
+  </div>
+
+  <div class="callout callout-info mt-3">
+    <i class="bi bi-info-circle-fill"></i>
+    <div><strong>Recursos adicionales para practicar</strong>
+    <p>• Exámenes de oposiciones de informática del cuerpo 590 (disponibles en BOE y páginas de preparadores).<br>
+    • Problemas de bases de datos del libro "Database System Concepts" de Silberschatz, Korth y Sudarshan.<br>
+    • Ejercicios de los MOOCs de Stanford sobre bases de datos (Coursera).<br>
+    • Pgexercises.com para practicar SQL con PostgreSQL online.</p></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     21. RESUMEN VISUAL
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="resumen">
+  <h2 class="section-title"><i class="bi bi-grid-fill"></i> 21. Resumen Visual Final</h2>
+  <p class="section-subtitle">Todo lo que necesitas recordar en un vistazo</p>
+
+  <div class="table-wrapper">
+    <table class="table-custom">
+      <thead>
+        <tr>
+          <th>Forma Normal</th>
+          <th>Condición previa</th>
+          <th>Elimina</th>
+          <th>Concepto clave</th>
+          <th>Violación típica</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="fn-badge fn1">1FN</span></td>
+          <td>—</td>
+          <td>Grupos repetitivos, valores no atómicos</td>
+          <td>Valores atómicos + PK</td>
+          <td>Columna con lista de valores</td>
+        </tr>
+        <tr>
+          <td><span class="fn-badge fn2">2FN</span></td>
+          <td>1FN</td>
+          <td>Dependencias parciales</td>
+          <td>Dependencia funcional completa respecto a la PK</td>
+          <td>Atributo depende de parte de la PK compuesta</td>
+        </tr>
+        <tr>
+          <td><span class="fn-badge fn3">3FN</span></td>
+          <td>2FN</td>
+          <td>Dependencias transitivas</td>
+          <td>No-primo depende solo de la clave, no de otro no-primo</td>
+          <td>A → B → C donde B no es clave</td>
+        </tr>
+        <tr>
+          <td><span class="fn-badge fnb">BCNF</span></td>
+          <td>3FN</td>
+          <td>DF donde determinante no es superclave</td>
+          <td>Para toda X→Y no trivial, X es superclave</td>
+          <td>Determinante no es superclave aunque Y sea primo</td>
+        </tr>
+        <tr>
+          <td><span class="fn-badge fn4">4FN</span></td>
+          <td>BCNF</td>
+          <td>Dependencias multivaluadas</td>
+          <td>Para toda X→→Y, X es superclave</td>
+          <td>Dos listas independientes en la misma tabla</td>
+        </tr>
+        <tr>
+          <td><span class="fn-badge fn5">5FN</span></td>
+          <td>4FN</td>
+          <td>Dependencias de unión</td>
+          <td>Solo quedan dependencias de unión triviales</td>
+          <td>Restricciones tripartitas no capturadas por 4FN</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4 class="mt-4">Reglas mnemotécnicas</h4>
+  <div class="row g-3">
+    <div class="col-md-6">
+      <div class="card-custom">
+        <h4><i class="bi bi-card-text" style="color:var(--accent)"></i> La frase de Codd</h4>
+        <p style="font-size:.9rem;font-style:italic;color:var(--fn2)">"The key (1FN), the whole key (2FN), and nothing but the key (3FN), so help me Codd."</p>
+        <p style="font-size:.82rem;color:var(--text-muted)">Cada atributo depende de la clave (1FN), de toda la clave (2FN) y solo de la clave (3FN).</p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-custom">
+        <h4><i class="bi bi-arrow-up-circle-fill" style="color:var(--fn2)"></i> Jerarquía de inclusión</h4>
+        <p style="font-size:.88rem;color:var(--text-muted)">5FN ⊂ 4FN ⊂ BCNF ⊂ 3FN ⊂ 2FN ⊂ 1FN</p>
+        <p style="font-size:.82rem;color:var(--text-muted)">Toda relación en 5FN está también en 4FN, BCNF, 3FN, 2FN y 1FN. La normalización es un proceso acumulativo.</p>
+      </div>
+    </div>
+  </div>
+
+  <h4 class="mt-4">Proceso de normalización: algoritmo general</h4>
+  <div class="timeline mt-3">
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:var(--fn1);color:var(--fn1)">1</div>
+      <div class="tl-title">Verificar 1FN</div>
+      <p style="font-size:.85rem;color:var(--text-muted)">¿Hay valores atómicos? ¿Hay PK definida? Si no → separar grupos repetitivos en tablas independientes.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:var(--fn2);color:var(--fn2)">2</div>
+      <div class="tl-title">Identificar claves candidatas</div>
+      <p style="font-size:.85rem;color:var(--text-muted)">Calcular el cierre de los conjuntos de atributos para encontrar todas las claves candidatas.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:var(--fn3);color:var(--fn3)">3</div>
+      <div class="tl-title">Detectar y eliminar dependencias parciales (→ 2FN)</div>
+      <p style="font-size:.85rem;color:var(--text-muted)">Extraer los atributos con DP a nuevas tablas con la parte correspondiente de la PK como nueva PK.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:var(--bcnf);color:var(--bcnf)">4</div>
+      <div class="tl-title">Detectar y eliminar dependencias transitivas (→ 3FN)</div>
+      <p style="font-size:.85rem;color:var(--text-muted)">Extraer la cadena transitiva a una nueva tabla con el intermediario como nueva PK.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:var(--fn4);color:var(--fn4)">5</div>
+      <div class="tl-title">Verificar BCNF (opcional según requisitos)</div>
+      <p style="font-size:.85rem;color:var(--text-muted)">Comprobar que todo determinante sea superclave. Si no → descomponer (verificar preservación de DFs).</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:var(--fn5);color:var(--fn5)">6</div>
+      <div class="tl-title">Verificar 4FN/5FN (casos especiales)</div>
+      <p style="font-size:.85rem;color:var(--text-muted)">Identificar dependencias multivaluadas independientes y dependencias de unión. Separar en tablas independientes.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     22. BIBLIOGRAFÍA
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="biblio">
+  <h2 class="section-title"><i class="bi bi-journal-text"></i> 22. Bibliografía y Referencias</h2>
+  <p class="section-subtitle">Fuentes originales, libros de referencia y recursos oficiales</p>
+
+  <h5 class="mb-3" style="color:var(--text-muted)"><i class="bi bi-book-fill" style="color:var(--primary)"></i> Artículos y publicaciones originales</h5>
+  <div class="row g-3">
+    <div class="col-md-6">
+      <div class="card-custom">
+        <h4 style="font-size:.9rem"><i class="bi bi-file-earmark-text-fill" style="color:var(--accent)"></i> Codd, E.F. (1970)</h4>
+        <p style="font-size:.82rem;color:var(--text-muted)">"A Relational Model of Data for Large Shared Data Banks." Communications of the ACM, 13(6), 377-387. <strong>El artículo fundacional del modelo relacional.</strong></p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-custom">
+        <h4 style="font-size:.9rem"><i class="bi bi-file-earmark-text-fill" style="color:var(--accent)"></i> Codd, E.F. (1972)</h4>
+        <p style="font-size:.82rem;color:var(--text-muted)">"Further Normalization of the Data Base Relational Model." Data Base Systems, Courant Computer Science Symposia Series, vol. 6. Prentice-Hall. <strong>Define la 2FN y 3FN.</strong></p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-custom">
+        <h4 style="font-size:.9rem"><i class="bi bi-file-earmark-text-fill" style="color:var(--accent)"></i> Boyce, R.F. y Codd, E.F. (1974)</h4>
+        <p style="font-size:.82rem;color:var(--text-muted)">"Relational Completeness of Data Base Sublanguages." Data Base Systems, Courant Computer Science Symposia, 1974. <strong>Introduce la BCNF.</strong></p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-custom">
+        <h4 style="font-size:.9rem"><i class="bi bi-file-earmark-text-fill" style="color:var(--accent)"></i> Armstrong, W.W. (1974)</h4>
+        <p style="font-size:.82rem;color:var(--text-muted)">"Dependency Structures of Data Base Relationships." IFIP Congress, 580-583. <strong>Los axiomas de Armstrong.</strong></p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-custom">
+        <h4 style="font-size:.9rem"><i class="bi bi-file-earmark-text-fill" style="color:var(--accent)"></i> Fagin, R. (1977)</h4>
+        <p style="font-size:.82rem;color:var(--text-muted)">"Multivalued Dependencies and a New Normal Form for Relational Databases." ACM TODS 2(3):262-278. <strong>Introduce la 4FN.</strong></p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-custom">
+        <h4 style="font-size:.9rem"><i class="bi bi-file-earmark-text-fill" style="color:var(--accent)"></i> Fagin, R. (1979)</h4>
+        <p style="font-size:.82rem;color:var(--text-muted)">"Normal Forms and Relational Database Operators." Proceedings of SIGMOD. <strong>Introduce la 5FN (PJNF).</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <h5 class="mb-3 mt-4" style="color:var(--text-muted)"><i class="bi bi-book" style="color:var(--fn2)"></i> Libros de referencia</h5>
+  <div class="row g-3">
+    <div class="col-md-6">
+      <div class="card-custom">
+        <h4 style="font-size:.9rem"><i class="bi bi-book-fill" style="color:var(--fn2)"></i> Silberschatz, A. et al.</h4>
+        <p style="font-size:.82rem;color:var(--text-muted)">"Database System Concepts" (7ª ed., 2019). McGraw-Hill. El libro de referencia más completo para universitarios y opositores. Cubre todos los aspectos de la normalización.</p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-custom">
+        <h4 style="font-size:.9rem"><i class="bi bi-book-fill" style="color:var(--fn2)"></i> Date, C.J.</h4>
+        <p style="font-size:.82rem;color:var(--text-muted)">"An Introduction to Database Systems" (8ª ed., 2004). Addison-Wesley. Referencia clásica con tratamiento exhaustivo del modelo relacional y la normalización.</p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-custom">
+        <h4 style="font-size:.9rem"><i class="bi bi-book-fill" style="color:var(--fn2)"></i> Elmasri, R. y Navathe, S.B.</h4>
+        <p style="font-size:.82rem;color:var(--text-muted)">"Fundamentals of Database Systems" (7ª ed., 2016). Pearson. Muy usado en España en grados universitarios de Informática.</p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-custom">
+        <h4 style="font-size:.9rem"><i class="bi bi-book-fill" style="color:var(--fn2)"></i> Ramakrishnan, R. y Gehrke, J.</h4>
+        <p style="font-size:.82rem;color:var(--text-muted)">"Database Management Systems" (3ª ed., 2002). McGraw-Hill. Excelente para profundizar en la teoría de dependencias funcionales.</p>
+      </div>
+    </div>
+  </div>
+
+  <h5 class="mb-3 mt-4" style="color:var(--text-muted)"><i class="bi bi-patch-check" style="color:var(--bcnf)"></i> Estándares y documentación oficial</h5>
+  <div class="row g-3">
+    <div class="col-md-6">
+      <div class="card-custom">
+        <h4 style="font-size:.9rem"><i class="bi bi-patch-check-fill" style="color:var(--bcnf)"></i> ISO/IEC 9075:2023 (SQL)</h4>
+        <p style="font-size:.82rem;color:var(--text-muted)">Estándar internacional del lenguaje SQL. Disponible en iso.org. Define PRIMARY KEY, FOREIGN KEY, CHECK, información_schema y el comportamiento transaccional.</p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-custom">
+        <h4 style="font-size:.9rem"><i class="bi bi-elephant" style="color:#336791)"></i> Documentación PostgreSQL 16</h4>
+        <p style="font-size:.82rem;color:var(--text-muted)">postgresql.org/docs/current — Documentación oficial completa de PostgreSQL. Especialmente útil la sección DDL (Chapter 5) para restricciones e integridad referencial.</p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-custom">
+        <h4 style="font-size:.9rem"><i class="bi bi-database" style="color:#f59e42"></i> Documentación MySQL 8.0</h4>
+        <p style="font-size:.82rem;color:var(--text-muted)">dev.mysql.com/doc — Documentación oficial de MySQL. Ver especialmente la sección sobre restricciones de integridad referencial y el comportamiento de InnoDB.</p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-custom">
+        <h4 style="font-size:.9rem"><i class="bi bi-globe" style="color:var(--fn1)"></i> MDN Web Docs (referencia web)</h4>
+        <p style="font-size:.82rem;color:var(--text-muted)">developer.mozilla.org — Para el contexto de uso de bases de datos en aplicaciones web (DAW/ASIR). Referencia para la integración de BD con tecnologías web.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-info mt-4">
+    <i class="bi bi-mortarboard-fill"></i>
+    <div><strong>Para preparar oposiciones (cuerpo 590)</strong>
+    <p>El temario oficial del cuerpo 590 de profesores de FP incluye bases de datos relacionales en el bloque de Sistemas Gestores de Bases de Datos. Los conceptos de normalización aparecen en varios temas. Consulta el BOE con la resolución de convocatoria más reciente para el temario actualizado. Los libros de Silberschatz y Elmasri son los más referenciados en los temarios oficiales españoles.</p></div>
+  </div>
+
+  <div style="text-align:center;padding:3rem 0 1rem;color:var(--text-muted);font-size:.82rem">
+    <div style="font-size:1.5rem;margin-bottom:.5rem"><i class="bi bi-database-fill-gear" style="color:var(--primary)"></i></div>
+    <div>Tutorial de Normalización de Bases de Datos Relacionales</div>
+    <div style="margin-top:.3rem">Orientado a Oposiciones Cuerpo 590 · DAM/DAW/ASIR · Universidad</div>
+    <div style="margin-top:.3rem;color:var(--border)">ISO/IEC 9075 · E.F. Codd · Armstrong · ANSI/SPARC · PostgreSQL · MySQL</div>
+  </div>
+</section>
+
+</div><!-- /main-content -->
+
+<!-- BACK TO TOP -->
+<button id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Volver arriba">
+  <i class="bi bi-arrow-up"></i>
+</button>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Sidebar toggle
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const main = document.getElementById('mainContent');
+    if (window.innerWidth <= 900) {
+      sidebar.classList.toggle('mobile-open');
+    } else {
+      sidebar.classList.toggle('collapsed');
+      main.classList.toggle('full');
+    }
+  }
+
+  // Dark mode toggle
+  function toggleDarkMode() {
+    const html = document.documentElement;
+    html.setAttribute('data-bs-theme',
+      html.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark');
+  }
+
+  // Back to top button
+  const backBtn = document.getElementById('back-top');
+  window.addEventListener('scroll', () => {
+    backBtn.classList.toggle('show', window.scrollY > 400);
+  });
+
+  // Scrollspy for sidebar
+  const sections = document.querySelectorAll('section[id], div[id]');
+  const sideLinks = document.querySelectorAll('.sidebar a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        sideLinks.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.sidebar a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-60px 0px -70% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+
+  // Close sidebar on mobile when clicking a link
+  sideLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      if (window.innerWidth <= 900) {
+        document.getElementById('sidebar').classList.remove('mobile-open');
+      }
+    });
+  });
+
+  // Enable Bootstrap tooltips
+  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
+    new bootstrap.Tooltip(el);
+  });
+</script>
+</body>
+</html>

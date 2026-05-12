@@ -4,42 +4,47 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>iptables — Tutorial Completo</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg:        #0d1117;
-    --surface:   #161b22;
-    --surface2:  #1f2937;
-    --border:    #30363d;
-    --accent:    #00e5a0;
-    --accent2:   #3b82f6;
-    --warn:      #f59e0b;
-    --danger:    #ef4444;
-    --text:      #e6edf3;
-    --muted:     #8b949e;
-    --code-bg:   #0d1117;
-    --radius:    8px;
-    --mono: 'IBM Plex Mono', monospace;
-    --sans: 'IBM Plex Sans', sans-serif;
+    --bg:        #f4f6fb;
+    --surface:   #ffffff;
+    --surface2:  #eef1f8;
+    --surface3:  #e4e9f4;
+    --border:    #d1d9ee;
+    --border2:   #b8c4e0;
+    --green:     #059669;
+    --green-lt:  #d1fae5;
+    --green-mid: #a7f3d0;
+    --blue:      #2563eb;
+    --blue-lt:   #dbeafe;
+    --blue-mid:  #93c5fd;
+    --amber:     #d97706;
+    --amber-lt:  #fef3c7;
+    --red:       #dc2626;
+    --red-lt:    #fee2e2;
+    --purple:    #7c3aed;
+    --purple-lt: #ede9fe;
+    --text:      #1e2942;
+    --text2:     #374151;
+    --muted:     #6b7280;
+    --code-bg:   #1a1f35;
+    --code-border:#2d3554;
+    --radius:    10px;
+    --radius-lg: 16px;
+    --shadow:    0 1px 3px rgba(30,41,66,.08), 0 4px 16px rgba(30,41,66,.06);
+    --shadow-lg: 0 4px 24px rgba(30,41,66,.12);
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Outfit', sans-serif;
   }
-
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   html { scroll-behavior: smooth; }
+  body { font-family: var(--sans); background: var(--bg); color: var(--text); font-size: 16px; line-height: 1.75; }
 
-  body {
-    font-family: var(--sans);
-    background: var(--bg);
-    color: var(--text);
-    font-size: 16px;
-    line-height: 1.7;
-  }
-
-  /* ── HEADER ── */
+  /* HEADER */
   header {
-    background: linear-gradient(135deg, #0d1117 0%, #0a2a1e 60%, #0d1117 100%);
-    border-bottom: 1px solid var(--border);
-    padding: 60px 24px 48px;
+    background: linear-gradient(135deg, #1a1f35 0%, #0f2d52 45%, #1a3a2a 100%);
+    padding: 64px 24px 52px;
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -48,837 +53,741 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(0,229,160,.10) 0%, transparent 70%);
+    background:
+      radial-gradient(ellipse 60% 80% at 20% 50%, rgba(5,150,105,.18) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 80% 30%, rgba(37,99,235,.15) 0%, transparent 60%);
     pointer-events: none;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--green), var(--blue), var(--purple));
+  }
+  .header-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 72px; height: 72px;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 20px; font-size: 2rem; margin-bottom: 20px;
   }
   .badge {
     display: inline-block;
-    font-family: var(--mono);
-    font-size: .72rem;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    color: var(--accent);
-    border: 1px solid var(--accent);
-    border-radius: 4px;
-    padding: 3px 10px;
-    margin-bottom: 20px;
+    font-family: var(--mono); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase;
+    color: #6ee7b7; border: 1px solid rgba(5,150,105,.4);
+    border-radius: 100px; padding: 3px 12px; margin-bottom: 16px;
+    background: rgba(5,150,105,.1);
   }
-  header h1 {
-    font-size: clamp(2.2rem, 5vw, 3.6rem);
-    font-weight: 700;
-    letter-spacing: -.02em;
-    line-height: 1.1;
-  }
-  header h1 span { color: var(--accent); }
-  header p {
-    margin-top: 14px;
-    color: var(--muted);
-    max-width: 560px;
-    margin-inline: auto;
-    font-weight: 300;
+  header h1 { font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 800; letter-spacing: -.03em; color: #fff; line-height: 1.05; }
+  header h1 .hl { color: #6ee7b7; }
+  header p { margin-top: 14px; color: rgba(255,255,255,.6); max-width: 540px; margin-inline: auto; font-weight: 300; font-size: 1.05rem; }
+  .header-tags { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+  .header-tag {
+    background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12);
+    border-radius: 100px; padding: 4px 14px; font-size: .78rem; color: rgba(255,255,255,.7); font-family: var(--mono);
   }
 
-  /* ── LAYOUT ── */
-  .container { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
-
-  /* ── NAV ── */
-  nav {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  nav ul {
-    list-style: none;
-    display: flex;
-    gap: 2px;
-    overflow-x: auto;
-    padding: 0 16px;
-    scrollbar-width: none;
-  }
+  /* NAV */
+  nav { background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(30,41,66,.07); }
+  nav ul { list-style: none; display: flex; overflow-x: auto; padding: 0 12px; scrollbar-width: none; max-width: 960px; margin: 0 auto; }
   nav ul::-webkit-scrollbar { display: none; }
-  nav a {
-    display: block;
-    padding: 12px 14px;
-    text-decoration: none;
-    color: var(--muted);
-    font-size: .82rem;
-    font-weight: 600;
-    letter-spacing: .03em;
-    white-space: nowrap;
-    transition: color .2s;
-    font-family: var(--mono);
-  }
-  nav a:hover { color: var(--accent); }
+  nav a { display: flex; align-items: center; gap: 6px; padding: 13px 12px; text-decoration: none; color: var(--muted); font-size: .78rem; font-weight: 600; white-space: nowrap; transition: color .18s; border-bottom: 2px solid transparent; }
+  nav a:hover { color: var(--blue); border-bottom-color: var(--blue); }
 
-  /* ── SECTION ── */
-  section { margin-top: 60px; }
-  section:first-of-type { margin-top: 48px; }
+  /* CONTAINER */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 20px 80px; }
+  section { margin-top: 56px; }
 
-  h2 {
-    font-size: 1.6rem;
-    font-weight: 700;
-    letter-spacing: -.01em;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 28px;
-  }
-  h2 .num {
-    font-family: var(--mono);
-    font-size: .9rem;
-    color: var(--accent);
-    background: rgba(0,229,160,.08);
-    border: 1px solid rgba(0,229,160,.3);
-    border-radius: 4px;
-    padding: 2px 8px;
-    flex-shrink: 0;
-  }
-
-  h3 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--accent2);
-    margin: 28px 0 10px;
-  }
-
-  p { margin-bottom: 14px; color: #c9d1d9; }
-
-  ul, ol { margin: 10px 0 14px 22px; color: #c9d1d9; }
+  /* HEADINGS */
+  h2 { font-size: 1.55rem; font-weight: 700; letter-spacing: -.02em; display: flex; align-items: center; gap: 12px; padding-bottom: 16px; border-bottom: 2px solid var(--border); margin-bottom: 28px; color: var(--text); }
+  .h2-icon { display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 12px; font-size: 1.15rem; flex-shrink: 0; }
+  .h2-icon.green  { background: var(--green-lt); }
+  .h2-icon.blue   { background: var(--blue-lt); }
+  .h2-icon.amber  { background: var(--amber-lt); }
+  .h2-icon.purple { background: var(--purple-lt); }
+  .h2-icon.red    { background: var(--red-lt); }
+  h3 { font-size: 1.05rem; font-weight: 700; color: var(--text); margin: 30px 0 10px; display: flex; align-items: center; gap: 8px; }
+  p { margin-bottom: 14px; color: var(--text2); }
+  ul, ol { margin: 10px 0 14px 20px; color: var(--text2); }
   li { margin-bottom: 6px; }
-
   strong { color: var(--text); font-weight: 600; }
-  em { color: var(--warn); font-style: normal; font-weight: 600; }
+  em { color: var(--amber); font-style: normal; font-weight: 600; }
 
-  /* ── CODE ── */
-  pre {
-    background: var(--code-bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px 22px;
-    overflow-x: auto;
-    font-family: var(--mono);
-    font-size: .82rem;
-    line-height: 1.7;
-    margin: 14px 0 20px;
-    position: relative;
-  }
-  pre .label {
-    position: absolute;
-    top: 8px; right: 10px;
-    font-size: .68rem;
-    letter-spacing: .08em;
-    color: var(--muted);
-    text-transform: uppercase;
-  }
-  code {
-    font-family: var(--mono);
-    font-size: .85em;
-    background: rgba(255,255,255,.06);
-    border-radius: 4px;
-    padding: 1px 5px;
-    color: #79c0ff;
-  }
-  pre code { background: none; padding: 0; font-size: 1em; color: inherit; }
+  /* CODE */
+  .pre-header { display: flex; align-items: center; gap: 8px; background: #12172b; border: 1px solid var(--code-border); border-bottom: none; border-radius: var(--radius) var(--radius) 0 0; padding: 8px 16px; }
+  .pre-dots { display: flex; gap: 5px; }
+  .pre-dots span { width: 10px; height: 10px; border-radius: 50%; }
+  .pre-dots .r { background: #ff5f57; }
+  .pre-dots .y { background: #ffbd2e; }
+  .pre-dots .g { background: #28ca41; }
+  .pre-lang { font-family: var(--mono); font-size: .65rem; letter-spacing: .1em; color: #4a5568; text-transform: uppercase; margin-left: auto; }
+  .pre-header + pre { border-radius: 0 0 var(--radius) var(--radius); margin-top: 0; }
+  pre { background: var(--code-bg); border: 1px solid var(--code-border); border-radius: var(--radius); padding: 20px 22px; overflow-x: auto; font-family: var(--mono); font-size: .8rem; line-height: 1.75; margin: 14px 0 20px; position: relative; box-shadow: var(--shadow); }
+  code { font-family: var(--mono); font-size: .82em; background: var(--surface2); border: 1px solid var(--border); border-radius: 5px; padding: 1px 6px; color: var(--blue); }
+  pre code { background: none; border: none; padding: 0; font-size: 1em; color: inherit; }
+  .c   { color: #4a6180; font-style: italic; }
+  .cmd { color: #f97583; }
+  .flag{ color: #79b8ff; }
+  .val { color: #6ee7b7; }
+  .ip  { color: #c792ea; }
+  .act { color: #ffd080; }
 
-  /* syntax colors */
-  .c  { color: #6a737d; }   /* comment  */
-  .cmd{ color: #ff7b72; }   /* commands / keywords */
-  .flag{ color: var(--accent2); } /* flags */
-  .val{ color: var(--accent); }   /* values / ports */
-  .ip { color: #d2a8ff; }         /* ips     */
-  .act{ color: var(--warn); }     /* actions */
+  /* CALLOUT */
+  .callout { display: flex; gap: 14px; border-radius: var(--radius); padding: 14px 18px; margin: 18px 0; font-size: .92rem; border: 1px solid; }
+  .callout.tip    { background: #f0fdf4; border-color: #bbf7d0; color: #14532d; }
+  .callout.warn   { background: var(--amber-lt); border-color: #fde68a; color: #78350f; }
+  .callout.danger { background: var(--red-lt);   border-color: #fecaca; color: #7f1d1d; }
+  .callout.info   { background: var(--blue-lt);  border-color: var(--blue-mid); color: #1e3a8a; }
+  .callout-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+  .callout p { margin: 0; color: inherit; }
 
-  /* ── CALLOUT ── */
-  .callout {
-    border-left: 3px solid var(--accent);
-    background: rgba(0,229,160,.05);
-    border-radius: 0 var(--radius) var(--radius) 0;
-    padding: 14px 18px;
-    margin: 18px 0;
-    font-size: .93rem;
-  }
-  .callout.warn  { border-color: var(--warn);   background: rgba(245,158,11,.05); }
-  .callout.danger{ border-color: var(--danger);  background: rgba(239,68,68,.05); }
-  .callout .icon { font-size: 1rem; margin-right: 6px; }
-
-  /* ── TABLE ── */
-  .table-wrap { overflow-x: auto; margin: 16px 0; }
-  table { border-collapse: collapse; width: 100%; font-size: .88rem; }
-  th {
-    background: var(--surface2);
-    color: var(--accent);
-    font-family: var(--mono);
-    font-size: .75rem;
-    letter-spacing: .06em;
-    text-transform: uppercase;
-    padding: 10px 14px;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-  }
-  td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: #c9d1d9; }
+  /* TABLE */
+  .table-wrap { overflow-x: auto; margin: 16px 0; border-radius: var(--radius); box-shadow: var(--shadow); }
+  table { border-collapse: collapse; width: 100%; font-size: .87rem; background: var(--surface); }
+  th { background: var(--surface2); color: var(--text); font-size: .73rem; letter-spacing: .06em; text-transform: uppercase; padding: 11px 16px; text-align: left; border-bottom: 2px solid var(--border); font-weight: 700; }
+  td { padding: 11px 16px; border-bottom: 1px solid var(--border); color: var(--text2); vertical-align: top; }
   tr:last-child td { border-bottom: none; }
-  tr:hover td { background: rgba(255,255,255,.02); }
+  tr:hover td { background: var(--surface2); }
+  td code { font-size: .8rem; }
 
-  /* ── FLOW DIAGRAM ── */
-  .flow {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0;
-    margin: 20px 0;
-    font-family: var(--mono);
-    font-size: .78rem;
-  }
-  .flow-box {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 8px 14px;
-    text-align: center;
-    min-width: 100px;
-    line-height: 1.3;
-  }
-  .flow-box .sub { font-size: .68rem; color: var(--muted); display: block; margin-top: 2px; }
-  .flow-box.chain { border-color: var(--accent2); color: var(--accent2); }
-  .flow-box.table { border-color: var(--accent); color: var(--accent); }
-  .flow-arrow {
-    color: var(--muted);
-    font-size: 1.1rem;
-    padding: 0 4px;
-    flex-shrink: 0;
-  }
+  /* CARDS */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin: 18px 0; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); transition: box-shadow .2s, transform .2s; }
+  .card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+  .card-icon { font-size: 1.6rem; margin-bottom: 8px; }
+  .card-title { font-weight: 700; font-size: .88rem; color: var(--text); margin-bottom: 4px; }
+  .card-sub { font-size: .78rem; color: var(--muted); font-family: var(--mono); }
+  .card-desc { font-size: .82rem; color: var(--text2); margin-top: 8px; }
+  .card.green-accent { border-top: 3px solid var(--green); }
+  .card.blue-accent  { border-top: 3px solid var(--blue); }
+  .card.amber-accent { border-top: 3px solid var(--amber); }
+  .card.purple-accent{ border-top: 3px solid var(--purple); }
 
-  /* ── ACCORDION (EXERCISES) ── */
-  details {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    margin-bottom: 16px;
-    overflow: hidden;
-    transition: all .2s;
-  }
-  details[open] { border-color: var(--accent2); }
-  summary {
-    padding: 16px 20px;
-    cursor: pointer;
-    font-weight: 600;
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    list-style: none;
-    user-select: none;
-  }
+  /* CHAIN BADGES */
+  .chain-grid { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0; }
+  .chain-badge { display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: var(--radius); font-family: var(--mono); font-size: .8rem; font-weight: 600; border: 1px solid; }
+  .chain-badge.green  { background: var(--green-lt);  border-color: var(--green-mid); color: #065f46; }
+  .chain-badge.blue   { background: var(--blue-lt);   border-color: var(--blue-mid);  color: #1e3a8a; }
+  .chain-badge.purple { background: var(--purple-lt); border-color: #c4b5fd;          color: #4c1d95; }
+  .chain-badge .cbdesc { font-family: var(--sans); font-size: .72rem; font-weight: 400; color: inherit; opacity: .8; }
+
+  /* FLOW DIAGRAM */
+  .flow-diagram { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px 20px; margin: 18px 0; box-shadow: var(--shadow); overflow-x: auto; }
+  .flow-title { font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 700; margin-bottom: 16px; }
+  .flow-row { display: flex; align-items: center; flex-wrap: nowrap; min-width: 580px; }
+  .flow-row + .flow-row { margin-top: 12px; }
+  .fbox { display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 8px; padding: 8px 12px; font-size: .72rem; font-family: var(--mono); font-weight: 600; text-align: center; min-width: 96px; border: 1px solid; line-height: 1.3; }
+  .fbox .fsub { font-size: .62rem; font-weight: 400; opacity: .75; margin-top: 2px; font-family: var(--sans); }
+  .fbox.net   { background: var(--surface2); border-color: var(--border2); color: var(--text); }
+  .fbox.chain { background: var(--blue-lt);  border-color: var(--blue-mid); color: #1e3a8a; }
+  .fbox.nat   { background: var(--purple-lt);border-color: #c4b5fd; color: #4c1d95; }
+  .fbox.proc  { background: var(--green-lt); border-color: var(--green-mid); color: #065f46; }
+  .fbox.route { background: var(--amber-lt); border-color: #fde68a; color: #78350f; }
+  .farr { color: var(--muted); font-size: 1rem; padding: 0 3px; flex-shrink: 0; }
+  .flow-note { font-size: .72rem; color: var(--muted); margin-top: 10px; font-family: var(--mono); padding-left: 8px; border-left: 2px solid var(--border2); }
+
+  /* SYNTAX ANATOMY */
+  .syntax-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 16px 0; box-shadow: var(--shadow); }
+  .syntax-code { font-family: var(--mono); font-size: .88rem; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; margin-bottom: 16px; }
+  .s-part { padding: 3px 10px; border-radius: 6px; font-weight: 600; }
+  .s-cmd    { background: #fce7f3; color: #be185d; border: 1px solid #fbcfe8; }
+  .s-table  { background: var(--purple-lt); color: #5b21b6; border: 1px solid #c4b5fd; }
+  .s-cmd2   { background: var(--green-lt);  color: #065f46; border: 1px solid #a7f3d0; }
+  .s-chain  { background: var(--blue-lt);   color: #1e3a8a; border: 1px solid #93c5fd; }
+  .s-cond   { background: var(--amber-lt);  color: #78350f; border: 1px solid #fde68a; }
+  .s-action { background: var(--red-lt);    color: #991b1b; border: 1px solid #fca5a5; }
+  .syntax-legend { display: flex; flex-wrap: wrap; gap: 8px; font-size: .75rem; }
+  .leg { display: flex; align-items: center; gap: 5px; color: var(--text2); }
+  .leg-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+
+  /* ACTION GRID */
+  .action-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px,1fr)); gap: 10px; margin: 14px 0; }
+  .action-pill { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--surface); box-shadow: var(--shadow); font-size: .82rem; }
+  .action-pill .ap-icon { font-size: 1.1rem; flex-shrink: 0; }
+  .action-pill .ap-name { font-family: var(--mono); font-weight: 600; color: var(--text); font-size: .8rem; }
+  .action-pill .ap-desc { font-size: .72rem; color: var(--muted); margin-top: 1px; }
+
+  /* EXAMPLE BLOCKS */
+  .example { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); margin: 24px 0; overflow: hidden; box-shadow: var(--shadow); }
+  .example-header { display: flex; align-items: center; gap: 14px; padding: 16px 20px; border-bottom: 1px solid var(--border); background: var(--surface2); }
+  .ex-num { display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 10px; font-family: var(--mono); font-weight: 700; font-size: .85rem; flex-shrink: 0; }
+  .ex-num.g { background: var(--green-lt);  color: var(--green); }
+  .ex-num.b { background: var(--blue-lt);   color: var(--blue); }
+  .ex-num.p { background: var(--purple-lt); color: var(--purple); }
+  .ex-num.a { background: var(--amber-lt);  color: var(--amber); }
+  .ex-num.r { background: var(--red-lt);    color: var(--red); }
+  .ex-title { font-weight: 700; color: var(--text); font-size: .97rem; }
+  .ex-sub   { font-size: .78rem; color: var(--muted); font-family: var(--mono); margin-top: 1px; }
+  .ex-body  { padding: 16px 20px 4px; }
+  .ex-body p { margin-bottom: 10px; font-size: .92rem; }
+
+  /* ACCORDION */
+  details { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; overflow: hidden; box-shadow: var(--shadow); }
+  details[open] { border-color: var(--blue-mid); box-shadow: 0 0 0 3px rgba(37,99,235,.08), var(--shadow); }
+  summary { padding: 14px 18px; cursor: pointer; font-weight: 600; font-size: .95rem; display: flex; align-items: center; gap: 12px; list-style: none; user-select: none; color: var(--text); }
   summary::-webkit-details-marker { display: none; }
-  summary::before {
-    content: '▶';
-    font-size: .7rem;
-    color: var(--accent2);
-    flex-shrink: 0;
-    margin-top: 4px;
-    transition: transform .2s;
-  }
-  details[open] summary::before { transform: rotate(90deg); }
-  .exercise-enunciado {
-    padding: 4px 20px 14px 42px;
-    color: var(--muted);
-    font-size: .9rem;
-  }
-  .solution {
-    padding: 0 20px 20px 20px;
-    border-top: 1px solid var(--border);
-  }
-  .solution-label {
-    font-family: var(--mono);
-    font-size: .7rem;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--accent);
-    padding: 10px 0 8px;
-    display: block;
-  }
+  .sum-icon { font-size: 1.1rem; flex-shrink: 0; }
+  .sum-chevron { margin-left: auto; color: var(--muted); font-size: .8rem; transition: transform .2s; flex-shrink: 0; }
+  details[open] .sum-chevron { transform: rotate(180deg); }
+  .ex-enunciado { padding: 0 18px 14px 46px; color: var(--muted); font-size: .9rem; }
+  .solution { padding: 0 18px 18px; border-top: 1px solid var(--border); }
+  .solution-label { display: flex; align-items: center; gap: 6px; font-size: .72rem; letter-spacing: .09em; text-transform: uppercase; font-weight: 700; color: var(--green); padding: 12px 0 6px; }
 
-  /* ── PILL GRID ── */
-  .pill-grid { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
-  .pill {
-    font-family: var(--mono);
-    font-size: .78rem;
-    padding: 4px 12px;
-    border-radius: 100px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: #c9d1d9;
-  }
-  .pill.accent { border-color: var(--accent); color: var(--accent); background: rgba(0,229,160,.06); }
-  .pill.blue   { border-color: var(--accent2); color: var(--accent2); background: rgba(59,130,246,.06); }
-  .pill.warn   { border-color: var(--warn); color: var(--warn); background: rgba(245,158,11,.06); }
+  /* STEPS */
+  .steps { margin: 18px 0; display: flex; flex-direction: column; gap: 12px; }
+  .step { display: flex; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow); align-items: flex-start; }
+  .step-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 1px; }
+  .step-body { flex: 1; }
+  .step-title { font-weight: 700; font-size: .92rem; color: var(--text); margin-bottom: 3px; }
+  .step-desc  { font-size: .85rem; color: var(--text2); margin: 0; }
 
-  /* ── STEPS ── */
-  .steps { counter-reset: step; margin: 16px 0; }
-  .step {
-    counter-increment: step;
-    display: flex;
-    gap: 16px;
-    margin-bottom: 18px;
-  }
-  .step::before {
-    content: counter(step);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: var(--accent2);
-    color: #fff;
-    font-weight: 700;
-    font-size: .8rem;
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-  .step p { margin: 0; }
+  /* INSTALL GRID */
+  .install-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+  @media(max-width:560px){ .install-grid { grid-template-columns: 1fr; } }
+  .install-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+  .install-header { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--surface2); border-bottom: 1px solid var(--border); font-weight: 700; font-size: .88rem; }
+  .install-card pre { border: none; border-radius: 0; margin: 0; box-shadow: none; font-size: .78rem; }
 
-  /* ── FOOTER ── */
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 32px 24px;
-    text-align: center;
-    font-size: .82rem;
-    color: var(--muted);
-    font-family: var(--mono);
+  /* FOOTER */
+  footer { background: var(--surface); border-top: 1px solid var(--border); padding: 28px 24px; text-align: center; font-size: .82rem; color: var(--muted); }
+  footer strong { color: var(--text); }
+
+  @media(max-width:640px){
+    .card-grid { grid-template-columns: 1fr 1fr; }
+    .action-grid { grid-template-columns: 1fr 1fr; }
+    h2 { font-size: 1.3rem; }
   }
-  footer span { color: var(--accent); }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="badge">Tutorial de Seguridad Linux</div>
-  <h1><span>iptables</span> — Cortafuegos en Linux</h1>
-  <p>Guía completa para administradores principiantes e intermedios. Desde los conceptos básicos hasta configuraciones avanzadas de NAT y persistencia.</p>
+  <div class="header-icon">🛡️</div>
+  <div class="badge">Tutorial · Seguridad Linux</div>
+  <h1><span class="hl">iptables</span><br>Cortafuegos en Linux</h1>
+  <p>Guía completa para administradores principiantes e intermedios. Desde la teoría hasta la configuración en producción.</p>
+  <div class="header-tags">
+    <span class="header-tag">filter · nat · mangle · raw</span>
+    <span class="header-tag">Ubuntu · Debian · RHEL</span>
+    <span class="header-tag">NAT · Port Forwarding · Rate Limiting</span>
+  </div>
 </header>
 
 <nav>
   <ul>
-    <li><a href="#s1">01 Introducción</a></li>
-    <li><a href="#s2">02 Instalación</a></li>
-    <li><a href="#s3">03 Sintaxis</a></li>
-    <li><a href="#s4">04 Ejemplos</a></li>
-    <li><a href="#s5">05 Ejercicios</a></li>
-    <li><a href="#s6">06 Persistencia</a></li>
-    <li><a href="#s7">07 Buenas Prácticas</a></li>
-    <li><a href="#s8">08 Problemas</a></li>
+    <li><a href="#s1">📖 Introducción</a></li>
+    <li><a href="#s2">⚙️ Instalación</a></li>
+    <li><a href="#s3">✏️ Sintaxis</a></li>
+    <li><a href="#s4">🔧 Ejemplos</a></li>
+    <li><a href="#s5">🧪 Ejercicios</a></li>
+    <li><a href="#s6">💾 Persistencia</a></li>
+    <li><a href="#s7">✅ Buenas Prácticas</a></li>
+    <li><a href="#s8">🚨 Problemas</a></li>
   </ul>
 </nav>
 
 <div class="container">
 
-<!-- ══════════════════════════════════════════════════
-     SECCIÓN 1 — INTRODUCCIÓN
-════════════════════════════════════════════════════ -->
+<!-- ══════ 01 INTRODUCCIÓN ══════ -->
 <section id="s1">
-  <h2><span class="num">01</span> Introducción Conceptual</h2>
+  <h2><span class="h2-icon green">📖</span> Introducción Conceptual</h2>
 
-  <p><strong>iptables</strong> es el cortafuegos estándar del kernel Linux, integrado desde la versión 2.4. Actúa como un <em>filtro de paquetes</em> a nivel de kernel: intercepta cada paquete de red y aplica reglas para decidir qué hacer con él (permitirlo, bloquearlo, redirigirlo, etc.).</p>
+  <p><strong>iptables</strong> es el cortafuegos estándar del kernel Linux, activo desde la versión 2.4. Actúa como un <strong>filtro de paquetes a nivel de kernel</strong>: intercepta cada paquete de red y aplica reglas para decidir qué hacer con él (permitirlo, bloquearlo, redirigirlo, registrarlo…).</p>
 
-  <p>Desde Linux 5.x convive con <strong>nftables</strong> (su sucesor), pero iptables sigue siendo el más usado en producción y en certificaciones como LPIC o RHCE.</p>
-
-  <h3>Las cuatro tablas</h3>
-  <p>iptables organiza las reglas en <strong>tablas</strong>, cada una con un propósito específico:</p>
-
-  <div class="table-wrap">
-  <table>
-    <tr><th>Tabla</th><th>Propósito principal</th><th>Cadenas disponibles</th></tr>
-    <tr><td><code>filter</code></td><td>Filtrado de paquetes (tabla por defecto)</td><td>INPUT, OUTPUT, FORWARD</td></tr>
-    <tr><td><code>nat</code></td><td>Traducción de direcciones (NAT, reenvío de puertos)</td><td>PREROUTING, OUTPUT, POSTROUTING</td></tr>
-    <tr><td><code>mangle</code></td><td>Modificar cabeceras de paquetes (QoS, TTL…)</td><td>Todas las cadenas</td></tr>
-    <tr><td><code>raw</code></td><td>Exención de seguimiento de conexiones (conntrack)</td><td>PREROUTING, OUTPUT</td></tr>
-  </table>
+  <div class="callout tip">
+    <span class="callout-icon">💡</span>
+    <p>Desde Linux 5.x convive con <strong>nftables</strong> (su sucesor moderno), pero iptables sigue siendo ampliamente utilizado en producción y es requerido en certificaciones como LPIC-2 y RHCE.</p>
   </div>
 
-  <h3>Las cinco cadenas predefinidas</h3>
-  <div class="pill-grid">
-    <span class="pill accent">INPUT</span>
-    <span class="pill accent">OUTPUT</span>
-    <span class="pill accent">FORWARD</span>
-    <span class="pill blue">PREROUTING</span>
-    <span class="pill blue">POSTROUTING</span>
+  <h3>🗂️ Las cuatro tablas</h3>
+  <p>iptables organiza las reglas en <strong>tablas</strong>, cada una con un propósito bien definido:</p>
+  <div class="card-grid">
+    <div class="card green-accent">
+      <div class="card-icon">🔍</div>
+      <div class="card-title">filter</div>
+      <div class="card-sub">Tabla por defecto</div>
+      <div class="card-desc">Decide qué paquetes se permiten o bloquean. La más utilizada en la práctica.</div>
+    </div>
+    <div class="card blue-accent">
+      <div class="card-icon">🔄</div>
+      <div class="card-title">nat</div>
+      <div class="card-sub">Traducción de direcciones</div>
+      <div class="card-desc">NAT, DNAT, SNAT y reenvío de puertos. Modifica IP/puerto de origen o destino.</div>
+    </div>
+    <div class="card amber-accent">
+      <div class="card-icon">🔧</div>
+      <div class="card-title">mangle</div>
+      <div class="card-sub">Modificación de cabeceras</div>
+      <div class="card-desc">Altera campos del paquete: TTL, TOS, marcas para QoS. Uso avanzado.</div>
+    </div>
+    <div class="card purple-accent">
+      <div class="card-icon">⚡</div>
+      <div class="card-title">raw</div>
+      <div class="card-sub">Exención de conntrack</div>
+      <div class="card-desc">Excluye paquetes del seguimiento de conexiones para mayor rendimiento.</div>
+    </div>
   </div>
 
-  <div class="table-wrap">
-  <table>
-    <tr><th>Cadena</th><th>¿Cuándo actúa?</th></tr>
-    <tr><td><code>INPUT</code></td><td>Paquetes destinados al propio equipo</td></tr>
-    <tr><td><code>OUTPUT</code></td><td>Paquetes originados en el propio equipo</td></tr>
-    <tr><td><code>FORWARD</code></td><td>Paquetes en tránsito (router/gateway)</td></tr>
-    <tr><td><code>PREROUTING</code></td><td>Antes de decidir el destino (útil para DNAT)</td></tr>
-    <tr><td><code>POSTROUTING</code></td><td>Justo antes de salir por la interfaz (útil para SNAT/MASQUERADE)</td></tr>
-  </table>
+  <h3>⛓️ Las cinco cadenas predefinidas</h3>
+  <p>Cada tabla tiene cadenas que se activan según el momento en que el paquete recorre el kernel:</p>
+  <div class="chain-grid">
+    <div class="chain-badge green">📥 INPUT <span class="cbdesc">→ paquetes para el propio equipo</span></div>
+    <div class="chain-badge green">📤 OUTPUT <span class="cbdesc">→ paquetes generados localmente</span></div>
+    <div class="chain-badge blue">🔀 FORWARD <span class="cbdesc">→ paquetes en tránsito (router)</span></div>
+    <div class="chain-badge purple">🔺 PREROUTING <span class="cbdesc">→ antes de decidir el destino</span></div>
+    <div class="chain-badge purple">🔻 POSTROUTING <span class="cbdesc">→ justo antes de salir</span></div>
   </div>
 
-  <h3>Flujo de paquetes (diagrama conceptual)</h3>
+  <h3>🗺️ Flujo de paquetes</h3>
+  <div class="flow-diagram">
+    <div class="flow-title">📦 Paquete entrante desde la red</div>
+    <div class="flow-row">
+      <div class="fbox net">🌐 Red<span class="fsub">Entrada</span></div>
+      <div class="farr">→</div>
+      <div class="fbox nat">PREROUTING<span class="fsub">raw · mangle · nat</span></div>
+      <div class="farr">→</div>
+      <div class="fbox route">🔀 Routing<span class="fsub">decisión destino</span></div>
+      <div class="farr">→</div>
+      <div class="fbox chain">INPUT<span class="fsub">mangle · filter</span></div>
+      <div class="farr">→</div>
+      <div class="fbox proc">⚙️ Proceso<span class="fsub">local</span></div>
+    </div>
+    <div class="flow-note">Si destino ≠ local → FORWARD (mangle · filter) → POSTROUTING (mangle · nat) → 🌐 Red</div>
+    <div class="flow-title" style="margin-top:20px;">📤 Paquete generado localmente</div>
+    <div class="flow-row">
+      <div class="fbox proc">⚙️ Proceso<span class="fsub">local</span></div>
+      <div class="farr">→</div>
+      <div class="fbox chain">OUTPUT<span class="fsub">raw · mangle · nat · filter</span></div>
+      <div class="farr">→</div>
+      <div class="fbox nat">POSTROUTING<span class="fsub">mangle · nat</span></div>
+      <div class="farr">→</div>
+      <div class="fbox net">🌐 Red<span class="fsub">Salida</span></div>
+    </div>
+  </div>
 
-  <div style="overflow-x:auto;padding-bottom:4px;">
-  <div class="flow" style="min-width:620px;">
-    <div class="flow-box"><strong>Red</strong><span class="sub">Entrada</span></div>
-    <div class="flow-arrow">→</div>
-    <div class="flow-box chain">PREROUTING<span class="sub">raw · mangle · nat</span></div>
-    <div class="flow-arrow">→</div>
-    <div class="flow-box" style="border-color:#f59e0b;color:#f59e0b;">Routing<span class="sub">decisión</span></div>
-    <div class="flow-arrow">→</div>
-    <div class="flow-box chain">INPUT<span class="sub">mangle · filter</span></div>
-    <div class="flow-arrow">→</div>
-    <div class="flow-box"><strong>Proceso</strong><span class="sub">local</span></div>
-  </div>
-  <div style="margin: 4px 0 4px 210px;color:var(--muted);font-size:.78rem;font-family:var(--mono);">
-    └── Si destino ≠ local ──&gt; FORWARD (mangle · filter) ──&gt; POSTROUTING (mangle · nat · filter) ──&gt; Red
-  </div>
-  <div class="flow" style="margin-top:8px;min-width:620px;">
-    <div class="flow-box"><strong>Proceso</strong><span class="sub">local</span></div>
-    <div class="flow-arrow">→</div>
-    <div class="flow-box chain">OUTPUT<span class="sub">raw · mangle · nat · filter</span></div>
-    <div class="flow-arrow">→</div>
-    <div class="flow-box chain">POSTROUTING<span class="sub">mangle · nat</span></div>
-    <div class="flow-arrow">→</div>
-    <div class="flow-box"><strong>Red</strong><span class="sub">Salida</span></div>
-  </div>
-  </div>
-
-  <div class="callout">
-    <span class="icon">💡</span> <strong>Regla de oro:</strong> las reglas se evalúan <em>en orden</em>. En cuanto una coincide, se aplica su acción y se deja de evaluar el resto (salvo LOG, que continúa).
+  <div class="callout tip">
+    <span class="callout-icon">🔑</span>
+    <p><strong>Regla de oro:</strong> las reglas se evalúan <em>en orden</em>, de arriba hacia abajo. En cuanto una regla coincide, se aplica su acción y se detiene la evaluación (excepto <code>LOG</code>, que continúa al siguiente).</p>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════════════
-     SECCIÓN 2 — INSTALACIÓN
-════════════════════════════════════════════════════ -->
+<!-- ══════ 02 INSTALACIÓN ══════ -->
 <section id="s2">
-  <h2><span class="num">02</span> Instalación y Verificación</h2>
+  <h2><span class="h2-icon blue">⚙️</span> Instalación y Verificación</h2>
 
-  <h3>Verificar si está instalado</h3>
+  <h3>🔍 Verificar si está instalado</h3>
+  <div class="pre-header"><div class="pre-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="pre-lang">bash</span></div>
 <pre><span class="c"># Comprobar versión instalada</span>
 <span class="cmd">iptables</span> <span class="flag">--version</span>
 
-<span class="c"># Listar reglas activas (tabla filter)</span>
-<span class="cmd">iptables</span> <span class="flag">-L</span> <span class="flag">-v</span> <span class="flag">-n</span>
+<span class="c"># Listar reglas activas con contadores y números de línea</span>
+<span class="cmd">iptables</span> <span class="flag">-L</span> <span class="flag">-v</span> <span class="flag">-n</span> <span class="flag">--line-numbers</span>
 </pre>
 
-  <h3>Instalación en Debian/Ubuntu</h3>
+  <h3>🐧 Instalación por distribución</h3>
+  <div class="install-grid">
+    <div class="install-card">
+      <div class="install-header">🟠 Debian / Ubuntu</div>
 <pre><span class="cmd">sudo apt update</span>
-<span class="cmd">sudo apt install</span> iptables iptables-persistent
+<span class="cmd">sudo apt install</span> \
+  iptables \
+  iptables-persistent
 </pre>
-
-  <h3>Instalación en RHEL/CentOS/Fedora</h3>
-<pre><span class="c"># En sistemas con firewalld, primero detenerlo</span>
+    </div>
+    <div class="install-card">
+      <div class="install-header">🔵 RHEL / CentOS / Fedora</div>
+<pre><span class="c"># Detener firewalld primero</span>
 <span class="cmd">sudo systemctl stop</span> firewalld
 <span class="cmd">sudo systemctl disable</span> firewalld
-
 <span class="cmd">sudo dnf install</span> iptables-services
 <span class="cmd">sudo systemctl enable</span> --now iptables
 </pre>
+    </div>
+  </div>
 
-  <h3>Ver reglas actuales y políticas por defecto</h3>
-<pre><span class="c"># Ver tabla filter con nombres (no IPs resueltas) y contadores</span>
+  <h3>📋 Ver reglas y políticas actuales</h3>
+  <div class="pre-header"><div class="pre-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="pre-lang">bash</span></div>
+<pre><span class="c"># Tabla filter con contadores y números de línea</span>
 <span class="cmd">iptables</span> <span class="flag">-t</span> filter <span class="flag">-L</span> <span class="flag">-v</span> <span class="flag">-n</span> <span class="flag">--line-numbers</span>
 
-<span class="c"># Ver tabla NAT</span>
+<span class="c"># Tabla NAT</span>
 <span class="cmd">iptables</span> <span class="flag">-t</span> nat <span class="flag">-L</span> <span class="flag">-v</span> <span class="flag">-n</span>
+
+<span class="c"># Ver TODAS las tablas</span>
+<span class="cmd">for</span> t <span class="act">in</span> filter nat mangle raw; <span class="act">do</span>
+  <span class="cmd">echo</span> <span class="val">"=== Tabla: $t ==="</span>
+  <span class="cmd">iptables</span> <span class="flag">-t</span> $t <span class="flag">-L</span> <span class="flag">-n</span>
+<span class="act">done</span>
 </pre>
 
   <div class="callout warn">
-    <span class="icon">⚠️</span> La <strong>política por defecto</strong> (ACCEPT o DROP) se aplica cuando ninguna regla coincide. Cámbiala con cuidado: <code>iptables -P INPUT DROP</code> puede bloquearte de inmediato si no tienes reglas de whitelist.
+    <span class="callout-icon">⚠️</span>
+    <p>La <strong>política por defecto</strong> (ACCEPT o DROP) se aplica cuando ninguna regla coincide. Ejecutar <code>iptables -P INPUT DROP</code> sin reglas de whitelist previas puede dejarte sin acceso al servidor.</p>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════════════
-     SECCIÓN 3 — SINTAXIS BÁSICA
-════════════════════════════════════════════════════ -->
+<!-- ══════ 03 SINTAXIS ══════ -->
 <section id="s3">
-  <h2><span class="num">03</span> Sintaxis Básica</h2>
+  <h2><span class="h2-icon purple">✏️</span> Sintaxis Básica</h2>
 
-  <h3>Estructura general</h3>
-<pre><span class="cmd">iptables</span> [<span class="flag">-t tabla</span>] <span class="act">COMANDO</span> [cadena] [condiciones] <span class="flag">-j</span> <span class="act">ACCIÓN</span></pre>
+  <h3>🏗️ Anatomía de un comando</h3>
+  <div class="syntax-box">
+    <div class="syntax-code">
+      <span class="s-part s-cmd">iptables</span>
+      <span class="s-part s-table">[-t tabla]</span>
+      <span class="s-part s-cmd2">COMANDO</span>
+      <span class="s-part s-chain">[cadena]</span>
+      <span class="s-part s-cond">[condiciones]</span>
+      <span class="s-part s-action">-j ACCIÓN</span>
+    </div>
+    <div class="syntax-legend">
+      <div class="leg"><div class="leg-dot" style="background:#be185d"></div> Comando base</div>
+      <div class="leg"><div class="leg-dot" style="background:#5b21b6"></div> Tabla (opcional, default: filter)</div>
+      <div class="leg"><div class="leg-dot" style="background:#065f46"></div> Subcomando (-A, -I, -D…)</div>
+      <div class="leg"><div class="leg-dot" style="background:#1e3a8a"></div> Cadena (INPUT, OUTPUT…)</div>
+      <div class="leg"><div class="leg-dot" style="background:#78350f"></div> Condiciones de coincidencia</div>
+      <div class="leg"><div class="leg-dot" style="background:#991b1b"></div> Acción (ACCEPT, DROP…)</div>
+    </div>
+  </div>
 
-  <p>Si no se especifica <code>-t tabla</code>, se usa <strong>filter</strong> por defecto.</p>
-
-  <h3>Comandos principales</h3>
+  <h3>📋 Comandos principales</h3>
   <div class="table-wrap">
   <table>
-    <tr><th>Comando</th><th>Descripción</th></tr>
-    <tr><td><code>-A cadena</code></td><td>Append — añade regla al final de la cadena</td></tr>
-    <tr><td><code>-I cadena [N]</code></td><td>Insert — inserta en la posición N (1 = inicio)</td></tr>
-    <tr><td><code>-D cadena N</code></td><td>Delete — elimina la regla número N</td></tr>
-    <tr><td><code>-R cadena N</code></td><td>Replace — reemplaza la regla número N</td></tr>
-    <tr><td><code>-L [cadena]</code></td><td>List — lista las reglas</td></tr>
-    <tr><td><code>-F [cadena]</code></td><td>Flush — borra todas las reglas de la cadena</td></tr>
-    <tr><td><code>-X [cadena]</code></td><td>eXpunge — elimina cadenas de usuario</td></tr>
-    <tr><td><code>-P cadena acción</code></td><td>Policy — establece política por defecto</td></tr>
-    <tr><td><code>-Z [cadena]</code></td><td>Zero — resetea contadores de paquetes/bytes</td></tr>
-    <tr><td><code>-N cadena</code></td><td>New — crea una cadena personalizada</td></tr>
+    <tr><th>Comando</th><th>Descripción</th><th>Ejemplo</th></tr>
+    <tr><td><code>-A cadena</code></td><td>➕ <strong>Append</strong> — añade al final</td><td><code>-A INPUT -j ACCEPT</code></td></tr>
+    <tr><td><code>-I cadena [N]</code></td><td>⬆️ <strong>Insert</strong> — inserta en posición N</td><td><code>-I INPUT 1 -j DROP</code></td></tr>
+    <tr><td><code>-D cadena N</code></td><td>🗑️ <strong>Delete</strong> — elimina la regla N</td><td><code>-D INPUT 3</code></td></tr>
+    <tr><td><code>-R cadena N</code></td><td>♻️ <strong>Replace</strong> — reemplaza la regla N</td><td><code>-R INPUT 2 ...</code></td></tr>
+    <tr><td><code>-L [cadena]</code></td><td>📋 <strong>List</strong> — lista las reglas</td><td><code>-L INPUT -n -v</code></td></tr>
+    <tr><td><code>-F [cadena]</code></td><td>🧹 <strong>Flush</strong> — borra todas las reglas</td><td><code>-F INPUT</code></td></tr>
+    <tr><td><code>-X [cadena]</code></td><td>💥 <strong>eXpunge</strong> — elimina cadenas de usuario</td><td><code>-X MI_CADENA</code></td></tr>
+    <tr><td><code>-P cadena acción</code></td><td>🎯 <strong>Policy</strong> — política por defecto</td><td><code>-P INPUT DROP</code></td></tr>
+    <tr><td><code>-N cadena</code></td><td>🆕 <strong>New</strong> — crea cadena personalizada</td><td><code>-N SSH_GUARD</code></td></tr>
+    <tr><td><code>-Z [cadena]</code></td><td>🔢 <strong>Zero</strong> — resetea contadores</td><td><code>-Z INPUT</code></td></tr>
   </table>
   </div>
 
-  <h3>Condiciones (matches) comunes</h3>
+  <h3>🎯 Condiciones (matches) comunes</h3>
   <div class="table-wrap">
   <table>
     <tr><th>Opción</th><th>Descripción</th></tr>
-    <tr><td><code>-s IP/máscara</code></td><td>IP de origen</td></tr>
-    <tr><td><code>-d IP/máscara</code></td><td>IP de destino</td></tr>
-    <tr><td><code>-p protocolo</code></td><td>Protocolo: tcp, udp, icmp, all</td></tr>
-    <tr><td><code>--dport puerto</code></td><td>Puerto de destino (requiere <code>-p tcp/udp</code>)</td></tr>
-    <tr><td><code>--sport puerto</code></td><td>Puerto de origen</td></tr>
-    <tr><td><code>-i interfaz</code></td><td>Interfaz de entrada (eth0, lo…)</td></tr>
-    <tr><td><code>-o interfaz</code></td><td>Interfaz de salida</td></tr>
-    <tr><td><code>-m state --state</code></td><td>Estado de conexión (NEW, ESTABLISHED, RELATED)</td></tr>
-    <tr><td><code>-m multiport --dports</code></td><td>Múltiples puertos de destino</td></tr>
-    <tr><td><code>-m limit --limit</code></td><td>Límite de tasa (rate limiting)</td></tr>
-    <tr><td><code>! condición</code></td><td>Negación de la condición</td></tr>
+    <tr><td><code>-s IP/máscara</code></td><td>🌐 IP o red de <strong>origen</strong></td></tr>
+    <tr><td><code>-d IP/máscara</code></td><td>🌐 IP o red de <strong>destino</strong></td></tr>
+    <tr><td><code>-p protocolo</code></td><td>📡 Protocolo: <code>tcp</code>, <code>udp</code>, <code>icmp</code>, <code>all</code></td></tr>
+    <tr><td><code>--dport puerto</code></td><td>🔌 Puerto de destino (requiere <code>-p tcp/udp</code>)</td></tr>
+    <tr><td><code>--sport puerto</code></td><td>🔌 Puerto de origen</td></tr>
+    <tr><td><code>-i interfaz</code></td><td>🖧 Interfaz de <strong>entrada</strong> (eth0, lo…)</td></tr>
+    <tr><td><code>-o interfaz</code></td><td>🖧 Interfaz de <strong>salida</strong></td></tr>
+    <tr><td><code>-m state --state</code></td><td>🔗 Estado conntrack: NEW, ESTABLISHED, RELATED</td></tr>
+    <tr><td><code>-m multiport --dports</code></td><td>🎛️ Múltiples puertos: <code>80,443,8080</code></td></tr>
+    <tr><td><code>-m limit --limit</code></td><td>⏱️ Límite de tasa (rate limiting)</td></tr>
+    <tr><td><code>-m recent</code></td><td>📊 Seguimiento de IPs recientes (anti brute-force)</td></tr>
+    <tr><td><code>! condición</code></td><td>🚫 Negación: todo EXCEPTO lo indicado</td></tr>
   </table>
   </div>
 
-  <h3>Acciones (-j) principales</h3>
-  <div class="pill-grid">
-    <span class="pill accent">ACCEPT</span>
-    <span class="pill warn">DROP</span>
-    <span class="pill" style="border-color:var(--danger);color:var(--danger)">REJECT</span>
-    <span class="pill blue">LOG</span>
-    <span class="pill blue">MASQUERADE</span>
-    <span class="pill blue">DNAT</span>
-    <span class="pill blue">SNAT</span>
-    <span class="pill">RETURN</span>
-  </div>
-
-  <div class="table-wrap">
-  <table>
-    <tr><th>Acción</th><th>Efecto</th></tr>
-    <tr><td><code>ACCEPT</code></td><td>Permite el paquete</td></tr>
-    <tr><td><code>DROP</code></td><td>Descarta silenciosamente (sin respuesta al emisor)</td></tr>
-    <tr><td><code>REJECT</code></td><td>Descarta y envía ICMP de error al emisor</td></tr>
-    <tr><td><code>LOG</code></td><td>Registra en syslog y continúa evaluando reglas</td></tr>
-    <tr><td><code>MASQUERADE</code></td><td>NAT dinámico (IP pública variable); solo en POSTROUTING</td></tr>
-    <tr><td><code>SNAT --to-source</code></td><td>NAT con IP de origen fija</td></tr>
-    <tr><td><code>DNAT --to-destination</code></td><td>Cambia IP/puerto de destino; solo en PREROUTING</td></tr>
-    <tr><td><code>RETURN</code></td><td>Vuelve a la cadena llamante</td></tr>
-  </table>
+  <h3>⚡ Acciones (-j) principales</h3>
+  <div class="action-grid">
+    <div class="action-pill"><span class="ap-icon">✅</span><div><div class="ap-name">ACCEPT</div><div class="ap-desc">Permite el paquete</div></div></div>
+    <div class="action-pill"><span class="ap-icon">🚫</span><div><div class="ap-name">DROP</div><div class="ap-desc">Descarta sin responder</div></div></div>
+    <div class="action-pill"><span class="ap-icon">↩️</span><div><div class="ap-name">REJECT</div><div class="ap-desc">Descarta + avisa al emisor</div></div></div>
+    <div class="action-pill"><span class="ap-icon">📝</span><div><div class="ap-name">LOG</div><div class="ap-desc">Registra y continúa</div></div></div>
+    <div class="action-pill"><span class="ap-icon">🎭</span><div><div class="ap-name">MASQUERADE</div><div class="ap-desc">NAT dinámico (POSTROUTING)</div></div></div>
+    <div class="action-pill"><span class="ap-icon">🏷️</span><div><div class="ap-name">SNAT</div><div class="ap-desc">NAT con IP origen fija</div></div></div>
+    <div class="action-pill"><span class="ap-icon">🎯</span><div><div class="ap-name">DNAT</div><div class="ap-desc">Cambia IP/puerto destino</div></div></div>
+    <div class="action-pill"><span class="ap-icon">↪️</span><div><div class="ap-name">RETURN</div><div class="ap-desc">Vuelve a la cadena padre</div></div></div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════════════
-     SECCIÓN 4 — EJEMPLOS PRÁCTICOS
-════════════════════════════════════════════════════ -->
+<!-- ══════ 04 EJEMPLOS ══════ -->
 <section id="s4">
-  <h2><span class="num">04</span> Ejemplos Prácticos</h2>
+  <h2><span class="h2-icon amber">🔧</span> Ejemplos Prácticos</h2>
 
-  <!-- Ejemplo 1 -->
-  <h3>① Bloquear todo excepto SSH</h3>
-  <p>Configuración básica de un servidor: permitir solo el puerto 22 en entrada y bloquear el resto.</p>
-<pre><span class="label">bash</span><span class="c"># 1. Primero permitir SSH para no bloquearnos</span>
+  <div class="example">
+    <div class="example-header">
+      <div class="ex-num g">①</div>
+      <div><div class="ex-title">🔒 Bloquear todo excepto SSH</div><div class="ex-sub">filter · INPUT · política DROP</div></div>
+    </div>
+    <div class="ex-body"><p>Configuración básica de servidor: permite solo el puerto 22 y bloquea todo lo demás. El orden importa: SSH va antes del DROP.</p></div>
+    <div class="pre-header"><div class="pre-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="pre-lang">bash</span></div>
+<pre><span class="c"># 1. CRÍTICO: permitir SSH ANTES de cambiar política a DROP</span>
 <span class="cmd">iptables</span> <span class="flag">-A</span> INPUT <span class="flag">-p</span> tcp <span class="flag">--dport</span> <span class="val">22</span> <span class="flag">-m</span> state <span class="flag">--state</span> NEW,ESTABLISHED <span class="flag">-j</span> <span class="act">ACCEPT</span>
 
-<span class="c"># 2. Permitir tráfico de salida relacionado con SSH</span>
-<span class="cmd">iptables</span> <span class="flag">-A</span> OUTPUT <span class="flag">-p</span> tcp <span class="flag">--sport</span> <span class="val">22</span> <span class="flag">-m</span> state <span class="flag">--state</span> ESTABLISHED <span class="flag">-j</span> <span class="act">ACCEPT</span>
-
-<span class="c"># 3. Permitir tráfico de retorno ya establecido</span>
+<span class="c"># 2. Permitir respuestas de conexiones ya establecidas</span>
 <span class="cmd">iptables</span> <span class="flag">-A</span> INPUT <span class="flag">-m</span> state <span class="flag">--state</span> ESTABLISHED,RELATED <span class="flag">-j</span> <span class="act">ACCEPT</span>
 
-<span class="c"># 4. Ahora sí, cambiar política por defecto a DROP</span>
-<span class="cmd">iptables</span> <span class="flag">-P</span> INPUT <span class="act">DROP</span>
+<span class="c"># 3. Ahora es seguro poner la política en DROP</span>
+<span class="cmd">iptables</span> <span class="flag">-P</span> INPUT   <span class="act">DROP</span>
 <span class="cmd">iptables</span> <span class="flag">-P</span> FORWARD <span class="act">DROP</span>
 </pre>
+  </div>
 
-  <!-- Ejemplo 2 -->
-  <h3>② Permitir tráfico loopback</h3>
-  <p>El tráfico por la interfaz <code>lo</code> (localhost) siempre debe estar permitido; muchos servicios se comunican internamente por ella.</p>
-<pre><span class="label">bash</span><span class="c"># Permitir todo tráfico en interfaz loopback</span>
+  <div class="example">
+    <div class="example-header">
+      <div class="ex-num b">②</div>
+      <div><div class="ex-title">🔁 Permitir tráfico loopback</div><div class="ex-sub">filter · INPUT/OUTPUT · interfaz lo</div></div>
+    </div>
+    <div class="ex-body"><p>El tráfico por la interfaz <code>lo</code> (127.0.0.1) siempre debe estar permitido. Muchos servicios —bases de datos, APIs— se comunican internamente por ella.</p></div>
+    <div class="pre-header"><div class="pre-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="pre-lang">bash</span></div>
+<pre><span class="c"># Permitir todo tráfico en interfaz loopback</span>
 <span class="cmd">iptables</span> <span class="flag">-A</span> INPUT  <span class="flag">-i</span> lo <span class="flag">-j</span> <span class="act">ACCEPT</span>
 <span class="cmd">iptables</span> <span class="flag">-A</span> OUTPUT <span class="flag">-o</span> lo <span class="flag">-j</span> <span class="act">ACCEPT</span>
 
-<span class="c"># También bloquear paquetes que lleguen por otra interfaz</span>
-<span class="c"># pero pretendan venir de 127.0.0.0/8 (anti-spoofing)</span>
+<span class="c"># Anti-spoofing: bloquear paquetes de otra interfaz que finjan ser 127.x</span>
 <span class="cmd">iptables</span> <span class="flag">-A</span> INPUT <span class="flag">!</span> <span class="flag">-i</span> lo <span class="flag">-s</span> <span class="ip">127.0.0.0/8</span> <span class="flag">-j</span> <span class="act">DROP</span>
 </pre>
+  </div>
 
-  <!-- Ejemplo 3 -->
-  <h3>③ Rate limiting SSH (anti fuerza bruta)</h3>
-  <p>Limitar nuevas conexiones SSH a 4 por minuto por IP de origen:</p>
-<pre><span class="label">bash</span><span class="c"># Crear una cadena personalizada para el control SSH</span>
+  <div class="example">
+    <div class="example-header">
+      <div class="ex-num p">③</div>
+      <div><div class="ex-title">⏱️ Rate limiting SSH (anti-fuerza bruta)</div><div class="ex-sub">filter · módulo recent · cadena personalizada</div></div>
+    </div>
+    <div class="ex-body"><p>Limita nuevas conexiones SSH a 4 por minuto por IP. Las que superen el límite son bloqueadas y registradas en syslog.</p></div>
+    <div class="pre-header"><div class="pre-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="pre-lang">bash</span></div>
+<pre><span class="c"># Cadena personalizada para control de acceso SSH</span>
 <span class="cmd">iptables</span> <span class="flag">-N</span> SSH_CONTROL
 
-<span class="c"># Si supera 4 conexiones/min, descartar con LOG</span>
+<span class="c"># Si la IP supera 4 intentos en 60s → LOG + DROP</span>
 <span class="cmd">iptables</span> <span class="flag">-A</span> SSH_CONTROL <span class="flag">-m</span> recent <span class="flag">--name</span> SSH <span class="flag">--rcheck</span> \
-         <span class="flag">--seconds</span> <span class="val">60</span> <span class="flag">--hitcount</span> <span class="val">4</span> <span class="flag">-j</span> <span class="act">LOG</span> <span class="flag">--log-prefix</span> <span class="val">"SSH_BRUTE: "</span>
+         <span class="flag">--seconds</span> <span class="val">60</span> <span class="flag">--hitcount</span> <span class="val">4</span> \
+         <span class="flag">-j</span> <span class="act">LOG</span> <span class="flag">--log-prefix</span> <span class="val">"SSH_BRUTE: "</span>
 <span class="cmd">iptables</span> <span class="flag">-A</span> SSH_CONTROL <span class="flag">-m</span> recent <span class="flag">--name</span> SSH <span class="flag">--rcheck</span> \
          <span class="flag">--seconds</span> <span class="val">60</span> <span class="flag">--hitcount</span> <span class="val">4</span> <span class="flag">-j</span> <span class="act">DROP</span>
 
-<span class="c"># Registrar y permitir conexiones dentro del límite</span>
+<span class="c"># Registrar IP y aceptar (dentro del límite)</span>
 <span class="cmd">iptables</span> <span class="flag">-A</span> SSH_CONTROL <span class="flag">-m</span> recent <span class="flag">--name</span> SSH <span class="flag">--set</span> <span class="flag">-j</span> <span class="act">ACCEPT</span>
 
 <span class="c"># Redirigir nuevas conexiones SSH a la cadena de control</span>
 <span class="cmd">iptables</span> <span class="flag">-A</span> INPUT <span class="flag">-p</span> tcp <span class="flag">--dport</span> <span class="val">22</span> <span class="flag">-m</span> state <span class="flag">--state</span> NEW <span class="flag">-j</span> SSH_CONTROL
 </pre>
+  </div>
 
-  <!-- Ejemplo 4 -->
-  <h3>④ Redirigir puerto 8080 → 80 (DNAT)</h3>
-  <p>Muy útil cuando un servidor web corre en el puerto 80 pero queremos recibir en 8080:</p>
-<pre><span class="label">bash</span><span class="c"># En la tabla nat, cadena PREROUTING</span>
+  <div class="example">
+    <div class="example-header">
+      <div class="ex-num a">④</div>
+      <div><div class="ex-title">🔌 Redirigir puerto 8080 → 80 (DNAT)</div><div class="ex-sub">nat · PREROUTING · DNAT</div></div>
+    </div>
+    <div class="ex-body"><p>Útil cuando el servidor web corre en el puerto 80 pero quieres exponer el 8080 externamente sin modificar la aplicación.</p></div>
+    <div class="pre-header"><div class="pre-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="pre-lang">bash</span></div>
+<pre><span class="c"># Redirigir en PREROUTING (antes del routing)</span>
 <span class="cmd">iptables</span> <span class="flag">-t</span> nat <span class="flag">-A</span> PREROUTING \
          <span class="flag">-p</span> tcp <span class="flag">--dport</span> <span class="val">8080</span> \
          <span class="flag">-j</span> <span class="act">DNAT</span> <span class="flag">--to-destination</span> <span class="ip">:80</span>
 
-<span class="c"># Permitir el tráfico redirigido en la cadena filter</span>
+<span class="c"># Permitir el tráfico en el puerto destino real</span>
 <span class="cmd">iptables</span> <span class="flag">-A</span> INPUT <span class="flag">-p</span> tcp <span class="flag">--dport</span> <span class="val">80</span> <span class="flag">-j</span> <span class="act">ACCEPT</span>
 
-<span class="c"># Para redirigir también tráfico local (loopback)</span>
+<span class="c"># Para que también funcione en el mismo equipo (loopback)</span>
 <span class="cmd">iptables</span> <span class="flag">-t</span> nat <span class="flag">-A</span> OUTPUT \
          <span class="flag">-p</span> tcp <span class="flag">--dport</span> <span class="val">8080</span> \
-         <span class="flag">-j</span> <span class="act">DNAT</span> <span class="flag">--to-destination</span> <span class="ip">127.0.0.1:80</span>
+         <span class="flag">-j</span> <span class="act">DNAT</span> <span class="flag">--to-destination</span> <span class="ip">127.0.0.1</span>:<span class="val">80</span>
 </pre>
+  </div>
 
-  <!-- Ejemplo 5 -->
-  <h3>⑤ Compartir Internet con NAT (MASQUERADE)</h3>
-  <p>Convertir el equipo en router/gateway para una red interna:</p>
-<pre><span class="label">bash</span><span class="c"># 1. Activar reenvío de paquetes en el kernel</span>
-<span class="cmd">echo 1 > /proc/sys/net/ipv4/ip_forward</span>
-<span class="c"># Para hacerlo permanente, editar /etc/sysctl.conf:</span>
-<span class="c"># net.ipv4.ip_forward = 1</span>
+  <div class="example">
+    <div class="example-header">
+      <div class="ex-num g">⑤</div>
+      <div><div class="ex-title">🌐 Compartir Internet con NAT (MASQUERADE)</div><div class="ex-sub">nat · POSTROUTING · ip_forward</div></div>
+    </div>
+    <div class="ex-body"><p>Convierte el equipo en un gateway para que una red interna acceda a Internet usando la IP pública dinámica del gateway.</p></div>
+    <div class="pre-header"><div class="pre-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="pre-lang">bash</span></div>
+<pre><span class="c"># 1. Activar reenvío de paquetes entre interfaces (obligatorio)</span>
+<span class="cmd">echo 1</span> > /proc/sys/net/ipv4/ip_forward
+<span class="c"># Persistente: agregar "net.ipv4.ip_forward=1" en /etc/sysctl.conf</span>
 
-<span class="c"># 2. MASQUERADE en la interfaz de salida (ej: eth0 con IP pública)</span>
-<span class="cmd">iptables</span> <span class="flag">-t</span> nat <span class="flag">-A</span> POSTROUTING \
-         <span class="flag">-o</span> eth0 \
-         <span class="flag">-j</span> <span class="act">MASQUERADE</span>
+<span class="c"># 2. MASQUERADE: enmascara IPs internas con la IP pública de eth0</span>
+<span class="cmd">iptables</span> <span class="flag">-t</span> nat <span class="flag">-A</span> POSTROUTING <span class="flag">-o</span> eth0 <span class="flag">-j</span> <span class="act">MASQUERADE</span>
 
-<span class="c"># 3. Permitir reenvío desde la red interna (eth1) hacia Internet</span>
+<span class="c"># 3. Reenvío LAN → Internet</span>
 <span class="cmd">iptables</span> <span class="flag">-A</span> FORWARD <span class="flag">-i</span> eth1 <span class="flag">-o</span> eth0 <span class="flag">-j</span> <span class="act">ACCEPT</span>
 
-<span class="c"># 4. Permitir tráfico de retorno ya establecido</span>
+<span class="c"># 4. Tráfico de retorno (respuestas desde Internet)</span>
 <span class="cmd">iptables</span> <span class="flag">-A</span> FORWARD <span class="flag">-i</span> eth0 <span class="flag">-o</span> eth1 \
          <span class="flag">-m</span> state <span class="flag">--state</span> ESTABLISHED,RELATED <span class="flag">-j</span> <span class="act">ACCEPT</span>
 </pre>
+  </div>
 
-  <!-- Ejemplo 6 -->
-  <h3>⑥ Bloquear una IP específica</h3>
-<pre><span class="label">bash</span><span class="c"># Bloquear todo tráfico entrante de una IP atacante</span>
+  <div class="example">
+    <div class="example-header">
+      <div class="ex-num r">⑥</div>
+      <div><div class="ex-title">🚫 Bloquear una IP específica</div><div class="ex-sub">filter · INPUT · -I (insertar al inicio)</div></div>
+    </div>
+    <div class="ex-body"><p>Bloquea inmediatamente una IP atacante. Usa <code>-I</code> para insertar en posición 1 con máxima prioridad.</p></div>
+    <div class="pre-header"><div class="pre-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="pre-lang">bash</span></div>
+<pre><span class="c"># Bloquear IP específica en posición 1 (máxima prioridad)</span>
 <span class="cmd">iptables</span> <span class="flag">-I</span> INPUT <span class="val">1</span> <span class="flag">-s</span> <span class="ip">203.0.113.45</span> <span class="flag">-j</span> <span class="act">DROP</span>
 
 <span class="c"># Bloquear un rango CIDR completo</span>
 <span class="cmd">iptables</span> <span class="flag">-I</span> INPUT <span class="val">1</span> <span class="flag">-s</span> <span class="ip">203.0.113.0/24</span> <span class="flag">-j</span> <span class="act">DROP</span>
 
-<span class="c"># Verificar que la regla quedó en posición 1</span>
+<span class="c"># Verificar que quedó en posición 1</span>
 <span class="cmd">iptables</span> <span class="flag">-L</span> INPUT <span class="flag">-n</span> <span class="flag">--line-numbers</span>
+
+<span class="c"># Desbloquear (eliminar por número de línea)</span>
+<span class="cmd">iptables</span> <span class="flag">-D</span> INPUT <span class="val">1</span>
 </pre>
+  </div>
 </section>
 
-<!-- ══════════════════════════════════════════════════
-     SECCIÓN 5 — EJERCICIOS
-════════════════════════════════════════════════════ -->
+<!-- ══════ 05 EJERCICIOS ══════ -->
 <section id="s5">
-  <h2><span class="num">05</span> Ejercicios Resueltos</h2>
-  <p>Lee el enunciado, intenta resolverlo y luego despliega la solución haciendo clic en <strong>▶ Ver solución</strong>.</p>
+  <h2><span class="h2-icon purple">🧪</span> Ejercicios Resueltos</h2>
+  <p>Lee el enunciado, intenta resolverlo por tu cuenta y luego despliega la solución haciendo clic.</p>
 
-  <!-- Ejercicio A -->
   <details>
-    <summary>Ejercicio A — Firewall web + SSH restringido por subred</summary>
-    <div class="exercise-enunciado">
-      Configura un firewall que <strong>solo permita</strong>: tráfico HTTP (80), HTTPS (443) desde cualquier origen, y SSH (22) <em>únicamente desde la subred 192.168.1.0/24</em>. Todo lo demás debe bloquearse.
-    </div>
+    <summary><span class="sum-icon">🅐</span> Firewall web público + SSH restringido por subred<span class="sum-chevron">▼</span></summary>
+    <div class="ex-enunciado">Configura un firewall que <strong>solo permita</strong> HTTP (80) y HTTPS (443) desde cualquier origen, y SSH (22) <em>únicamente desde 192.168.1.0/24</em>. Bloquear el resto.</div>
     <div class="solution">
-      <span class="solution-label">▸ Solución</span>
+      <div class="solution-label">✅ Solución</div>
+      <div class="pre-header"><div class="pre-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="pre-lang">bash</span></div>
 <pre><span class="c">#!/bin/bash
-# Firewall: web público + SSH solo desde LAN
-
-# ── Limpiar reglas previas ──
-</span><span class="cmd">iptables</span> <span class="flag">-F</span>
+# ── Limpiar reglas previas ──</span>
+<span class="cmd">iptables</span> <span class="flag">-F</span>
 <span class="cmd">iptables</span> <span class="flag">-X</span>
 
-<span class="c"># ── Políticas por defecto ──</span>
+<span class="c"># ── Políticas por defecto restrictivas ──</span>
 <span class="cmd">iptables</span> <span class="flag">-P</span> INPUT   <span class="act">DROP</span>
 <span class="cmd">iptables</span> <span class="flag">-P</span> FORWARD <span class="act">DROP</span>
 <span class="cmd">iptables</span> <span class="flag">-P</span> OUTPUT  <span class="act">ACCEPT</span>
 
-<span class="c"># ── Loopback ──</span>
+<span class="c"># ── Loopback siempre permitido ──</span>
 <span class="cmd">iptables</span> <span class="flag">-A</span> INPUT <span class="flag">-i</span> lo <span class="flag">-j</span> <span class="act">ACCEPT</span>
 
-<span class="c"># ── Tráfico ya establecido ──</span>
+<span class="c"># ── Conexiones ya establecidas ──</span>
 <span class="cmd">iptables</span> <span class="flag">-A</span> INPUT <span class="flag">-m</span> state <span class="flag">--state</span> ESTABLISHED,RELATED <span class="flag">-j</span> <span class="act">ACCEPT</span>
 
-<span class="c"># ── SSH solo desde 192.168.1.0/24 ──</span>
+<span class="c"># ── SSH solo desde la subred interna ──</span>
 <span class="cmd">iptables</span> <span class="flag">-A</span> INPUT <span class="flag">-p</span> tcp <span class="flag">-s</span> <span class="ip">192.168.1.0/24</span> <span class="flag">--dport</span> <span class="val">22</span> <span class="flag">-j</span> <span class="act">ACCEPT</span>
 
 <span class="c"># ── Web desde cualquier origen ──</span>
 <span class="cmd">iptables</span> <span class="flag">-A</span> INPUT <span class="flag">-p</span> tcp <span class="flag">-m</span> multiport <span class="flag">--dports</span> <span class="val">80,443</span> <span class="flag">-j</span> <span class="act">ACCEPT</span>
 
-<span class="c"># ── El resto cae en la política DROP (log opcional) ──</span>
+<span class="c"># ── Registrar lo que cae (opcional) ──</span>
 <span class="cmd">iptables</span> <span class="flag">-A</span> INPUT <span class="flag">-j</span> <span class="act">LOG</span> <span class="flag">--log-prefix</span> <span class="val">"FW_DROP: "</span> <span class="flag">--log-level</span> <span class="val">4</span>
 </pre>
     </div>
   </details>
 
-  <!-- Ejercicio B -->
   <details>
-    <summary>Ejercicio B — Prevenir fuerza bruta SSH (máx. 3 intentos/min)</summary>
-    <div class="exercise-enunciado">
-      Crea reglas que <strong>bloqueen automáticamente</strong> a cualquier IP que supere 3 intentos de conexión SSH nuevos en menos de 60 segundos.
-    </div>
+    <summary><span class="sum-icon">🅑</span> Prevenir fuerza bruta SSH (máx. 3 intentos/min)<span class="sum-chevron">▼</span></summary>
+    <div class="ex-enunciado">Bloquea automáticamente cualquier IP que supere <strong>3 intentos de conexión SSH</strong> en menos de 60 segundos.</div>
     <div class="solution">
-      <span class="solution-label">▸ Solución</span>
-<pre><span class="c">#!/bin/bash
-# Anti-brute-force SSH con módulo recent
-
-</span><span class="c"># Cadena de control</span>
+      <div class="solution-label">✅ Solución</div>
+      <div class="pre-header"><div class="pre-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="pre-lang">bash</span></div>
+<pre><span class="c"># Cadena dedicada al anti-brute-force</span>
 <span class="cmd">iptables</span> <span class="flag">-N</span> SSH_BF
 
-<span class="c"># Si ya está en la lista de "atacantes", DROP</span>
+<span class="c"># Si la IP tiene 3+ intentos en 60s → LOG y DROP</span>
 <span class="cmd">iptables</span> <span class="flag">-A</span> SSH_BF <span class="flag">-m</span> recent <span class="flag">--name</span> SSHBF \
          <span class="flag">--rcheck</span> <span class="flag">--seconds</span> <span class="val">60</span> <span class="flag">--hitcount</span> <span class="val">3</span> \
-         <span class="flag">-j</span> <span class="act">LOG</span> <span class="flag">--log-prefix</span> <span class="val">"SSH_BF_BLOCKED: "</span>
+         <span class="flag">-j</span> <span class="act">LOG</span> <span class="flag">--log-prefix</span> <span class="val">"SSH_BF_BLOCK: "</span>
 <span class="cmd">iptables</span> <span class="flag">-A</span> SSH_BF <span class="flag">-m</span> recent <span class="flag">--name</span> SSHBF \
          <span class="flag">--rcheck</span> <span class="flag">--seconds</span> <span class="val">60</span> <span class="flag">--hitcount</span> <span class="val">3</span> <span class="flag">-j</span> <span class="act">DROP</span>
 
-<span class="c"># Registrar la IP y aceptar (dentro del límite)</span>
+<span class="c"># Registrar IP y aceptar (dentro del límite)</span>
 <span class="cmd">iptables</span> <span class="flag">-A</span> SSH_BF <span class="flag">-m</span> recent <span class="flag">--name</span> SSHBF <span class="flag">--set</span> <span class="flag">-j</span> <span class="act">ACCEPT</span>
 
-<span class="c"># Enviar nuevas conexiones SSH a la cadena SSH_BF</span>
-<span class="cmd">iptables</span> <span class="flag">-A</span> INPUT <span class="flag">-p</span> tcp <span class="flag">--dport</span> <span class="val">22</span> \
-         <span class="flag">-m</span> state <span class="flag">--state</span> NEW <span class="flag">-j</span> SSH_BF
+<span class="c"># Solo conexiones NUEVAS van al control</span>
+<span class="cmd">iptables</span> <span class="flag">-A</span> INPUT <span class="flag">-p</span> tcp <span class="flag">--dport</span> <span class="val">22</span> <span class="flag">-m</span> state <span class="flag">--state</span> NEW <span class="flag">-j</span> SSH_BF
 </pre>
     </div>
   </details>
 
-  <!-- Ejercicio C -->
   <details>
-    <summary>Ejercicio C — Router NAT con IP pública dinámica</summary>
-    <div class="exercise-enunciado">
-      Configura el equipo como <strong>gateway NAT</strong> para que los equipos de la red interna <code>10.0.0.0/24</code> (interfaz <code>eth1</code>) salgan a Internet por la interfaz <code>eth0</code> con IP pública dinámica.
-    </div>
+    <summary><span class="sum-icon">🅒</span> Router NAT con IP pública dinámica (gateway)<span class="sum-chevron">▼</span></summary>
+    <div class="ex-enunciado">Configura el equipo como <strong>gateway NAT</strong> para que la red <code>10.0.0.0/24</code> (eth1) salga a Internet por eth0 con IP pública dinámica.</div>
     <div class="solution">
-      <span class="solution-label">▸ Solución</span>
+      <div class="solution-label">✅ Solución</div>
+      <div class="pre-header"><div class="pre-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="pre-lang">bash</span></div>
 <pre><span class="c">#!/bin/bash
-# Gateway NAT con MASQUERADE
-
-# ── Activar IP forwarding ──</span>
+# Activar IP forwarding</span>
 <span class="cmd">sysctl</span> <span class="flag">-w</span> net.ipv4.ip_forward=<span class="val">1</span>
-<span class="c"># Persistente: echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf</span>
+<span class="cmd">echo</span> <span class="val">"net.ipv4.ip_forward=1"</span> >> /etc/sysctl.conf
 
-<span class="c"># ── Limpiar ──</span>
 <span class="cmd">iptables</span> <span class="flag">-F</span>
 <span class="cmd">iptables</span> <span class="flag">-t</span> nat <span class="flag">-F</span>
 
-<span class="c"># ── NAT de salida (MASQUERADE porque la IP pública es dinámica) ──</span>
+<span class="c"># MASQUERADE (IP dinámica → usa la IP actual de eth0)</span>
 <span class="cmd">iptables</span> <span class="flag">-t</span> nat <span class="flag">-A</span> POSTROUTING \
-         <span class="flag">-s</span> <span class="ip">10.0.0.0/24</span> \
-         <span class="flag">-o</span> eth0 \
-         <span class="flag">-j</span> <span class="act">MASQUERADE</span>
+         <span class="flag">-s</span> <span class="ip">10.0.0.0/24</span> <span class="flag">-o</span> eth0 <span class="flag">-j</span> <span class="act">MASQUERADE</span>
 
-<span class="c"># ── Permitir reenvío LAN → Internet ──</span>
+<span class="c"># Reenvío LAN → Internet</span>
 <span class="cmd">iptables</span> <span class="flag">-A</span> FORWARD \
-         <span class="flag">-i</span> eth1 <span class="flag">-o</span> eth0 \
-         <span class="flag">-s</span> <span class="ip">10.0.0.0/24</span> \
-         <span class="flag">-j</span> <span class="act">ACCEPT</span>
+         <span class="flag">-i</span> eth1 <span class="flag">-o</span> eth0 <span class="flag">-s</span> <span class="ip">10.0.0.0/24</span> <span class="flag">-j</span> <span class="act">ACCEPT</span>
 
-<span class="c"># ── Permitir tráfico de retorno ──</span>
+<span class="c"># Reenvío: respuestas de Internet → LAN</span>
 <span class="cmd">iptables</span> <span class="flag">-A</span> FORWARD \
          <span class="flag">-i</span> eth0 <span class="flag">-o</span> eth1 \
-         <span class="flag">-m</span> state <span class="flag">--state</span> ESTABLISHED,RELATED \
-         <span class="flag">-j</span> <span class="act">ACCEPT</span>
+         <span class="flag">-m</span> state <span class="flag">--state</span> ESTABLISHED,RELATED <span class="flag">-j</span> <span class="act">ACCEPT</span>
 </pre>
     </div>
   </details>
 
-  <!-- Ejercicio D -->
   <details>
-    <summary>Ejercicio D — Port forwarding: puerto 2222 → servidor interno 10.0.0.5:22</summary>
-    <div class="exercise-enunciado">
-      Redirige el tráfico TCP que llegue al puerto <strong>2222</strong> del gateway hacia el puerto <strong>22</strong> del servidor interno <code>10.0.0.5</code>.
-    </div>
+    <summary><span class="sum-icon">🅓</span> Port forwarding: puerto 2222 → servidor interno 10.0.0.5:22<span class="sum-chevron">▼</span></summary>
+    <div class="ex-enunciado">Redirige el tráfico TCP del puerto <strong>2222</strong> del gateway hacia el puerto <strong>22</strong> del servidor interno <code>10.0.0.5</code>.</div>
     <div class="solution">
-      <span class="solution-label">▸ Solución</span>
-<pre><span class="c">#!/bin/bash
-# Port forwarding: gateway:2222 → 10.0.0.5:22
-
-# ── Redirigir en PREROUTING (tabla nat) ──</span>
+      <div class="solution-label">✅ Solución</div>
+      <div class="pre-header"><div class="pre-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="pre-lang">bash</span></div>
+<pre><span class="c"># DNAT: redirigir :2222 → 10.0.0.5:22</span>
 <span class="cmd">iptables</span> <span class="flag">-t</span> nat <span class="flag">-A</span> PREROUTING \
-         <span class="flag">-p</span> tcp \
-         <span class="flag">--dport</span> <span class="val">2222</span> \
+         <span class="flag">-p</span> tcp <span class="flag">--dport</span> <span class="val">2222</span> \
          <span class="flag">-j</span> <span class="act">DNAT</span> <span class="flag">--to-destination</span> <span class="ip">10.0.0.5</span>:<span class="val">22</span>
 
-<span class="c"># ── Permitir el reenvío hacia el servidor interno ──</span>
+<span class="c"># Permitir reenvío hacia el servidor interno</span>
 <span class="cmd">iptables</span> <span class="flag">-A</span> FORWARD \
          <span class="flag">-p</span> tcp <span class="flag">-d</span> <span class="ip">10.0.0.5</span> <span class="flag">--dport</span> <span class="val">22</span> \
          <span class="flag">-m</span> state <span class="flag">--state</span> NEW,ESTABLISHED,RELATED \
          <span class="flag">-j</span> <span class="act">ACCEPT</span>
 
-<span class="c"># ── Asegurarse de que IP forwarding está activo ──</span>
 <span class="cmd">sysctl</span> <span class="flag">-w</span> net.ipv4.ip_forward=<span class="val">1</span>
 </pre>
     </div>
   </details>
 
-  <!-- Ejercicio E -->
   <details>
-    <summary>Ejercicio E — Registrar paquetes ICMP y bloquearlos</summary>
-    <div class="exercise-enunciado">
-      Registra todos los paquetes ICMP (ping) entrantes en syslog con el prefijo <code>ICMP_IN:</code> y luego bloquéalos sin responder al emisor.
-    </div>
+    <summary><span class="sum-icon">🅔</span> Registrar paquetes ICMP entrantes y bloquearlos<span class="sum-chevron">▼</span></summary>
+    <div class="ex-enunciado">Registra todos los paquetes ICMP (ping) entrantes con prefijo <code>ICMP_IN:</code> y luego bloquéalos sin responder al emisor.</div>
     <div class="solution">
-      <span class="solution-label">▸ Solución</span>
-<pre><span class="c">#!/bin/bash
-# LOG + DROP de ICMP entrante
-
-# ── Registrar primero (LOG no detiene el procesamiento) ──</span>
+      <div class="solution-label">✅ Solución</div>
+      <div class="pre-header"><div class="pre-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="pre-lang">bash</span></div>
+<pre><span class="c"># LOG primero: no detiene la evaluación, el paquete continúa</span>
 <span class="cmd">iptables</span> <span class="flag">-A</span> INPUT \
          <span class="flag">-p</span> icmp \
          <span class="flag">-j</span> <span class="act">LOG</span> \
          <span class="flag">--log-prefix</span> <span class="val">"ICMP_IN: "</span> \
          <span class="flag">--log-level</span> <span class="val">4</span>
 
-<span class="c"># ── Luego descartar (DROP = sin respuesta) ──</span>
+<span class="c"># DROP silencioso: el emisor no recibe respuesta (el equipo "no existe")</span>
 <span class="cmd">iptables</span> <span class="flag">-A</span> INPUT <span class="flag">-p</span> icmp <span class="flag">-j</span> <span class="act">DROP</span>
 
-<span class="c"># Ver los logs en tiempo real:</span>
-<span class="c"># journalctl -f | grep ICMP_IN
-# o: tail -f /var/log/kern.log | grep ICMP_IN</span>
+<span class="c"># Ver logs en tiempo real:</span>
+<span class="c"># journalctl -f | grep ICMP_IN</span>
 </pre>
     </div>
   </details>
 
-  <!-- Ejercicio F -->
   <details>
-    <summary>Ejercicio F — Reglas persistentes con iptables-save / restore</summary>
-    <div class="exercise-enunciado">
-      Guarda las reglas actuales de forma persistente para que sobrevivan a un reinicio del sistema, tanto en sistemas Debian/Ubuntu como RHEL/CentOS.
-    </div>
+    <summary><span class="sum-icon">🅕</span> Reglas persistentes con iptables-save / restore<span class="sum-chevron">▼</span></summary>
+    <div class="ex-enunciado">Guarda las reglas actuales para que sobrevivan a un reinicio, tanto en Debian/Ubuntu como en RHEL/CentOS.</div>
     <div class="solution">
-      <span class="solution-label">▸ Solución</span>
-<pre><span class="c">#!/bin/bash
-# ══ OPCIÓN A: iptables-save manual ══
+      <div class="solution-label">✅ Solución</div>
+      <div class="pre-header"><div class="pre-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="pre-lang">bash</span></div>
+<pre><span class="c"># ══ OPCIÓN A: Manual (cualquier distro) ══</span>
+<span class="cmd">iptables-save</span>  > /etc/iptables/rules.v4
+<span class="cmd">iptables-restore</span>  < /etc/iptables/rules.v4
 
-# Guardar reglas en archivo</span>
-<span class="cmd">iptables-save</span> > /etc/iptables/rules.v4
-<span class="cmd">ip6tables-save</span> > /etc/iptables/rules.v6
-
-<span class="c"># Restaurar manualmente</span>
-<span class="cmd">iptables-restore</span> < /etc/iptables/rules.v4
-
-<span class="c"># ══ OPCIÓN B: iptables-persistent (Debian/Ubuntu) ══
-
-# Instalar</span>
+<span class="c"># ══ OPCIÓN B: iptables-persistent (Debian/Ubuntu) ══</span>
 <span class="cmd">apt install</span> iptables-persistent
-
-<span class="c"># Guardar automáticamente (guarda las reglas actuales)</span>
 <span class="cmd">netfilter-persistent save</span>
+<span class="cmd">systemctl enable</span> netfilter-persistent
 
-<span class="c"># El servicio las restaura en cada arranque
-# Estado del servicio:</span>
-<span class="cmd">systemctl status</span> netfilter-persistent
-
-<span class="c"># ══ OPCIÓN C: Script systemd ══
-
+<span class="c"># ══ OPCIÓN C: Servicio systemd personalizado ══
 # /etc/systemd/system/iptables-restore.service</span>
 [Unit]
-Description=Restore iptables rules
+Description=Restaurar reglas iptables
 Before=network-pre.target
 
 [Service]
@@ -889,45 +798,50 @@ RemainAfterExit=yes
 [Install]
 WantedBy=multi-user.target
 
-<span class="c"># Activar el servicio</span>
 <span class="cmd">systemctl enable</span> --now iptables-restore
 </pre>
     </div>
   </details>
-
 </section>
 
-<!-- ══════════════════════════════════════════════════
-     SECCIÓN 6 — PERSISTENCIA
-════════════════════════════════════════════════════ -->
+<!-- ══════ 06 PERSISTENCIA ══════ -->
 <section id="s6">
-  <h2><span class="num">06</span> Persistencia de Reglas</h2>
+  <h2><span class="h2-icon blue">💾</span> Persistencia de Reglas</h2>
 
-  <p>Por defecto, las reglas de iptables son <em>volátiles</em>: desaparecen al reiniciar. Existen varias formas de hacerlas persistentes:</p>
+  <div class="callout warn">
+    <span class="callout-icon">⚠️</span>
+    <p>Las reglas de iptables son <strong>volátiles por defecto</strong>: desaparecen al reiniciar. Es imprescindible usar alguno de los métodos siguientes en producción.</p>
+  </div>
 
-  <h3>iptables-save y iptables-restore</h3>
-<pre><span class="label">bash</span><span class="c"># Exportar reglas a archivo (incluye todas las tablas)</span>
+  <h3>💾 iptables-save y iptables-restore</h3>
+  <div class="pre-header"><div class="pre-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="pre-lang">bash</span></div>
+<pre><span class="c"># Exportar todas las tablas a archivo</span>
 <span class="cmd">iptables-save</span> > /etc/iptables/rules.v4
 
 <span class="c"># Restaurar desde archivo</span>
 <span class="cmd">iptables-restore</span> < /etc/iptables/rules.v4
 
-<span class="c"># Ver el formato del archivo exportado</span>
+<span class="c"># Ver contenido del archivo guardado</span>
 <span class="cmd">cat</span> /etc/iptables/rules.v4
 </pre>
 
-  <h3>iptables-persistent / netfilter-persistent (Debian/Ubuntu)</h3>
-<pre><span class="label">bash</span><span class="cmd">apt install</span> iptables-persistent
+  <h3>📦 netfilter-persistent (Debian/Ubuntu)</h3>
+  <div class="pre-header"><div class="pre-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="pre-lang">bash</span></div>
+<pre><span class="cmd">apt install</span> iptables-persistent
 
-<span class="c"># Guarda las reglas actuales en /etc/iptables/rules.v4</span>
+<span class="c"># Guardar reglas actuales en /etc/iptables/rules.v4</span>
 <span class="cmd">netfilter-persistent save</span>
 
-<span class="c"># Recarga las reglas guardadas</span>
+<span class="c"># Recargar reglas guardadas</span>
 <span class="cmd">netfilter-persistent reload</span>
+
+<span class="c"># Estado del servicio</span>
+<span class="cmd">systemctl status</span> netfilter-persistent
 </pre>
 
-  <h3>Script en /etc/network/if-pre-up.d/</h3>
-<pre><span class="label">bash</span><span class="c"># Crear script que se ejecuta antes de levantar interfaces</span>
+  <h3>🔧 Script en /etc/network/if-pre-up.d/</h3>
+  <div class="pre-header"><div class="pre-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="pre-lang">bash</span></div>
+<pre><span class="c"># Se ejecuta antes de levantar interfaces de red</span>
 <span class="cmd">cat</span> > /etc/network/if-pre-up.d/iptables <span class="val">&lt;&lt;'EOF'
 #!/bin/bash
 iptables-restore < /etc/iptables/rules.v4
@@ -935,41 +849,39 @@ EOF</span>
 <span class="cmd">chmod</span> +x /etc/network/if-pre-up.d/iptables
 </pre>
 
-  <div class="callout">
-    <span class="icon">💡</span> En sistemas RHEL/CentOS con <code>iptables-services</code>, las reglas se guardan en <code>/etc/sysconfig/iptables</code> y se gestionan con <code>service iptables save</code>.
+  <div class="callout info">
+    <span class="callout-icon">ℹ️</span>
+    <p>En RHEL/CentOS con <code>iptables-services</code>, las reglas se guardan en <code>/etc/sysconfig/iptables</code>. Usa <code>service iptables save</code> y <code>systemctl enable iptables</code>.</p>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════════════
-     SECCIÓN 7 — BUENAS PRÁCTICAS
-════════════════════════════════════════════════════ -->
+<!-- ══════ 07 BUENAS PRÁCTICAS ══════ -->
 <section id="s7">
-  <h2><span class="num">07</span> Consejos de Seguridad y Buenas Prácticas</h2>
+  <h2><span class="h2-icon green">✅</span> Consejos de Seguridad y Buenas Prácticas</h2>
 
   <div class="steps">
-    <div class="step"><p><strong>Whitelist SSH ANTES de cambiar la política a DROP.</strong> Siempre añade la regla de aceptación SSH antes de ejecutar <code>iptables -P INPUT DROP</code>. De lo contrario te quedarás sin acceso al servidor.</p></div>
-    <div class="step"><p><strong>Orden de reglas: específicas primero, generales después.</strong> Las reglas más concretas (una IP, un puerto) deben aparecer antes que las genéricas. El motor las evalúa en orden y para en la primera coincidencia.</p></div>
-    <div class="step"><p><strong>Vacía las reglas antes de aplicar un script nuevo.</strong> Inicia siempre con <code>iptables -F</code> y <code>iptables -X</code> para evitar reglas duplicadas o conflictivas de ejecuciones anteriores.</p></div>
-    <div class="step"><p><strong>Usa <code>-n</code> en los listados.</strong> Evita la resolución DNS inversa con <code>iptables -L -n -v</code>, lo que hace los listados mucho más rápidos en servidores con DNS lento.</p></div>
-    <div class="step"><p><strong>Añade reglas con <code>-I</code> (insert) en lugar de <code>-A</code> (append) para máxima prioridad.</strong> Las reglas de bloqueo urgentes deben ir al inicio de la cadena.</p></div>
-    <div class="step"><p><strong>Usa estados de conexión (conntrack).</strong> La regla <code>-m state --state ESTABLISHED,RELATED -j ACCEPT</code> es fundamental: permite que el tráfico de retorno fluya sin necesidad de reglas bidireccionales para cada servicio.</p></div>
-    <div class="step"><p><strong>Prueba con un cron de seguridad.</strong> Antes de aplicar reglas arriesgadas en remoto, programa un cron que resetee las reglas en 5 minutos: <code>echo "iptables -F" | at now + 5 min</code>. Cancélalo si todo funciona.</p></div>
-    <div class="step"><p><strong>Documenta tus reglas.</strong> Usa comentarios en los scripts y añade <code>--log-prefix</code> descriptivos en los LOG para facilitar el diagnóstico posterior.</p></div>
+    <div class="step"><span class="step-icon">🔑</span><div class="step-body"><div class="step-title">Whitelist SSH ANTES de cambiar la política a DROP</div><p class="step-desc">Añade la regla de aceptación SSH <em>antes</em> de <code>iptables -P INPUT DROP</code>. De lo contrario perderás acceso al servidor remoto permanentemente hasta tener consola física.</p></div></div>
+    <div class="step"><span class="step-icon">📊</span><div class="step-body"><div class="step-title">Orden: reglas específicas primero, generales después</div><p class="step-desc">Las reglas concretas (por IP, por puerto) deben preceder a las genéricas. El motor evalúa en orden y se detiene en la primera coincidencia.</p></div></div>
+    <div class="step"><span class="step-icon">🧹</span><div class="step-body"><div class="step-title">Vacía las reglas antes de aplicar un script nuevo</div><p class="step-desc">Inicia con <code>iptables -F</code> y <code>iptables -X</code> para evitar reglas duplicadas o conflictivas de ejecuciones anteriores.</p></div></div>
+    <div class="step"><span class="step-icon">⚡</span><div class="step-body"><div class="step-title">Usa <code>-n</code> en los listados para mayor velocidad</div><p class="step-desc"><code>iptables -L -n -v</code> evita la resolución DNS inversa, lo que puede ser muy lento en servidores con DNS mal configurado.</p></div></div>
+    <div class="step"><span class="step-icon">🔗</span><div class="step-body"><div class="step-title">Aprovecha el seguimiento de estado (conntrack)</div><p class="step-desc"><code>-m state --state ESTABLISHED,RELATED -j ACCEPT</code> es fundamental: permite el tráfico de retorno sin reglas bidireccionales para cada servicio.</p></div></div>
+    <div class="step"><span class="step-icon">⏰</span><div class="step-body"><div class="step-title">Usa un cron de seguridad al probar reglas en remoto</div><p class="step-desc">Antes de aplicar reglas arriesgadas: <code>echo "iptables -F && iptables -P INPUT ACCEPT" | at now + 5 min</code>. Cancela el job si todo funciona.</p></div></div>
+    <div class="step"><span class="step-icon">⬆️</span><div class="step-body"><div class="step-title">Usa <code>-I</code> para bloqueos urgentes</div><p class="step-desc"><code>-I INPUT 1</code> inserta al inicio (máxima prioridad). Ideal para bloqueos de emergencia. <code>-A</code> añade al final del flujo normal de reglas.</p></div></div>
+    <div class="step"><span class="step-icon">📝</span><div class="step-body"><div class="step-title">Documenta tus reglas con prefijos de LOG descriptivos</div><p class="step-desc">Comenta cada bloque en tus scripts y usa <code>--log-prefix "NOMBRE_REGLA: "</code> para identificar fácilmente el origen en los logs del sistema.</p></div></div>
   </div>
 
-  <h3>Plantilla de script de firewall recomendada</h3>
-<pre><span class="label">bash</span><span class="c">#!/bin/bash
-# firewall.sh — Plantilla de firewall segura
-
-set -e   # Salir si hay error
+  <h3>📄 Plantilla de script de firewall recomendada</h3>
+  <div class="pre-header"><div class="pre-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="pre-lang">bash</span></div>
+<pre><span class="c">#!/bin/bash
+# firewall.sh — Plantilla segura y comentada
+set -e  # Detener si hay error
 
 # ══ 1. Limpiar reglas existentes ══</span>
 <span class="cmd">iptables</span> <span class="flag">-F</span>
 <span class="cmd">iptables</span> <span class="flag">-X</span>
 <span class="cmd">iptables</span> <span class="flag">-t</span> nat <span class="flag">-F</span>
-<span class="cmd">iptables</span> <span class="flag">-t</span> mangle <span class="flag">-F</span>
 
-<span class="c"># ══ 2. Políticas por defecto (PERMISIVAS al inicio) ══</span>
+<span class="c"># ══ 2. Políticas permisivas al inicio (seguridad) ══</span>
 <span class="cmd">iptables</span> <span class="flag">-P</span> INPUT   <span class="act">ACCEPT</span>
 <span class="cmd">iptables</span> <span class="flag">-P</span> FORWARD <span class="act">ACCEPT</span>
 <span class="cmd">iptables</span> <span class="flag">-P</span> OUTPUT  <span class="act">ACCEPT</span>
@@ -977,69 +889,72 @@ set -e   # Salir si hay error
 <span class="c"># ══ 3. Reglas específicas ══</span>
 <span class="cmd">iptables</span> <span class="flag">-A</span> INPUT <span class="flag">-i</span> lo <span class="flag">-j</span> <span class="act">ACCEPT</span>
 <span class="cmd">iptables</span> <span class="flag">-A</span> INPUT <span class="flag">-m</span> state <span class="flag">--state</span> ESTABLISHED,RELATED <span class="flag">-j</span> <span class="act">ACCEPT</span>
-<span class="cmd">iptables</span> <span class="flag">-A</span> INPUT <span class="flag">-p</span> tcp <span class="flag">--dport</span> <span class="val">22</span> <span class="flag">-j</span> <span class="act">ACCEPT</span>   <span class="c"># SSH</span>
-<span class="c"># ... añadir más reglas aquí ...</span>
+<span class="cmd">iptables</span> <span class="flag">-A</span> INPUT <span class="flag">-p</span> tcp <span class="flag">--dport</span> <span class="val">22</span>  <span class="flag">-j</span> <span class="act">ACCEPT</span>  <span class="c"># SSH</span>
+<span class="cmd">iptables</span> <span class="flag">-A</span> INPUT <span class="flag">-p</span> tcp <span class="flag">--dport</span> <span class="val">80</span>  <span class="flag">-j</span> <span class="act">ACCEPT</span>  <span class="c"># HTTP</span>
+<span class="cmd">iptables</span> <span class="flag">-A</span> INPUT <span class="flag">-p</span> tcp <span class="flag">--dport</span> <span class="val">443</span> <span class="flag">-j</span> <span class="act">ACCEPT</span>  <span class="c"># HTTPS</span>
 
 <span class="c"># ══ 4. Políticas restrictivas AL FINAL ══</span>
 <span class="cmd">iptables</span> <span class="flag">-P</span> INPUT   <span class="act">DROP</span>
 <span class="cmd">iptables</span> <span class="flag">-P</span> FORWARD <span class="act">DROP</span>
 
-<span class="c"># ══ 5. Guardar ══</span>
+<span class="c"># ══ 5. Guardar para persistencia ══</span>
 <span class="cmd">iptables-save</span> > /etc/iptables/rules.v4
-<span class="cmd">echo</span> <span class="val">"Firewall aplicado correctamente."</span>
+<span class="cmd">echo</span> <span class="val">"✅ Firewall aplicado correctamente."</span>
 </pre>
 </section>
 
-<!-- ══════════════════════════════════════════════════
-     SECCIÓN 8 — PROBLEMAS Y SOLUCIONES
-════════════════════════════════════════════════════ -->
+<!-- ══════ 08 PROBLEMAS ══════ -->
 <section id="s8">
-  <h2><span class="num">08</span> Posibles Problemas y Soluciones</h2>
+  <h2><span class="h2-icon red">🚨</span> Posibles Problemas y Soluciones</h2>
 
   <details open>
-    <summary>❌ Me quedé sin acceso SSH al servidor</summary>
+    <summary><span class="sum-icon">🔒</span> Me quedé sin acceso SSH al servidor<span class="sum-chevron">▼</span></summary>
     <div class="solution">
-      <span class="solution-label">▸ Solución</span>
-      <p>Si tienes acceso a la consola física o panel VNC/KVM del proveedor:</p>
-<pre><span class="c"># Desde consola local: limpiar todas las reglas (acceso inmediato)</span>
+      <div class="solution-label">✅ Solución</div>
+      <p>Desde consola física, VNC/KVM o panel de emergencia del proveedor cloud:</p>
+      <div class="pre-header"><div class="pre-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="pre-lang">bash</span></div>
+<pre><span class="c"># Limpiar reglas y restaurar acceso inmediatamente</span>
 <span class="cmd">iptables</span> <span class="flag">-F</span>
 <span class="cmd">iptables</span> <span class="flag">-P</span> INPUT <span class="act">ACCEPT</span>
 </pre>
-      <p>Si usas un proveedor cloud, utiliza la consola de emergencia (EC2 Serial Console, Azure Bastion, etc.).</p>
+      <p style="margin-top:8px;">En cloud: EC2 Serial Console, Azure Bastion, Google Cloud SSH in Browser, consola web del VPS.</p>
     </div>
   </details>
 
   <details>
-    <summary>❌ Las reglas desaparecen tras reiniciar</summary>
+    <summary><span class="sum-icon">🔄</span> Las reglas desaparecen tras reiniciar<span class="sum-chevron">▼</span></summary>
     <div class="solution">
-      <span class="solution-label">▸ Solución</span>
-      <p>Las reglas de iptables son volátiles por defecto. Usa alguno de los métodos de la sección de persistencia: <code>iptables-persistent</code> en Debian/Ubuntu, <code>service iptables save</code> en RHEL, o un servicio systemd personalizado.</p>
+      <div class="solution-label">✅ Solución</div>
+      <p>Las reglas son volátiles por diseño. Usa <code>iptables-persistent</code> en Debian/Ubuntu, <code>service iptables save</code> en RHEL, o un servicio systemd personalizado (ver sección 06).</p>
     </div>
   </details>
 
   <details>
-    <summary>❌ El NAT funciona pero los equipos internos no salen a Internet</summary>
+    <summary><span class="sum-icon">🌐</span> El NAT funciona pero los equipos internos no salen a Internet<span class="sum-chevron">▼</span></summary>
     <div class="solution">
-      <span class="solution-label">▸ Solución</span>
-<pre><span class="c"># Verificar que IP forwarding está activo</span>
+      <div class="solution-label">✅ Solución</div>
+      <div class="pre-header"><div class="pre-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="pre-lang">bash</span></div>
+<pre><span class="c"># 1. Verificar ip_forward (debe devolver 1)</span>
 <span class="cmd">cat</span> /proc/sys/net/ipv4/ip_forward
-<span class="c"># Debe devolver 1; si es 0:</span>
+
+<span class="c"># 2. Activarlo si es 0</span>
 <span class="cmd">echo 1</span> > /proc/sys/net/ipv4/ip_forward
 
-<span class="c"># Verificar que FORWARD no está en DROP</span>
-<span class="cmd">iptables</span> <span class="flag">-L</span> FORWARD <span class="flag">-n</span>
+<span class="c"># 3. Verificar cadena FORWARD</span>
+<span class="cmd">iptables</span> <span class="flag">-L</span> FORWARD <span class="flag">-n</span> <span class="flag">-v</span>
 
-<span class="c"># Verificar la regla MASQUERADE</span>
+<span class="c"># 4. Verificar regla MASQUERADE</span>
 <span class="cmd">iptables</span> <span class="flag">-t</span> nat <span class="flag">-L</span> POSTROUTING <span class="flag">-v</span> <span class="flag">-n</span>
 </pre>
     </div>
   </details>
 
   <details>
-    <summary>❌ El DNAT (port forwarding) no funciona desde el propio gateway</summary>
+    <summary><span class="sum-icon">🔌</span> El DNAT no funciona desde el propio gateway<span class="sum-chevron">▼</span></summary>
     <div class="solution">
-      <span class="solution-label">▸ Solución</span>
-      <p>PREROUTING no se aplica al tráfico originado en el mismo equipo. Añade una regla en la cadena <code>OUTPUT</code> de la tabla nat:</p>
+      <div class="solution-label">✅ Solución</div>
+      <p>PREROUTING no aplica al tráfico originado localmente. Añade una regla en OUTPUT de la tabla nat:</p>
+      <div class="pre-header"><div class="pre-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="pre-lang">bash</span></div>
 <pre><span class="cmd">iptables</span> <span class="flag">-t</span> nat <span class="flag">-A</span> OUTPUT \
          <span class="flag">-p</span> tcp <span class="flag">--dport</span> <span class="val">2222</span> \
          <span class="flag">-j</span> <span class="act">DNAT</span> <span class="flag">--to-destination</span> <span class="ip">10.0.0.5</span>:<span class="val">22</span>
@@ -1048,47 +963,46 @@ set -e   # Salir si hay error
   </details>
 
   <details>
-    <summary>❌ Error: "iptables: No chain/target/match by that name"</summary>
+    <summary><span class="sum-icon">💥</span> Error: "No chain/target/match by that name"<span class="sum-chevron">▼</span></summary>
     <div class="solution">
-      <span class="solution-label">▸ Solución</span>
-      <p>El módulo del kernel requerido no está cargado. Carga los módulos necesarios:</p>
-<pre><span class="c"># Para el módulo 'recent' (rate limiting)</span>
-<span class="cmd">modprobe</span> xt_recent
-
-<span class="c"># Para el módulo 'state' / conntrack</span>
-<span class="cmd">modprobe</span> ip_conntrack
-
-<span class="c"># Ver módulos cargados relacionados con netfilter</span>
-<span class="cmd">lsmod</span> | <span class="cmd">grep</span> xt_
+      <div class="solution-label">✅ Solución</div>
+      <p>El módulo del kernel requerido no está cargado. Cárgalo manualmente:</p>
+      <div class="pre-header"><div class="pre-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="pre-lang">bash</span></div>
+<pre><span class="cmd">modprobe</span> xt_recent    <span class="c"># módulo 'recent' (anti brute-force)</span>
+<span class="cmd">modprobe</span> ip_conntrack  <span class="c"># módulo conntrack / state</span>
+<span class="cmd">lsmod</span> | <span class="cmd">grep</span> xt_      <span class="c"># ver módulos netfilter cargados</span>
 </pre>
     </div>
   </details>
 
   <details>
-    <summary>❌ Conflicto con firewalld o ufw</summary>
+    <summary><span class="sum-icon">⚡</span> Conflicto con firewalld o ufw<span class="sum-chevron">▼</span></summary>
     <div class="solution">
-      <span class="solution-label">▸ Solución</span>
-      <p>iptables, firewalld y ufw gestionan netfilter por debajo. Usarlos simultáneamente produce conflictos. Elige uno:</p>
+      <div class="solution-label">✅ Solución</div>
+      <p>iptables, firewalld y ufw gestionan netfilter simultáneamente y se interfieren. Elige uno y desactiva los demás:</p>
+      <div class="pre-header"><div class="pre-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="pre-lang">bash</span></div>
 <pre><span class="c"># Deshabilitar firewalld (RHEL/CentOS)</span>
 <span class="cmd">systemctl</span> stop firewalld
-<span class="cmd">systemctl</span> disable firewalld
+<span class="cmd">systemctl</span> mask firewalld
 
 <span class="c"># Deshabilitar ufw (Debian/Ubuntu)</span>
 <span class="cmd">ufw</span> disable
+<span class="cmd">systemctl</span> disable ufw
 </pre>
     </div>
   </details>
 
-  <div class="callout warn" style="margin-top:32px;">
-    <span class="icon">⚠️</span> <strong>Entornos de prueba:</strong> practica siempre en máquinas virtuales (VirtualBox, KVM, VMware) o contenedores Docker/LXC antes de aplicar estas configuraciones en producción. Un error en un servidor de producción remoto puede dejarlo inaccesible.
+  <div class="callout warn" style="margin-top:28px;">
+    <span class="callout-icon">🧪</span>
+    <p><strong>Entornos de prueba:</strong> practica siempre en máquinas virtuales (VirtualBox, KVM, VMware) o contenedores Docker/LXC antes de aplicar estas configuraciones en producción. Un error en un servidor remoto real puede dejarlo inaccesible.</p>
   </div>
-
 </section>
 
-</div><!-- /container -->
+</div>
 
 <footer>
-  Tutorial iptables &nbsp;·&nbsp; GNU/Linux Security &nbsp;·&nbsp; <span>Uso educativo</span> &nbsp;·&nbsp; Probado en Ubuntu 22.04 · Debian 12 · RHEL 9
+  <strong>Tutorial iptables</strong> &nbsp;·&nbsp; GNU/Linux Security &nbsp;·&nbsp; Uso educativo
+  &nbsp;·&nbsp; Probado en Ubuntu 22.04 · Debian 12 · RHEL 9 · CentOS Stream 9
 </footer>
 
 </body>
